@@ -1,18 +1,29 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+from sklearn import  metrics
+
 
 class Plotter():
-    def __init__(self, working_dir):
+    def __init__(self, working_dir, config):
         """
         Simple Plotter
         
         """
         self.dir = working_dir
+
+        #if directory doesn't exist create new one:
+        if os.path.exists(working_dir):
+            pass
+        else:
+            os.mkdir(working_dir)
+
         return
     
     def train_test_plot(self, df_train, df_test, bgd_train_sf=1, signal_train_sf=1):
         """
+        Train test plots from https://github.com/aelwood/hepML
         """
         decisions = []
         bins=30
@@ -78,6 +89,7 @@ class Plotter():
     
     def class_prediction(self, df, save=False, mode="test", bgd_test_sf=1, signal_test_sf=1):
         """
+        Class prediction plots  from https://github.com/aelwood/hepML
         """
 
         bgd_weights=[np.float32(i)*np.float32(bgd_test_sf) for i in df[df.test_labels==0]['test_weights']]
@@ -97,6 +109,7 @@ class Plotter():
     
     def significance_plot(self, df_train, df_test, bgd_test_sf, signal_test_sf):
         """
+        Significance plots from https://github.com/aelwood/hepML
         """
         self.class_prediction(df_test, mode="test", bgd_test_sf=bgd_test_sf, signal_test_sf=signal_test_sf)
         s=self.h2[0]
@@ -118,7 +131,7 @@ class Plotter():
 
     def roc_curve(self, df_train, df_test):
         
-        _roc_auc_score = sklearn.metrics.roc_auc_score(df_test['test_labels'], df_test['test_pred'])
+        _roc_auc_score = metrics.roc_auc_score(df_test['test_labels'], df_test['test_pred'])
 
         _fpr, _tpr, _thresholds = metrics.roc_curve(df_train['train_labels'], df_train['train_output'])
         fpr, tpr, thresholds = metrics.roc_curve(df_test['test_labels'], df_test['test_output'])
@@ -139,5 +152,8 @@ class Plotter():
         plt.savefig(os.path.join(self.dir,'ROC_Curva.pdf'))
         plt.show()
         return
+
+
+
     
         

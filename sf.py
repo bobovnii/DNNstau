@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
 
-def sf_bgd_train_test(test, train):
+
+
+def sf_bgd_train_test(test, train,):
     "Number of bgd in test set"
     "Calculate TF for background"
     weight  = test[(test.classID == 0)]['weight']
