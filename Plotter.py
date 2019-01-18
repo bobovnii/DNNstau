@@ -6,7 +6,7 @@ from sklearn import  metrics
 
 
 class Plotter():
-    def __init__(self, working_dir, config):
+    def __init__(self, working_dir):
         """
         Simple Plotter
         
@@ -21,7 +21,7 @@ class Plotter():
 
         return
     
-    def train_test_plot(self, df_train, df_test, bgd_train_sf=1, signal_train_sf=1):
+    def train_test_plot(self, df_train, df_test, bgd_train_sf, signal_train_sf, bgd_test_sf, signal_test_sf):
         """
         Train test plots from https://github.com/aelwood/hepML
         """
@@ -83,11 +83,11 @@ class Plotter():
         plt.legend(loc='best')
         #if not os.path.exists(output): os.makedirs(output)
         plt.savefig(os.path.join(self.dir,'compareTrainTest.pdf'))
-        plt.show()
+        #plt.show()
         plt.clf()
         return
     
-    def class_prediction(self, df, save=False, mode="test", bgd_test_sf=1, signal_test_sf=1):
+    def class_prediction(self, df, save=False, bgd_test_sf=1, signal_test_sf=1):
         """
         Class prediction plots  from https://github.com/aelwood/hepML
         """
@@ -107,24 +107,24 @@ class Plotter():
         #plt.show()
         return
     
-    def significance_plot(self, df_train, df_test, bgd_test_sf, signal_test_sf):
+    def significance_plot(self, df_test, bgd_test_sf, signal_test_sf):
         """
         Significance plots from https://github.com/aelwood/hepML
         """
-        self.class_prediction(df_test, mode="test", bgd_test_sf=bgd_test_sf, signal_test_sf=signal_test_sf)
+        self.class_prediction(df_test, bgd_test_sf=bgd_test_sf, signal_test_sf=signal_test_sf)
         s=self.h2[0]
         b=self.h1[0]
 
         plt.plot((self.h1[1][:-1]+self.h1[1][1:])/2,s/b)
         plt.title('sig/bkgd on test set')
         plt.savefig(os.path.join(self.dir,'sigDivBkgdDiscriminator.pdf'))
-        plt.show()
+        #plt.show()
         plt.clf()
         
         plt.plot((self.h1[1][:-1]+self.h1[1][1:])/2,s/np.sqrt(s+b))
         plt.title('sig/sqrt(sig+bkgd) on test set, best is '+str(max(s/np.sqrt(s+b))))
         plt.savefig(os.path.join(self.dir,'sensitivityDiscriminator.pdf'))
-        plt.show()
+        #plt.show()
         plt.clf()
         
         return
@@ -150,9 +150,8 @@ class Plotter():
         plt.title('Receiver operating characteristic at AUC %f'%_roc_auc_score)
         plt.legend(loc="lower right")
         plt.savefig(os.path.join(self.dir,'ROC_Curva.pdf'))
-        plt.show()
+        #plt.show()
         return
-
 
 
     

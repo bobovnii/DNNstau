@@ -2,21 +2,22 @@ import pandas as pd
 import numpy as np
 import uproot 
 
-class DataLoader(config):
+class DataLoader():
     """
     """
-    def __init__(self):
+    def __init__(self,config):
         self.config = config
         return
     
     
-    def _get_train(self, batch_size, convert_to_pd = True):
+    def _get_train(self, convert_to_pd = True):
         
         """
         """
+        self.path = self.config.get("data","path")
         self.train_path = self.config.get("data","train")
         self.train_directory = self.config.get("data","train_directory")
-        train_df = uproot.open(self.train_path)[self.train_directory]
+        train_df = uproot.open(self.path+self.train_path)[self.train_directory]
         if convert_to_pd ==True:
             train_df = pd.DataFrame(train_df.arrays())
         return train_df
