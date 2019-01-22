@@ -21,7 +21,7 @@ class Plotter():
 
         return
     
-    def train_test_plot(self, df_train, df_test, bgd_train_sf, signal_train_sf, bgd_test_sf, signal_test_sf):
+    def train_test_plot(self, df_train, df_test, bgd_train_sf, bgd_test_sf, signal_train_sf, signal_test_sf):
         """
         Train test plots from https://github.com/aelwood/hepML
         """
@@ -82,9 +82,10 @@ class Plotter():
         plt.yscale('log')
         plt.legend(loc='best')
         #if not os.path.exists(output): os.makedirs(output)
-        plt.savefig(os.path.join(self.dir,'compareTrainTest.pdf'))
         #plt.show()
+        plt.savefig(os.path.join(self.dir,'compareTrainTest.pdf'))
         plt.clf()
+
         return
     
     def class_prediction(self, df, save=False, bgd_test_sf=1, signal_test_sf=1):
@@ -111,7 +112,7 @@ class Plotter():
         """
         Significance plots from https://github.com/aelwood/hepML
         """
-        self.class_prediction(df_test, bgd_test_sf=bgd_test_sf, signal_test_sf=signal_test_sf)
+        self.class_prediction(df=df_test, bgd_test_sf=bgd_test_sf, signal_test_sf=signal_test_sf)
         s=self.h2[0]
         b=self.h1[0]
 

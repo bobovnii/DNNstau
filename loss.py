@@ -19,3 +19,22 @@ def Asimov_Loss(y_true, y_pred, weight, signal_test_sf, bgd_test_sf):
     else:
         asimov = TP /np.sqrt(FP +TP)
     return asimov
+
+
+def significanceLoss(expectedSignal,expectedBkgd):
+    '''Define a loss function that calculates the significance based on fixed
+    expected signal and expected background yields for a given batch size'''
+
+
+    def sigLoss(y_true,y_pred):
+        #Continuous version:
+
+        signalWeight=expectedSignal/K.sum(y_true)
+        bkgdWeight=expectedBkgd/K.sum(1-y_true)
+
+        s = signalWeight*K.sum(y_pred*y_true)
+        b = bkgdWeight*K.sum(y_pred*(1-y_true))
+
+        return -(s*s)/(s+b+K.epsilon()) #Add the epsilon to avoid dividing by 0
+
+    return sigLoss

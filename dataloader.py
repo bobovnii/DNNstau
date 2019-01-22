@@ -29,8 +29,8 @@ class DataLoader():
         self.test_path = self.config.get("data","test")
         self.test_directory = self.config.get("data","test_directory")
         test_df = uproot.open(self.test_path)[self.test_directory]
-        if convert_to_pd ==True:
-            train_df = pd.DataFrame(train_df.arrays())
+        #if convert_to_pd ==True:
+        #    train_df = pd.DataFrame(train_df.arrays())
     
         return test_df
     
