@@ -18,6 +18,7 @@ import numpy as np
 import pandas as pd
 np.random.seed(7)
 from functools import partial
+from sklearn.model_selection import StratifiedKFold
 
 """
 def sigLoss(y_true,y_pred, weights):
@@ -108,16 +109,16 @@ class Training():
 
         #cl4 = partial(custom_loss_4, weights=weights_tensor)
 
-        
-        
         model = Sequential()
-        model.add(Dense(256, input_dim=13, kernel_initializer="uniform", activation="relu"))
-        model.add(Dense(256, kernel_initializer="uniform", activation="relu"))
-        model.add(Dense(256, kernel_initializer="uniform", activation="relu"))
+        model.add(Dense(256, input_dim=13, kernel_initializer='uniform', activation='relu'))
         model.add(Dropout(0.4))
-        model.add(Dense(1, kernel_initializer="uniform", activation="sigmoid"))
+        model.add(Dense(256, kernel_initializer='uniform', activation='relu'))
+        model.add(Dropout(0.4))
+        model.add(Dense(256, kernel_initializer='uniform', activation='relu'))
+        model.add(Dropout(0.4))
+        model.add(Dense(1, kernel_initializer='uniform', activation='sigmoid'))
         # Compile model
-        model.compile(loss="binary_crossentropy", metrics=["accuracy"], optimizer=Adam(lr=0.01))
+        model.compile(loss='binary_crossentropy', metrics=['accuracy'], optimizer=Adam(lr=0.001))
 
         print(model.summary())
         self.__model = model
@@ -129,7 +130,7 @@ class Training():
         return self.__model
 
 
-    def train(self, X, Y):
+    def train(self, X, Y, X_validation=None, Y_validation=None):
         """
 
 
@@ -137,7 +138,14 @@ class Training():
         """
         #TODO remove:
 
-        history = self.__model.fit(X, Y, epochs=self.epochs, batch_size=self.batch_size)  # , verbose=0)
+        if X_validation is None or Y_validation is None:
+
+            history = self.__model.fit(X, Y, epochs=self.epochs, batch_size=self.batch_size)
+        else:
+
+            history = self.__model.fit(X, Y, epochs=self.epochs, batch_size=self.batch_size,
+                                       validation_data=(X_validation, Y_validation ))  # , verbose=0)
+
 
         if self._plot_history:
             """
@@ -153,6 +161,36 @@ class Training():
         return
 
 
+    def train_k_folds(self, X, Y, k_folds = 5, n_class=2):
+        """
+
+
+        :return:
+        """
+        #TODO remove:
+
+        #Kfold
+
+        folds = StratifiedKFold(n_splits=3, shuffle=True, random_state=1)
+        oof_preds = np.zeros((len(X), 1))
+        clfs = []
+        index = 0
+        for fold_, (trn_, val_) in enumerate(folds.split(Y, Y)):
+            index+=0
+            _x_train, _y_train = X.ix[trn_], Y.ix[trn_]
+            x_valid, y_valid = X.ix[val_], Y.ix[val_]
+            model = self._model()
+            history = model.fit(_x_train, _y_train, validation_data=[x_valid, y_valid], epochs=self.epochs, batch_size=self.batch_size,
+                                shuffle=True)  # , verbose=0)
+            self.plot_history(history, title=str(index))
+            #plot_loss_acc(history, title="DNN_{0}".format(index))
+            oof_preds[val_, :] = model.predict_proba(x_valid, batch_size=4000)
+            clfs.append(model)
+        self.clfs = clfs
+        return clfs, oof_preds
+
+        return
+
 
     def store_model(self, model=None, model_name=None):
         """
@@ -165,11 +203,31 @@ class Training():
             model_name = self.model_name
 
         model_json = model.to_json()
-        with open("{0}.json".format(self.dir +  self.model_name), "w") as json_file:
+        with open("{0}/Model.json".format(self.dir +  self.model_name), "w") as json_file:
             json_file.write(model_json)
         # serialize weights to HDF5
-        model.save_weights(model_name)
+        model.save_weights(self.dir +  self.model_name+"/Model_weight")
         print("Model is saved on disk")
+        return
+
+    def store_models(self, models=None, model_name=None):
+        """
+
+                :return:
+                """
+        if models is None:
+            models = self.clfs
+        if model_name is None:
+            model_name = self.model_name
+        index = 0
+        for i in range(len(models)):
+            index+=1
+            model_json = models[i].to_json()
+            with open("{0}/Model{0}.json".format(index).format(self.dir + self.model_name), "w") as json_file:
+                json_file.write(model_json)
+            # serialize weights to HDF5
+            models[i].save_weights(self.dir + self.model_name + "/Model_weight_{0}".format(index))
+            print("Model is saved on disk")
         return
 
 
@@ -244,29 +302,31 @@ class Training():
         return _df_train, _df_test
 
 
-    def plot_history(self, history):
+    def plot_history(self, history, title=""):
         """"
 
         """
         # summarize history for accuracy
 
         plt.plot(history.history["acc"])
+        plt.plot(history.history["val_acc"])
         plt.title("model accuracy")
         plt.ylabel("accuracy")
         plt.xlabel("epoch")
-        plt.legend(["train", "test"], loc="upper left")
+        plt.legend(["train", "validation"], loc="upper left")
 
-        plt.savefig(os.path.join(self.dir +  self.model_name, "Accuracy.pdf"))
+        plt.savefig(os.path.join(self.dir +  self.model_name, "Accuracy_{0}.pdf".format(title)))
         #plt.show()
         plt.clf()
 
         # summarize history for loss
         plt.plot(history.history["loss"])
+        plt.plot(history.history["val_loss"])
         plt.title("model loss")
         plt.ylabel("loss")
         plt.xlabel("epoch")
-        plt.legend(["train", "test"], loc="upper left")
-        plt.savefig(os.path.join(self.dir +  self.model_name, "Loss.pdf"))
+        plt.legend(["train", "validation"], loc="upper left")
+        plt.savefig(os.path.join(self.dir +  self.model_name, "Loss_{0}.pdf".format(title)))
         #plt.show()
         plt.clf()
 
