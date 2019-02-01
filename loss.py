@@ -24,9 +24,10 @@ def Asimov_Loss(y_true, y_pred, weights):
     for c_p, c_t in product(range(nb_cl), range(nb_cl)):
         final_mask += (weights[c_t, c_p] * y_pred_max_mat[:, c_p] * y_true[:, c_t])
 
+
+
     TP = np.sum(np.logical_and(new_y_pred == 1, new_y_true == 1).astype(np.int32 ) *final_mask )
     FP = np.sum(np.logical_and(new_y_pred == 1, new_y_true == 0).astype(np.int32 ) *final_mask )
-
 
 
     if TP == 0:

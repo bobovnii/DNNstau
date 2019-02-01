@@ -1,22 +1,5 @@
-from keras.optimizers import Adam
-import uproot
 import pandas as pd
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.models import model_from_json
-import numpy as np
-import os
-import math
-
-import logging
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import classification_report
 from sklearn.utils import shuffle
-from sklearn.metrics import roc_auc_score
-from sklearn.metrics import roc_curve
-import matplotlib.pyplot as plt
-from sklearn.model_selection import KFold
 from Plotter import Plotter
 import ConfigParser
 
@@ -41,7 +24,7 @@ LABELS = ["classID"]
 WEIGHT = "weight"
 
 
-#Run plotter:
+#####   Run plotter:     ######
 
 def eval_model(DIR):
     plotter = Plotter(DIR)
@@ -49,7 +32,7 @@ def eval_model(DIR):
     plotter.significance_plot(_df_test, bgd_test_sf,signal_test_sf)
     plotter.roc_curve(_df_train, _df_test)
 
-#Parse config:
+######   Parse config:    #####
 
 config = ConfigParser.RawConfigParser()
 config.read("config_100.ini")
@@ -78,6 +61,10 @@ def _overbalance(train):
     df_over = shuffle(df_over)
     return df_over
 
+
+_train, _validation = test_train_split(_train, split=0.1)
+
+
 #Preprocess
 from utils import _overbalance as ovbal
 _train = ovbal(_train)
@@ -92,26 +79,21 @@ signal_train_sf, signal_test_sf = sf_signal_train_test(test=_test,train=_train, 
 
 
 
-X_train = _train[VARS]
+X_train = _train[gen_VARS]
 Y_train = _train[LABELS]
 W_train = _train[WEIGHT]
 
+X_validation = _validation[gen_VARS]
+Y_validation = _validation[LABELS]
+W_validation = _validation[WEIGHT]
 
-X_test = _test[VARS]
+X_test = _test[gen_VARS]
 Y_test = _test[LABELS]
 W_test = _test[WEIGHT]
 
 DIR = config.get("model", "dir")
 from train import Training
 
-x_train = _train[VARS]
-x_gen_train = _train[gen_VARS]
-y_train = _train[["classID"]]
-w_train = _train["weight"]
-x_test = _test[VARS]
-x_gen_test = _test[gen_VARS]
-y_test = _test[["classID"]]
-w_test = _test["weight"]
 
 """GEN Pretraining"""
 #Start training:
@@ -119,11 +101,17 @@ w_test = _test["weight"]
 gen_met_trainin = Training(config)
 model = gen_met_trainin._model()
 
-gen_met_trainin.train(x_gen_train, y_train)
+#from utils import LearningRateScheduler
+#ls #lrate = LearningRateScheduler(step_decay)
+
+#epochs = config.get("model", 'gen_lr')
+#lr = config.get("model", 'gen_epoch')
+
+gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation)
 gen_met_trainin.store_model()
 
 #gen_met_trainin.epochs = 20
-gen_met_trainin.train(x_train, y_train)
+#gen_met_trainin.train(x_train, y_train, epochs=50)
 
 #Get Result of training:
 #from utils import get_results
@@ -150,7 +138,7 @@ def get_results(model, _x_train, _y_train, x_test, y_test, _w_train, w_test):
 
 
 
-_df_train, _df_test  = gen_met_trainin.get_results(x_train, y_train, x_test, y_test, w_train, w_test)
+_df_train, _df_test  = gen_met_trainin.get_results(X_train, Y_train,  X_test, Y_test, W_train, W_test)
 
 
 #Run plotter:

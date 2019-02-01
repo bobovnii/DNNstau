@@ -57,7 +57,13 @@ def label_correction(df, labels=[1,0], class_names=["signal","background"], col_
 
 
 
-
+def step_decay(epoch):
+   initial_lrate = 0.1
+   drop = 0.5
+   epochs_drop = 10.0
+   lrate = initial_lrate * math.pow(drop,
+           math.floor((1+epoch)/epochs_drop))
+   return lrate
 
 
 def get_results(model, _x_train, _y_train, x_test, y_test, _w_train, w_test):

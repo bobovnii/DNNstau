@@ -85,6 +85,11 @@ def _overbalance(train):
     return df_over
 
 #Preprocess
+_train, _validation = test_train_split(_train, split=0.1)
+X_validation = _validation[VARS]
+Y_validation = _validation[LABELS]
+W_validation = _validation[WEIGHT]
+
 from utils import _overbalance as ovbal
 _train = ovbal(_train)
 

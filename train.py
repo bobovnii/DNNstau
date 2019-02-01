@@ -4,14 +4,17 @@ Script for the pretraining:
 # MLP for Pima Indians Dataset Serialize to JSON and HDF5
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
-from keras.models import model_from_json
+#TODO add load model
+## from keras.models import model_from_json
 from keras.optimizers import Adam
 import matplotlib.pyplot as plt
-import os
-import math
-import uproot
-import logging
-import argparse
+from keras.callbacks import Callback
+#import os
+#import math
+#TODO add loggig
+# import logging
+#Add argument parser
+# import argparse
 from logger import *
 
 import numpy as np
@@ -36,6 +39,17 @@ def sigLoss(y_true,y_pred, weights):
 
 
 #model = Model([input_layer, weights_tensor], out)
+
+from utils import step_decay
+
+class LossHistory(Callback):
+    def on_train_begin(self, logs={}):
+        self.losses = []
+        self.lr = []
+
+    def on_epoch_end(self, batch, logs={}):
+        self.losses.append(logs.get('loss'))
+        self.lr.append(step_decay(len(self.losses)))
 
 
 
@@ -130,13 +144,17 @@ class Training():
         return self.__model
 
 
-    def train(self, X, Y, X_validation=None, Y_validation=None):
+    def train(self, X, Y, X_validation=None, Y_validation=None,  epochs=None, lr=None):
         """
 
 
         :return:
         """
         #TODO remove:
+        if  epochs==None and lr==None:
+            epochs = self.epochs
+            batch_size = self.batch_size
+            #lr = self.lr
 
         if X_validation is None or Y_validation is None:
 
@@ -264,7 +282,6 @@ class Training():
         scores = self.__model.evaluate(X, Y, verbose=0)
         print("Accuraccy %s: %.2f%%" % (self.__model.metrics_names[1], scores[1] * 100))
 
-
     ## Extract parameter of mode:
     def extract_weights(self, model=None):
         """
@@ -278,7 +295,6 @@ class Training():
         B = [layer.get_weights()[1] for layer in model.layers]
 
         return {"W": W, "B": B}
-
 
     def get_results(self, _x_train, _y_train, x_test, y_test, _w_train, w_test):
 
@@ -301,11 +317,12 @@ class Training():
         _df_test["index"] = x_test.index
         return _df_train, _df_test
 
-
     def plot_history(self, history, title=""):
         """"
 
         """
+
+
         # summarize history for accuracy
 
         plt.plot(history.history["acc"])
@@ -331,9 +348,23 @@ class Training():
         plt.clf()
 
         return
-    
 
+    def lr_schedule(self):
+        """
 
+        :return:
+        """
+        #self.loss_history = LossHistory()
+        #lrate = LearningRateScheduler(step_decay)
+
+        #callbacks_list = [loss_history, lrate]
+        #history = model.fit(X_train, y_train,
+        #                validation_data=(X_test, y_test),
+        #                epochs=epochs,
+        #                batch_size=batch_size,
+        #                callbacks=callbacks_list,
+        #                verbose=2)
+        return
 
     
 def cv_train(train_x, train_y, train_w, num_folds):
