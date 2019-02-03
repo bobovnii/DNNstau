@@ -3,33 +3,17 @@ Utils:
 """
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-import os
-import math
-import uproot
-from tqdm import tqdm
-import tensorflow as tf
-import sklearn
-from sklearn.model_selection import train_test_split
-from sklearn import metrics
-from sklearn.metrics import roc_auc_score
-from sklearn.metrics import confusion_matrix
-import os
-import math
-
-import logging
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import classification_report
+##from sklearn.metrics import accuracy_score
+#from sklearn.metrics import classification_report
 from sklearn.utils import shuffle
-from sklearn.metrics import roc_auc_score
-from sklearn.metrics import roc_curve
-import matplotlib.pyplot as plt
-from sklearn.model_selection import KFold
+
 
 def _overbalance(train):
     """
     Return Oversampled dataset
+
+    :param train:
+    :return:
     """
     count_class_0, count_class_1 = train.classID.value_counts()
     # Divide by class
@@ -43,14 +27,13 @@ def _overbalance(train):
 
 def label_correction(df, labels=[1,0], class_names=["signal","background"], col_names=["classID", "className"]):
     """
+
+    :param df:
+    :param labels:
+    :param class_names:
+    :param col_names:
+    :return:
     """
-    #test_row = df[col_names].loc[0].as_matrix()
-    #if test_row[0] == labels[0] and test_row[1] == class_names[0]:
-    #    pass
-    #elif test_row[0] == labels[1] and test_row[1] == class_names[1]:
-    #    pass
-    #else:
-    #    df[col_names[0]] = df[col_names[0]].apply(lambda x: 1 - np.int32(x > 0.5))
     df['classID'] = df['classID'].apply(lambda x: 1-np.int32(x>0.5))
     return df
 
@@ -61,7 +44,17 @@ def label_correction(df, labels=[1,0], class_names=["signal","background"], col_
 
 
 def get_results(model, _x_train, _y_train, x_test, y_test, _w_train, w_test):
-        
+    """
+
+    :param model:
+    :param _x_train:
+    :param _y_train:
+    :param x_test:
+    :param y_test:
+    :param _w_train:
+    :param w_test:
+    :return:
+    """
     _df_train = pd.DataFrame()
     _df_test = pd.DataFrame()
 

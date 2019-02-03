@@ -31,10 +31,6 @@ def sigLoss(y_true,y_pred, weights):
 
     return -(s*s)/(s+b+K.epsilon()) #Add the epsilon to avoid dividing by 0
 """
-#weights_tensor = Input(shape=(5,))
-
-
-#model = Model([input_layer, weights_tensor], out)
 
 
 
