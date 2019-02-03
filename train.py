@@ -313,12 +313,38 @@ class Training():
 
         # summarize history for accuracy
 
+
+        bbox = dict(boxstyle="round", fc="blue", alpha=0.1)
+
+        _max = max(history.history['loss'])
+        _index = int(history.history['loss'].index(_max))
+
         plt.plot(history.history["acc"])
         plt.plot(history.history["val_acc"])
         plt.title("model accuracy")
         plt.ylabel("accuracy")
         plt.xlabel("epoch")
         plt.legend(["train", "validation"], loc="upper left")
+
+        _max =max(history.history["acc"])
+        _index = history.history["acc"].index(_max)
+
+        plt.annotate('{0}'.format(_max),
+                     size=20,
+                     xy=(_index - 0.005, _max + 0.001),
+                     xytext=(_index - 0.005, _max),
+                     bbox=bbox  # arrowprops=dict(facecolor='black', shrink=0.05),
+                     )
+
+        _max = max(history.history["val_acc"])
+        _index = history.history["val_acc"].index(_max)
+
+        plt.annotate('{0}'.format(_max),
+                     size=20,
+                     xy=(_index - 0.005, _max + 0.001),
+                     xytext=(_index - 0.005, _max),
+                     bbox=bbox  # arrowprops=dict(facecolor='black', shrink=0.05),
+                     )
 
         plt.savefig(os.path.join(self.dir +  self.model_name, "Accuracy_{0}.pdf".format(title)))
         #plt.show()
@@ -331,6 +357,26 @@ class Training():
         plt.ylabel("loss")
         plt.xlabel("epoch")
         plt.legend(["train", "validation"], loc="upper left")
+
+        _min = max(history.history["loss"])
+        _index = history.history["loss"].index(_min)
+
+        plt.annotate('{0}'.format(_min),
+                     size=20,
+                     xy=(_index - 0.005, _min + 0.001),
+                     xytext=(_index - 0.005, _min),
+                     bbox=bbox)  # arrowprops=dict(facecolor='black', shrink=0.05),
+
+        _min = max(history.history["val_loss"])
+        _index = history.history["val_loss"].index(_min)
+
+        plt.annotate('{0}'.format(_min),
+                     size=20,
+                     xy=(_index - 0.005, _min + 0.001),
+                     xytext=(_index - 0.005, _min),
+                     bbox=bbox) # arrowprops=dict(facecolor='black', shrink=0.05),
+
+
         plt.savefig(os.path.join(self.dir +  self.model_name, "Loss_{0}.pdf".format(title)))
         #plt.show()
         plt.clf()
