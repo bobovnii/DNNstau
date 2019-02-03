@@ -101,13 +101,18 @@ from train import Training
 gen_met_trainin = Training(config)
 model = gen_met_trainin._model()
 
+
+histories = Histories()
+histories.set_up_weight(test_weights)
+
+
 #from utils import LearningRateScheduler
 #ls #lrate = LearningRateScheduler(step_decay)
 
 #epochs = config.get("model", 'gen_lr')
 #lr = config.get("model", 'gen_epoch')
 
-gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation)
+gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=histories)
 gen_met_trainin.store_model()
 
 #gen_met_trainin.epochs = 20

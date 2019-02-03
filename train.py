@@ -23,18 +23,7 @@ np.random.seed(7)
 from functools import partial
 from sklearn.model_selection import StratifiedKFold
 
-"""
-def sigLoss(y_true,y_pred, weights):
-    #Continuous version:
 
-    signalWeight=weights/K.sum(y_true)
-    bkgdWeight=weights/K.sum(1-y_true)
-
-    s = signalWeight*K.sum(y_pred*y_true)
-    b = bkgdWeight*K.sum(y_pred*(1-y_true))
-
-    return -(s*s)/(s+b+K.epsilon()) #Add the epsilon to avoid dividing by 0
-"""
 #weights_tensor = Input(shape=(5,))
 
 
@@ -144,13 +133,12 @@ class Training():
         return self.__model
 
 
-    def train(self, X, Y, X_validation=None, Y_validation=None,  epochs=None, lr=None):
+    def train(self, X, Y, X_validation=None, Y_validation=None,  epochs=None, lr=None, callback=None):
         """
 
 
         :return:
         """
-        #TODO remove:
         if  epochs==None and lr==None:
             epochs = self.epochs
             batch_size = self.batch_size
@@ -158,11 +146,11 @@ class Training():
 
         if X_validation is None or Y_validation is None:
 
-            history = self.__model.fit(X, Y, epochs=self.epochs, batch_size=self.batch_size)
+            history = self.__model.fit(X, Y, epochs=self.epochs, batch_size=self.batch_size, callbacks=callback)
         else:
 
             history = self.__model.fit(X, Y, epochs=self.epochs, batch_size=self.batch_size,
-                                       validation_data=(X_validation, Y_validation ))  # , verbose=0)
+                                       validation_data=(X_validation, Y_validation, ), callbacks=callback)  # , verbose=0)
 
 
         if self._plot_history:
