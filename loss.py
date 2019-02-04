@@ -61,9 +61,9 @@ class Histories(keras.callbacks.Callback):
         self.losses.append(logs.get('loss'))
         y_pred = self.model.predict(self.validation_data[0])
         #self.aucs.append(roc_auc_score(self.validation_data[1], y_pred))
-        self.data = [self.validation_data[1],
-                                       y_pred,
-                                       self.new_weight]
+        #self.data = [self.validation_data[1],
+        #                               y_pred,
+        #                               self.new_weight]
         self.asimov.append(asimov(self.validation_data[1],
                                        y_pred,
                                        self.new_weight))
