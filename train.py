@@ -236,14 +236,27 @@ class Training():
         return
 
 
-    def load_model(self):
+    def load_model(self, MODEL_NAME):
         """
 
         :return:
         """
         #TODO implement this method
+        # load json and create model
+        json_file = open('GEN_MET_model.json', 'r')
+        loaded_model_json = json_file.read()
+        json_file.close()
+        loaded_model = model_from_json(loaded_model_json)
+        # load weights into new model
+        loaded_model.load_weights(MODEL_NAME)
+        print("Loaded model from disk")
+
         return
 
+    def extract_weights(self, model):
+        W = [layer.get_weights()[0] for layer in model.layers]
+        B = [layer.get_weights()[1] for layer in model.layers]
+        return {"W": W, "B": B}
 
     def model_diagnostic(self):
         """
