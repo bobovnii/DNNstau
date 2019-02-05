@@ -1,14 +1,12 @@
 import numpy as np
 import keras.backend as K
-from itertools import product
-from sklearn.metrics import  roc_auc_score
 import math
 import tensorflow as tf
 import pandas as pd
-import keras
 
 def asimov(true, predicted, weight):
     """
+
     """
     result = pd.DataFrame()
     predicted = np.round(predicted)
@@ -22,9 +20,17 @@ def asimov(true, predicted, weight):
     asimov = TP/math.sqrt(TP+FP)
     return asimov
 
-"""
+
 def sigLoss(y_true,y_pred, weights):
-    #Continuous version:
+    """
+    Based on this paper:
+    Code:
+
+    :param y_true:
+    :param y_pred:
+    :param weights:
+    :return:
+    """
 
     signalWeight=weights/K.sum(y_true)
     bkgdWeight=weights/K.sum(1-y_true)
@@ -33,7 +39,7 @@ def sigLoss(y_true,y_pred, weights):
     b = bkgdWeight*K.sum(y_pred*(1-y_true))
 
     return -(s*s)/(s+b+K.epsilon()) #Add the epsilon to avoid dividing by 0
-"""
+
 
 def significance(true, predicted, weigth):
     """
@@ -43,7 +49,6 @@ def significance(true, predicted, weigth):
     :return:
     """
     return
-
 
 
 def mywloss(y_true,y_pred):
