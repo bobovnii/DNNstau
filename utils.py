@@ -6,6 +6,40 @@ import numpy as np
 ##from sklearn.metrics import accuracy_score
 #from sklearn.metrics import classification_report
 from sklearn.utils import shuffle
+import math
+import  keras
+
+
+class Histories(keras.callbacks.Callback):
+    def set_up_weight(self, weight):
+        self.new_weight = weight
+    def on_train_begin(self, logs={}):
+        self.aucs = []
+        self.losses = []
+        self.asimov = []
+        self.acc = []
+
+    def on_train_end(self, logs={}):
+        return
+
+    def on_epoch_begin(self, epoch, logs={}):
+        return
+
+    def on_epoch_end(self, epoch, logs={}):
+        self.losses.append(logs.get('loss'))
+        y_pred = self.model.predict(self.validation_data[0])
+        self.aucs.append(roc_auc_score(self.validation_data[1], y_pred))
+        self.asimov.append(asimov(self.validation_data[1],
+                                       y_pred,
+                                       self.new_weight))
+        self.acc.append(logs.get('loss'))
+        return
+
+	def on_batch_begin(self, batch, logs={}):
+		return
+
+	def on_batch_end(self, batch, logs={}):
+		return
 
 
 def _overbalance(train):
@@ -36,8 +70,6 @@ def label_correction(df, labels=[1,0], class_names=["signal","background"], col_
     """
     df['classID'] = df['classID'].apply(lambda x: 1-np.int32(x>0.5))
     return df
-
-
 
 
 def step_decay(epoch):

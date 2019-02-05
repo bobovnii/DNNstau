@@ -1,7 +1,6 @@
 """
 Script for the pretraining:
 """
-# MLP for Pima Indians Dataset Serialize to JSON and HDF5
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
 from keras.models import model_from_json
@@ -11,11 +10,7 @@ from keras.callbacks import Callback
 #import os
 #import math
 #TODO add loggig
-# import logging
-#Add argument parser
-# import argparse
 from logger import *
-
 import numpy as np
 import pandas as pd
 np.random.seed(7)
@@ -24,28 +19,14 @@ from sklearn.model_selection import StratifiedKFold
 
 
 #weights_tensor = Input(shape=(5,))
-
-
 #model = Model([input_layer, weights_tensor], out)
-
 from utils import step_decay
-
-class LossHistory(Callback):
-    def on_train_begin(self, logs={}):
-        self.losses = []
-        self.lr = []
-
-    def on_epoch_end(self, batch, logs={}):
-        self.losses.append(logs.get('loss'))
-        self.lr.append(step_decay(len(self.losses)))
-
 
 
 class Training():
     """
 
     """
-
     def __init__(self, config):
         """
 
@@ -103,6 +84,7 @@ class Training():
 
 
         return
+
 
     def _model(self):
         """
@@ -215,6 +197,7 @@ class Training():
         print("Model is saved on disk")
         return
 
+
     def store_models(self, models=None, model_name=None):
         """
 
@@ -253,10 +236,12 @@ class Training():
 
         return
 
+
     def extract_weights(self, model):
         W = [layer.get_weights()[0] for layer in model.layers]
         B = [layer.get_weights()[1] for layer in model.layers]
         return {"W": W, "B": B}
+
 
     def model_diagnostic(self):
         """
@@ -282,9 +267,10 @@ class Training():
         scores = self.__model.evaluate(X, Y, verbose=0)
         print("Accuraccy %s: %.2f%%" % (self.__model.metrics_names[1], scores[1] * 100))
 
-    ## Extract parameter of mode:
+
     def extract_weights(self, model=None):
         """
+        Extract parameter of mode:
 
         :param model:
         :return:
@@ -318,6 +304,7 @@ class Training():
         _df_test["index"] = x_test.index
         return _df_train, _df_test
 
+
     def plot_history(self, history, title=""):
         """"
 
@@ -329,8 +316,6 @@ class Training():
 
         bbox = dict(boxstyle="round", fc="blue", alpha=0.1)
 
-        _max = max(history.history['loss'])
-        _index = int(history.history['loss'].index(_max))
 
         plt.plot(history.history["acc"])
         plt.plot(history.history["val_acc"])
@@ -343,9 +328,9 @@ class Training():
         _index = history.history["acc"].index(_max)
 
         plt.annotate('{0}'.format(_max),
-                     size=20,
-                     xy=(_index - 0.005, _max + 0.001),
-                     xytext=(_index - 0.005, _max),
+                     size=5,
+                     xy=(_index - 0.05, _max - 0.01),
+                     xytext=(_index - 0.05, _max - 0.01),
                      bbox=bbox  # arrowprops=dict(facecolor='black', shrink=0.05),
                      )
 
@@ -353,9 +338,9 @@ class Training():
         _index = history.history["val_acc"].index(_max)
 
         plt.annotate('{0}'.format(_max),
-                     size=20,
-                     xy=(_index - 0.005, _max + 0.001),
-                     xytext=(_index - 0.005, _max),
+                     size=5,
+                     xy=(_index - 0.05, _max - 0.01),
+                     xytext=(_index - 0.05, _max - 0.01),
                      bbox=bbox  # arrowprops=dict(facecolor='black', shrink=0.05),
                      )
 
@@ -371,22 +356,22 @@ class Training():
         plt.xlabel("epoch")
         plt.legend(["train", "validation"], loc="upper left")
 
-        _min = max(history.history["loss"])
+        _min = min(history.history["loss"])
         _index = history.history["loss"].index(_min)
 
         plt.annotate('{0}'.format(_min),
-                     size=20,
-                     xy=(_index - 0.005, _min + 0.001),
-                     xytext=(_index - 0.005, _min),
+                     size=5,
+                     xy=(_index - 0.05, _min - 0.01),
+                     xytext=(_index - 0.05, _min-0.01),
                      bbox=bbox)  # arrowprops=dict(facecolor='black', shrink=0.05),
 
-        _min = max(history.history["val_loss"])
+        _min = min(history.history["val_loss"])
         _index = history.history["val_loss"].index(_min)
 
         plt.annotate('{0}'.format(_min),
-                     size=20,
-                     xy=(_index - 0.005, _min + 0.001),
-                     xytext=(_index - 0.005, _min),
+                     size=5,
+                     xy=(_index - 0.05, _min + 0.01),
+                     xytext=(_index - 0.05, _min + 0.01),
                      bbox=bbox) # arrowprops=dict(facecolor='black', shrink=0.05),
 
 
@@ -395,6 +380,7 @@ class Training():
         plt.clf()
 
         return
+
 
     def lr_schedule(self):
         """
