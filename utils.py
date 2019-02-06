@@ -4,42 +4,100 @@ Utils:
 import pandas as pd
 import numpy as np
 ##from sklearn.metrics import accuracy_score
-#from sklearn.metrics import classification_report
+from sklearn.metrics import roc_auc_score
 from sklearn.utils import shuffle
 import math
 import  keras
-
+from loss import asimov
+from Plotter import plot_asimov
 
 class Histories(keras.callbacks.Callback):
-    def set_up_weight(self, weight):
-        self.new_weight = weight
+
+    def set_up_confi(self, config):
+        """
+
+        :param config:
+        :return:
+        """
+
+
+    def set_up_train_weight(self, weight):
+        """
+
+        :param weight:
+        :return:
+        """
+        self.train_weight = weight
+
+    def set_up_val_weight(self, weight):
+        """
+
+        :param weight:
+        :return:
+        """
+        self.val_weight = weight
+
+
     def on_train_begin(self, logs={}):
-        self.aucs = []
-        self.losses = []
-        self.asimov = []
-        self.acc = []
+        """
+
+        :param logs:
+        :return:
+        """
+
+        self.aucs = {'train':[], 'val':[]}
+        self.losses = {'train':[], 'val':[]}
+        self.asimov = {'train':[], 'val':[]}
+        self.acc = {'train':[], 'val':[]}
+
 
     def on_train_end(self, logs={}):
+        """
+
+        :param logs:
+        :return:
+        """
+        plot_asimov(history, title="", dir="", model_name="")
         return
+
 
     def on_epoch_begin(self, epoch, logs={}):
+
         return
 
+
     def on_epoch_end(self, epoch, logs={}):
+        """
+
+        :param epoch:
+        :param logs:
+        :return:
+        """
+        print(logs)
+        #Loss
         self.losses.append(logs.get('loss'))
+
+        #Accuracy
+        self.acc.append(logs.get('accuracy'))
+
         y_pred = self.model.predict(self.validation_data[0])
+
+        #AUC
         self.aucs.append(roc_auc_score(self.validation_data[1], y_pred))
+
+        #Asimov
         self.asimov.append(asimov(self.validation_data[1],
                                        y_pred,
                                        self.new_weight))
-        self.acc.append(logs.get('loss'))
         return
+
 
 	def on_batch_begin(self, batch, logs={}):
 		return
 
 	def on_batch_end(self, batch, logs={}):
 		return
+
 
 
 def _overbalance(train):
@@ -57,6 +115,7 @@ def _overbalance(train):
     df_over = pd.concat([df_class_0, df_class_1_over], axis=0)
     df_over = shuffle(df_over)
     return df_over
+
 
 
 def label_correction(df, labels=[1,0], class_names=["signal","background"], col_names=["classID", "className"]):
