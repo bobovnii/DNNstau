@@ -196,5 +196,81 @@ def plot_asimov(history, title="", dir="", model_name=""):
     plt.clf()
 
 
+def plot_history(history, title="", dir="", model_name=""):
+        """"
+
+        """
+
+
+        # summarize history for accuracy
+
+
+        bbox = dict(boxstyle="round", fc="blue", alpha=0.1)
+
+
+        plt.plot(history["acc"]['train'])
+        plt.plot(history["acc"]['val'])
+        plt.title("model accuracy")
+        plt.ylabel("accuracy")
+        plt.xlabel("epoch")
+        plt.legend(["train", "validation"], loc="upper left")
+
+        _max =max(history["acc"]['train'])
+        _index = history["acc"]['train'].index(_max)
+
+        plt.annotate('{0}'.format(_max),
+                     size=5,
+                     xy=(_index - 0.05, _max - 0.01),
+                     xytext=(_index - 0.05, _max - 0.01),
+                     bbox=bbox  # arrowprops=dict(facecolor='black', shrink=0.05),
+                     )
+
+        _max = max(history["acc"]['val'])
+        _index = history["acc"]['val'].index(_max)
+
+        plt.annotate('{0}'.format(_max),
+                     size=5,
+                     xy=(_index - 0.05, _max - 0.01),
+                     xytext=(_index - 0.05, _max - 0.01),
+                     bbox=bbox  # arrowprops=dict(facecolor='black', shrink=0.05),
+                     )
+
+        plt.savefig(os.path.join(dir +  model_name, "Accuracy_{0}.pdf".format(title)))
+        #plt.show()
+        plt.clf()
+
+        # summarize history for loss
+        plt.plot(history["loss"]['train'])
+        plt.plot(history["loss"]['val'])
+        plt.title("model loss")
+        plt.ylabel("loss")
+        plt.xlabel("epoch")
+        plt.legend(["train", "validation"], loc="upper left")
+
+        _min = min(history["loss"]['train'])
+        _index = history["loss"]['train'].index(_min)
+
+        plt.annotate('{0}'.format(_min),
+                     size=5,
+                     xy=(_index - 0.05, _min - 0.01),
+                     xytext=(_index - 0.05, _min-0.01),
+                     bbox=bbox)  # arrowprops=dict(facecolor='black', shrink=0.05),
+
+        _min = min(history["loss"]['val'])
+        _index = history["loss"]['val'].index(_min)
+
+        plt.annotate('{0}'.format(_min),
+                     size=5,
+                     xy=(_index - 0.05, _min + 0.01),
+                     xytext=(_index - 0.05, _min + 0.01),
+                     bbox=bbox) # arrowprops=dict(facecolor='black', shrink=0.05),
+
+
+        plt.savefig(os.path.join(dir +  model_name, "Loss_{0}.pdf".format(title)))
+        #plt.show()
+        plt.clf()
+
+        return
+
 
 

@@ -9,7 +9,7 @@ from sklearn.utils import shuffle
 import math
 import  keras
 from loss import asimov
-from Plotter import plot_asimov
+from Plotter import plot_asimov, plot
 
 class Histories(keras.callbacks.Callback):
 
@@ -58,7 +58,11 @@ class Histories(keras.callbacks.Callback):
         :return:
         """
         #Run Plotter
-        plot_asimov(history, title="", dir="", model_name="")
+        dir = self.config.get("model", "dir")
+        model_name = self.config.get("model", "model_name")
+
+        plot_asimov(self.asimov, title="Asimov Significance", dir=dir, model_name=model_name)
+        plot_history(history={"loss": self.losses, "acc": self.acc},  dir=dir, model_name=model_name)
         return
 
 
