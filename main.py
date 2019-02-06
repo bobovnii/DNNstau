@@ -96,7 +96,7 @@ model = gen_met_trainin._model()
 
 from utils import Histories
 histories = Histories()
-histories.set_up_weight(weight=W_validation)
+histories.set_up_val_weight(weight=W_validation)
 
 
 #from utils import LearningRateScheduler

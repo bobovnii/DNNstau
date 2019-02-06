@@ -57,6 +57,7 @@ class Histories(keras.callbacks.Callback):
         :param logs:
         :return:
         """
+        #Run Plotter
         plot_asimov(history, title="", dir="", model_name="")
         return
 
@@ -73,27 +74,30 @@ class Histories(keras.callbacks.Callback):
         :param logs:
         :return:
         """
-        print(logs)
         #Loss
-        self.losses.append(logs.get('loss'))
+        self.losses['train'].append(logs.get('loss'))
+        self.losses['val'].append(logs.get('val_loss'))
 
         #Accuracy
-        self.acc.append(logs.get('accuracy'))
+        self.acc['train'].append(logs.get('acc'))
+        self.acc['val'].append(logs.get('val_acc'))
 
         y_pred = self.model.predict(self.validation_data[0])
 
         #AUC
-        self.aucs.append(roc_auc_score(self.validation_data[1], y_pred))
+        self.aucs['train'].append(roc_auc_score(self.validation_data[1], y_pred))
+        self.aucs['val'].append(roc_auc_score(self.validation_data[1], y_pred))
 
         #Asimov
-        self.asimov.append(asimov(self.validation_data[1],
-                                       y_pred,
-                                       self.new_weight))
+        self.asimov['train'].append(asimov(self.validation_data[1], y_pred, self.train_weight))
+        self.asimov['val'].append(asimov(self.validation_data[1], y_pred, self.val_weight))
+
         return
 
 
 	def on_batch_begin(self, batch, logs={}):
 		return
+
 
 	def on_batch_end(self, batch, logs={}):
 		return

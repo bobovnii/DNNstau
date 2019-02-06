@@ -20,7 +20,7 @@ from sklearn.model_selection import StratifiedKFold
 
 #weights_tensor = Input(shape=(5,))
 #model = Model([input_layer, weights_tensor], out)
-from utils import step_decay
+#from utils import step_decay
 
 
 class Training():
