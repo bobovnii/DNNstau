@@ -21,6 +21,17 @@ class Histories(keras.callbacks.Callback):
         """
         print(config)
         self.config=config
+        return
+
+
+    def set_train_mode(self, mode="train"):
+        """
+
+        :param mode:
+        :return:
+        """
+        self.train_mode  = mode
+        return
 
 
     def set_up_train_weight(self, weight):
@@ -30,6 +41,8 @@ class Histories(keras.callbacks.Callback):
         :return:
         """
         self.train_weight = weight
+        return
+
 
     def set_up_val_weight(self, weight):
         """
@@ -64,6 +77,7 @@ class Histories(keras.callbacks.Callback):
         dir = self.config.get("model", "dir")
         model_name = self.config.get("model", "model_name")
 
+        #TODO ADD train mode
         plot_asimov(self.asimov, title="Asimov Significance", dir=dir, model_name=model_name)
         plot_history(history={"loss": self.losses, "acc": self.acc},  dir=dir, model_name=model_name)
 
