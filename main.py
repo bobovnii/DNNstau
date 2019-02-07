@@ -96,6 +96,8 @@ model = gen_met_trainin._model()
 
 from utils import Histories
 histories = Histories()
+histories.set_up_config(config)
+histories.set_up_train_weight(weight=W_train)
 histories.set_up_val_weight(weight=W_validation)
 
 
@@ -106,6 +108,7 @@ histories.set_up_val_weight(weight=W_validation)
 #lr = config.get("model", 'gen_epoch')
 
 gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
+
 gen_met_trainin.store_model()
 
 #gen_met_trainin.epochs = 20

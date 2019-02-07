@@ -4,9 +4,15 @@ import math
 import tensorflow as tf
 import pandas as pd
 
+
 def asimov(true, predicted, weight):
     """
+    Asimov Significance
 
+    :param true:
+    :param predicted:
+    :param weight:
+    :return:
     """
     result = pd.DataFrame()
     predicted = np.round(predicted)

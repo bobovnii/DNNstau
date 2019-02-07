@@ -9,7 +9,6 @@ import matplotlib.pyplot as plt
 from keras.callbacks import Callback
 #import os
 #import math
-#TODO add loggig
 from logger import *
 import numpy as np
 import pandas as pd
@@ -71,11 +70,7 @@ class Training():
         #Training Name
         #try:
         self.model_name = config.get("model", "model_name")
-        #except Exception:
-        #print("Model Name", self.model_name)
-        #self.model_name = "DNN"
 
-        print(self.dir)
         #if not os.path.exists(self.dir):
         if os.path.exists(self.dir +self.model_name):
             pass
@@ -129,16 +124,17 @@ class Training():
 
             history = self.__model.fit(X, Y, epochs=self.epochs, batch_size=self.batch_size, callbacks=callback)
         else:
-
+            from pprint import pprint
             history = self.__model.fit(X, Y, epochs=self.epochs, batch_size=self.batch_size,
                                        validation_data=(X_validation, Y_validation, ), callbacks=callback)  # , verbose=0)
+            #pprint(vars(callback[0]))
 
 
         if self._plot_history:
             """
             Plot the history
             """
-            self.plot_history(history)
+            #plot_history(history)
 
         if self._store_history:
             """
@@ -322,16 +318,4 @@ class Training():
         #                verbose=2)
         return
 
-    
-def cv_train(train_x, train_y, train_w, num_folds):
-    """
-    """
-
-    return
-
-def evaluate_model():
-    """
-    """
-    return
-    
     

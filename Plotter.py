@@ -163,28 +163,22 @@ def plot_asimov(history, title="", dir="", model_name=""):
     :return:
     """
     bbox = dict(boxstyle="round", fc="blue", alpha=0.1)
-
-    plt.plot(history.history["sign"])
-    plt.plot(history.history["val_sign"])
+    print(history)
+    #plt.plot(history["train"])
+    plt.plot(history["val"])
     plt.title("model significance")
     plt.ylabel("significance")
     plt.xlabel("epoch")
-    plt.legend(["train", "validation"], loc="upper left")
+    plt.legend(["validation"], loc="upper left")
 
-    _max = max(history.history["sign"])
-    _index = history.history["sign"].index(_max)
 
-    plt.annotate('{0}'.format(_max),
-                 size=5,
-                 xy=(_index - 0.05, _max - 0.01),
-                 xytext=(_index - 0.05, _max - 0.01),
-                 bbox=bbox  # arrowprops=dict(facecolor='black', shrink=0.05),
-                 )
-
-    _max = max(history.history["val_sign"])
-    _index = history.history["val_a"].index(_max)
-
-    plt.annotate('{0}'.format(_max),
+    try:
+        _max = max(history.history["val"])
+        _index = history.history["val"].index(_max)
+    except Exception:
+        pass
+    else:
+        plt.annotate('{0}'.format(_max),
                  size=5,
                  xy=(_index - 0.05, _max - 0.01),
                  xytext=(_index - 0.05, _max - 0.01),

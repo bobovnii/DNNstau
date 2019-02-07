@@ -9,16 +9,18 @@ from sklearn.utils import shuffle
 import math
 import  keras
 from loss import asimov
-from Plotter import plot_asimov, plot
+from Plotter import plot_asimov, plot_history
 
 class Histories(keras.callbacks.Callback):
 
-    def set_up_confi(self, config):
+    def set_up_config(self, config):
         """
 
         :param config:
         :return:
         """
+        print(config)
+        self.config=config
 
 
     def set_up_train_weight(self, weight):
@@ -58,11 +60,14 @@ class Histories(keras.callbacks.Callback):
         :return:
         """
         #Run Plotter
+
         dir = self.config.get("model", "dir")
         model_name = self.config.get("model", "model_name")
 
         plot_asimov(self.asimov, title="Asimov Significance", dir=dir, model_name=model_name)
         plot_history(history={"loss": self.losses, "acc": self.acc},  dir=dir, model_name=model_name)
+
+        #TODO add store history
         return
 
 
@@ -87,13 +92,14 @@ class Histories(keras.callbacks.Callback):
         self.acc['val'].append(logs.get('val_acc'))
 
         y_pred = self.model.predict(self.validation_data[0])
+        #y_train_pred = self.model.predict(self.x)
 
         #AUC
-        self.aucs['train'].append(roc_auc_score(self.validation_data[1], y_pred))
+        #elf.aucs['train'].append(roc_auc_score(self.y, y_pred))
         self.aucs['val'].append(roc_auc_score(self.validation_data[1], y_pred))
 
         #Asimov
-        self.asimov['train'].append(asimov(self.validation_data[1], y_pred, self.train_weight))
+        #self.asimov['train'].append(asimov(self.x, y_train_pred, self.train_weight))
         self.asimov['val'].append(asimov(self.validation_data[1], y_pred, self.val_weight))
 
         return
