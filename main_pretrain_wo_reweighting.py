@@ -67,10 +67,10 @@ _train = ovbal(_train)
 
 ###   Extract the SF for signal and background:  ###
 from sf import *
-Number_of_Background = float(config.get("physics", "Number_of_Background"))
-Number_of_Signal = float(config.get("physics","Number_of_Signal"))
-bgd_train_sf, bgd_test_sf = sf_bgd_train_test(test=_test,train=_train, Number_of_Background=Number_of_Background)
-signal_train_sf, signal_test_sf = sf_signal_train_test(test=_test,train=_train, Number_of_Signal=Number_of_Signal)
+#Number_of_Background = float(config.get("physics", "Number_of_Background"))
+#Number_of_Signal = float(config.get("physics","Number_of_Signal"))
+bgd_train_sf, bgd_test_sf = 1, 1#sf_bgd_train_test(test=_test,train=_train, Number_of_Background=Number_of_Background)
+signal_train_sf, signal_test_sf = 1, 1#sf_signal_train_test(test=_test,train=_train, Number_of_Signal=Number_of_Signal)
 
 
 X_train = _train[VARS]
@@ -105,9 +105,8 @@ histories.set_up_train_weight(weight=W_train)
 histories.set_up_val_weight(weight=W_validation)
 
 
-from keras.callbacks import LearningRateScheduler
-from lr.schedule import *
-lrate = LearningRateScheduler(step_decay)
+#from utils import LearningRateScheduler
+#ls #lrate = LearningRateScheduler(step_decay)
 
 #epochs = config.get("model", 'gen_lr')
 #lr = config.get("model", 'gen_epoch')

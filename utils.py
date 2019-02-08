@@ -10,6 +10,7 @@ import math
 import  keras
 from loss import asimov
 from Plotter import plot_asimov, plot_history
+from lr.schedule import *
 
 class Histories(keras.callbacks.Callback):
 
@@ -64,7 +65,7 @@ class Histories(keras.callbacks.Callback):
         self.losses = {'train':[], 'val':[]}
         self.asimov = {'train':[], 'val':[]}
         self.acc = {'train':[], 'val':[]}
-
+        self.lr = []
 
     def on_train_end(self, logs={}):
         """
@@ -80,7 +81,7 @@ class Histories(keras.callbacks.Callback):
         #TODO ADD train mode
         plot_asimov(self.asimov, title="Asimov Significance", dir=dir, model_name=model_name)
         plot_history(history={"loss": self.losses, "acc": self.acc},  dir=dir, model_name=model_name)
-
+        plot_asimov(self.lr , title="Learning Rate", dir=dir, model_name=model_name)
         #TODO add store history
         return
 
@@ -115,6 +116,9 @@ class Histories(keras.callbacks.Callback):
         #Asimov
         #self.asimov['train'].append(asimov(self.x, y_train_pred, self.train_weight))
         self.asimov['val'].append(asimov(self.validation_data[1], y_pred, self.val_weight))
+
+        #Learning Rate:
+        self.lr.append(step_decay(len( self.losses['train'])))
 
         return
 

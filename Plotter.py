@@ -164,8 +164,8 @@ def plot_asimov(history, title="", dir="", model_name=""):
     """
     bbox = dict(boxstyle="round", fc="blue", alpha=0.1)
     print(history)
-    #plt.plot(history["train"])
-    plt.plot(history["val"])
+    plt.plot(history["train"])
+    #plt.plot(history["val"])
     plt.title("model significance")
     plt.ylabel("significance")
     plt.xlabel("epoch")

@@ -92,7 +92,9 @@ W_test = _test[WEIGHT]
 DIR = config.get("model", "dir")
 from train import Training
 
-
+from keras.callbacks import LearningRateScheduler
+from lr.schedule import step_decay
+lrate = LearningRateScheduler(step_decay)
 ###   Start training:   ####
 
 gen_met_trainin = Training(config)
@@ -105,15 +107,11 @@ histories.set_up_train_weight(weight=W_train)
 histories.set_up_val_weight(weight=W_validation)
 
 
-from keras.callbacks import LearningRateScheduler
-from lr.schedule import *
-lrate = LearningRateScheduler(step_decay)
-
 #epochs = config.get("model", 'gen_lr')
 #lr = config.get("model", 'gen_epoch')
 #Gen pretrain
-gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
-gen_met_trainin.train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories])
+gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories, lrate])
+gen_met_trainin.train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories, lrate])
 
 ##Store gen_pretraininf results:
 
