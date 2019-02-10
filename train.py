@@ -75,7 +75,7 @@ class Training():
         if os.path.exists(self.dir +self.model_name):
             pass
         else:
-            os.mkdir(self.dir +self.model_name)
+            os.makedirs(self.dir +self.model_name)
 
 
         return

@@ -110,22 +110,17 @@ histories.set_up_val_weight(weight=W_validation)
 #epochs = config.get("model", 'gen_lr')
 #lr = config.get("model", 'gen_epoch')
 #Gen pretrain
-gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories, lrate])
 gen_met_trainin.train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories, lrate])
 
-##Store gen_pretraininf results:
+
+
 
 #Normal training
-# gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
+gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories, lrate])
 
 
 gen_met_trainin.store_model()
 
-#gen_met_trainin.epochs = 20
-#gen_met_trainin.train(x_train, y_train, epochs=50)
-
-#Get Result of training:
-#from utils import get_results
 
 _df_train, _df_test  = gen_met_trainin.get_results(X_train, Y_train,  X_test, Y_test, W_train, W_test)
 

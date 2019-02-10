@@ -81,7 +81,7 @@ class Histories(keras.callbacks.Callback):
         #TODO ADD train mode
         plot_asimov(self.asimov, title="Asimov Significance", dir=dir, model_name=model_name)
         plot_history(history={"loss": self.losses, "acc": self.acc},  dir=dir, model_name=model_name)
-        plot_asimov(self.lr , title="Learning Rate", dir=dir, model_name=model_name)
+        plot_asimov({'val':self.lr} , title="Learning Rate", dir=dir, model_name=model_name)
         #TODO add store history
         return
 

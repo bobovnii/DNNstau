@@ -112,8 +112,9 @@ lrate = LearningRateScheduler(step_decay)
 #epochs = config.get("model", 'gen_lr')
 #lr = config.get("model", 'gen_epoch')
 #Gen pretrain
-gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
 gen_met_trainin.train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories])
+
+gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
 
 ##Store gen_pretraininf results:
 
