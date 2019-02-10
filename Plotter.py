@@ -155,7 +155,7 @@ class Plotter():
         return
 
 
-def plot_asimov(history, title="", dir="", model_name=""):
+def plot_asimov(history, title="", dir="", model_name="", mode=""):
     """
 
     :param hisotry:
@@ -185,12 +185,12 @@ def plot_asimov(history, title="", dir="", model_name=""):
                  bbox=bbox  # arrowprops=dict(facecolor='black', shrink=0.05),
                  )
 
-    plt.savefig(os.path.join(dir + model_name, "Significance_{0}.pdf".format(title)))
+    plt.savefig(os.path.join(dir + model_name, "Significance_{0}_{1}.pdf".format(title, mode)))
     # plt.show()
     plt.clf()
 
 
-def plot_history(history, title="", dir="", model_name=""):
+def plot_history(history, title="", dir="", model_name="", mode=""):
         """"
 
         """
@@ -229,7 +229,7 @@ def plot_history(history, title="", dir="", model_name=""):
                      bbox=bbox  # arrowprops=dict(facecolor='black', shrink=0.05),
                      )
 
-        plt.savefig(os.path.join(dir +  model_name, "Accuracy_{0}.pdf".format(title)))
+        plt.savefig(os.path.join(dir +  model_name, "Accuracy_{0}_{1}.pdf".format(title, mode)))
         #plt.show()
         plt.clf()
 
@@ -260,7 +260,7 @@ def plot_history(history, title="", dir="", model_name=""):
                      bbox=bbox) # arrowprops=dict(facecolor='black', shrink=0.05),
 
 
-        plt.savefig(os.path.join(dir +  model_name, "Loss_{0}.pdf".format(title)))
+        plt.savefig(os.path.join(dir +  model_name, "Loss_{0}_{1}.pdf".format(title, mode)))
         #plt.show()
         plt.clf()
 

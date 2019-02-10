@@ -17,7 +17,7 @@ from sklearn.model_selection import StratifiedKFold
 
 class Training():
     """
-
+    Training class implementation
     """
     def __init__(self, config):
         """

@@ -12,8 +12,12 @@ from loss import asimov
 from Plotter import plot_asimov, plot_history
 from lr.schedule import *
 
-class Histories(keras.callbacks.Callback):
 
+
+class Histories(keras.callbacks.Callback):
+    """
+
+    """
     def set_up_config(self, config):
         """
 
@@ -22,6 +26,16 @@ class Histories(keras.callbacks.Callback):
         """
         print(config)
         self.config=config
+        return
+
+
+    def set_mode(self, mode="train"):
+        """
+
+        :param mode:
+        :return:
+        """
+        self.mode = mode
         return
 
 
@@ -67,6 +81,7 @@ class Histories(keras.callbacks.Callback):
         self.acc = {'train':[], 'val':[]}
         self.lr = []
 
+
     def on_train_end(self, logs={}):
         """
 
@@ -77,12 +92,9 @@ class Histories(keras.callbacks.Callback):
 
         dir = self.config.get("model", "dir")
         model_name = self.config.get("model", "model_name")
-
-        #TODO ADD train mode
-        plot_asimov(self.asimov, title="Asimov Significance", dir=dir, model_name=model_name)
-        plot_history(history={"loss": self.losses, "acc": self.acc},  dir=dir, model_name=model_name)
-        plot_asimov({'val':self.lr} , title="Learning Rate", dir=dir, model_name=model_name)
-        #TODO add store history
+        plot_asimov(self.asimov, title="Asimov Significance {0}", dir=dir, model_name=model_name, mode=self.mode)
+        plot_history(history={"loss": self.losses, "acc": self.acc},  dir=dir, model_name=model_name, mode=self.mode)
+        plot_asimov({'val':self.lr} , title="Learning Rate", dir=dir, model_name=model_name, mode=self.mode)
         return
 
 
@@ -129,6 +141,28 @@ class Histories(keras.callbacks.Callback):
 
 	def on_batch_end(self, batch, logs={}):
 		return
+
+
+    def store_hisotry(self):
+        """
+
+        :return:
+        """
+        #Save train
+        df = pd.DataFrame()
+        df['train_accuracy'] = self.acc['train']
+        df['train_loss'] =  self.losses['train']
+        df['test_accuracy'] = self.acc['val']
+        df['test_loss'] =  self.losses['val']
+        df['train_auc'] =  self.aucs['train']
+        df['test_auc'] =  self.aucs['val']
+        df['asimov'] =  self.asimov['val']
+        df['lr'] = self.lr
+        #Save test
+        dir = self.config.get("model", "dir")
+        model_name = self.config.get("model", "model_name")
+        df.to_csv(dir+model_name+'/history_{0}.csv'.format(self.mode))
+        return
 
 
 
