@@ -193,3 +193,17 @@ def get_results(model, _x_train, _y_train, x_test, y_test, _w_train, w_test):
     _df_test['test_pred'] = _df_test['test_output'].apply(lambda x: 1 if x>0.5 else 0)
     _df_test['index'] = x_test.index
     return _df_train, _df_test
+
+
+def store_history(history, path):
+
+    """
+
+    :return:
+    """
+    df  = pd.DataFrame(history)
+    df.to_csv("{0}/History.csv".format(path))
+    return
+
+
+

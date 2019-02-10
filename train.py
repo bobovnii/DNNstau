@@ -1,5 +1,4 @@
 """
-Script for the pretraining:
 """
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
@@ -7,8 +6,6 @@ from keras.models import model_from_json
 from keras.optimizers import Adam
 import matplotlib.pyplot as plt
 from keras.callbacks import Callback
-#import os
-#import math
 from logger import *
 import numpy as np
 import pandas as pd
@@ -16,10 +13,6 @@ np.random.seed(7)
 from functools import partial
 from sklearn.model_selection import StratifiedKFold
 
-
-#weights_tensor = Input(shape=(5,))
-#model = Model([input_layer, weights_tensor], out)
-#from utils import step_decay
 
 
 class Training():
@@ -81,7 +74,7 @@ class Training():
         return
 
 
-    def _model(self):
+    def _model(self, config):
         """
            :return:
         """
@@ -106,13 +99,71 @@ class Training():
 
     def get_model(self):
 
+
         return self.__model
+
+
+    def pre_train(self, X, Y, X_validation=None, Y_validation=None,  epochs=None, lr=None, callback=None):
+        """
+
+        # Set learning rate:
+        # Set Number of epochs
+        :return:
+        """
+        #TODO add possibility to use learning rate and another parmaeters from function
+        #inputs
+
+
+        try:
+            lr = self.config.get("pretrain", 'lr')
+        except Exception:
+
+            lr = self.config.get("train", 'lr')
+
+        try:
+            epochs = self.config.get("pretrain", 'epochs')
+        except Exception:
+            epochs = self.config.get("train", 'epochs')
+
+
+        try:
+            batch_size = self.config.get("pretrain", 'batch_size')
+        except Exception:
+            batch_size = self.config.get("train", 'batch_size')
+
+        #Recompile model with new settings
+        self.__model.compile(loss='binary_crossentropy',
+                             metrics=['accuracy'],
+                             optimizer=Adam(lr=lr))
+        #Start Training:
+
+
+        if X_validation is None or Y_validation is None:
+
+            self.__model.fit(X, Y, epochs=self.epochs, batch_size=batch_size, callbacks=callback)
+        else:
+            self.__model.fit(X, Y, epochs=self.epochs, batch_size=self.batch_size,
+                                       validation_data=(X_validation, Y_validation, ), callbacks=callback)  # , verbose=0)
+
+
+        if self._plot_history:
+            """
+            Plot the history
+            """
+            #plot_history(history)
+
+        if self._store_history:
+            """
+            Store history of training
+            """
+
+        return
 
 
     def train(self, X, Y, X_validation=None, Y_validation=None,  epochs=None, lr=None, callback=None):
         """
 
-
+        #Set Numb
         :return:
         """
         if  epochs==None and lr==None:
@@ -150,8 +201,6 @@ class Training():
 
         :return:
         """
-        #TODO remove:
-
         #Kfold
 
         folds = StratifiedKFold(n_splits=3, shuffle=True, random_state=1)
@@ -177,7 +226,7 @@ class Training():
 
     def store_model(self, model=None, model_name=None):
         """
-
+        Store model weights to disk
         :return:
         """
         if model is None:
@@ -186,10 +235,10 @@ class Training():
             model_name = self.model_name
 
         model_json = model.to_json()
-        with open("{0}/Model.json".format(self.dir +  self.model_name), "w") as json_file:
+        with open("{0}/Model.json".format(self.dir +  model_name), "w") as json_file:
             json_file.write(model_json)
         # serialize weights to HDF5
-        model.save_weights(self.dir +  self.model_name+"/Model_weight")
+        model.save_weights(self.dir +  model_name+"/Model_weight")
         print("Model is saved on disk")
         return
 
@@ -234,8 +283,14 @@ class Training():
 
 
     def extract_weights(self, model):
+        """
+
+        :param model:
+        :return:
+        """
         W = [layer.get_weights()[0] for layer in model.layers]
         B = [layer.get_weights()[1] for layer in model.layers]
+
         return {"W": W, "B": B}
 
 
@@ -244,7 +299,7 @@ class Training():
 
         :return:
         """
-        #TODO
+        #TODO provide simple way for model diagnostics
         return
 
 
@@ -263,20 +318,6 @@ class Training():
         scores = self.__model.evaluate(X, Y, verbose=0)
         print("Accuraccy %s: %.2f%%" % (self.__model.metrics_names[1], scores[1] * 100))
 
-
-    def extract_weights(self, model=None):
-        """
-        Extract parameter of mode:
-
-        :param model:
-        :return:
-        """
-        if model is None:
-            model = self.__model
-        W = [layer.get_weights()[0] for layer in model.layers]
-        B = [layer.get_weights()[1] for layer in model.layers]
-
-        return {"W": W, "B": B}
 
 
     def get_results(self, _x_train, _y_train, x_test, y_test, _w_train, w_test):
