@@ -111,6 +111,7 @@ histories.set_up_val_weight(weight=W_validation)
 #epochs = config.get("model", 'gen_lr')
 #lr = config.get("model", 'gen_epoch')
 #Gen pretrain
+histories.set_mode(mode="train")
 gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
 ##Store gen_pretraininf results:
 

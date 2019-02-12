@@ -9,8 +9,8 @@ def warm_restart(T_i, list_of_lr, T_cur):
 
     :return:
     """
-    n_max = max(list_of_lr)
-    n_min = min(list_of_lr)
+    n_max = max(list_of_lr)#0.1  paremeter
+    n_min = min(list_of_lr)#0.0001 parameter
     #Optional variable - T_mul
 
 
