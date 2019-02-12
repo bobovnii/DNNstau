@@ -90,11 +90,14 @@ class Histories(keras.callbacks.Callback):
         """
         #Run Plotter
 
+        #TODO add conditions when to store or not training history
+
         dir = self.config.get("model", "dir")
         model_name = self.config.get("model", "model_name")
         plot_asimov(self.asimov, title="Asimov Significance {0}", dir=dir, model_name=model_name, mode=self.mode)
         plot_history(history={"loss": self.losses, "acc": self.acc},  dir=dir, model_name=model_name, mode=self.mode)
         plot_asimov({'val':self.lr} , title="Learning Rate", dir=dir, model_name=model_name, mode=self.mode)
+        self.store_history()
         return
 
 
@@ -143,7 +146,7 @@ class Histories(keras.callbacks.Callback):
 		return
 
 
-    def store_hisotry(self):
+    def store_history(self):
         """
 
         :return:
@@ -154,7 +157,8 @@ class Histories(keras.callbacks.Callback):
         df['train_loss'] =  self.losses['train']
         df['test_accuracy'] = self.acc['val']
         df['test_loss'] =  self.losses['val']
-        df['train_auc'] =  self.aucs['train']
+        #TODO add train AUC
+        #df['train_auc'] =  self.aucs['train']
         df['test_auc'] =  self.aucs['val']
         df['asimov'] =  self.asimov['val']
         df['lr'] = self.lr
@@ -229,15 +233,7 @@ def get_results(model, _x_train, _y_train, x_test, y_test, _w_train, w_test):
     return _df_train, _df_test
 
 
-def store_history(history, path):
 
-    """
-
-    :return:
-    """
-    df  = pd.DataFrame(history)
-    df.to_csv("{0}/History.csv".format(path))
-    return
 
 
 

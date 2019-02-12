@@ -3,16 +3,14 @@ Warm restart scheme
 From https://arxiv.org/pdf/1608.03983.pdf
 """
 import  math
-def warm_restart():
+
+def warm_restart(T_i, list_of_lr, T_cur):
     """
 
     :return:
     """
-    list_of_lr = []
-    T_i = epoch_number_period
     n_max = max(list_of_lr)
     n_min = min(list_of_lr)
-    T_cur = n_epoch_performed_from_restart
     #Optional variable - T_mul
 
 

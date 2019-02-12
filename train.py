@@ -74,7 +74,7 @@ class Training():
         return
 
 
-    def _model(self, config):
+    def _model(self, config=None):
         """
            :return:
         """
@@ -103,7 +103,7 @@ class Training():
         return self.__model
 
 
-    def pre_train(self, X, Y, X_validation=None, Y_validation=None,  epochs=None, lr=None, callback=None):
+    def pre_train(self, X, Y, X_validation=None, Y_validation=None,  callback=None):
         """
 
         # Set learning rate:
@@ -134,63 +134,57 @@ class Training():
         #Recompile model with new settings
         self.__model.compile(loss='binary_crossentropy',
                              metrics=['accuracy'],
-                             optimizer=Adam(lr=lr))
+                             optimizer=Adam(lr=float(lr)))
         #Start Training:
 
 
         if X_validation is None or Y_validation is None:
 
-            self.__model.fit(X, Y, epochs=self.epochs, batch_size=batch_size, callbacks=callback)
+            self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size), callbacks=callback)
         else:
-            self.__model.fit(X, Y, epochs=self.epochs, batch_size=self.batch_size,
+            self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size),
                                        validation_data=(X_validation, Y_validation, ), callbacks=callback)  # , verbose=0)
 
-
-        if self._plot_history:
-            """
-            Plot the history
-            """
-            #plot_history(history)
-
-        if self._store_history:
-            """
-            Store history of training
-            """
 
         return
 
 
-    def train(self, X, Y, X_validation=None, Y_validation=None,  epochs=None, lr=None, callback=None):
+    def train(self, X, Y, X_validation=None, Y_validation=None, callback=None):
         """
 
         #Set Numb
         :return:
         """
-        if  epochs==None and lr==None:
-            epochs = self.epochs
-            batch_size = self.batch_size
-            #lr = self.lr
+        try:
+            lr = self.config.get("train", 'lr')
+        except Exception:
+
+            lr = self.config.get("train", 'lr')
+
+        try:
+            epochs = self.config.get("train", 'epochs')
+        except Exception:
+            epochs = self.config.get("train", 'epochs')
+
+
+        try:
+            batch_size = self.config.get("train", 'batch_size')
+        except Exception:
+            batch_size = self.config.get("train", 'batch_size')
+
+        #Recompile model with new settings
+        self.__model.compile(loss='binary_crossentropy',
+                             metrics=['accuracy'],
+                             optimizer=Adam(lr=float(lr)))
+
 
         if X_validation is None or Y_validation is None:
 
-            history = self.__model.fit(X, Y, epochs=self.epochs, batch_size=self.batch_size, callbacks=callback)
+            self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size), callbacks=callback)
         else:
-            from pprint import pprint
-            history = self.__model.fit(X, Y, epochs=self.epochs, batch_size=self.batch_size,
+            self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size),
                                        validation_data=(X_validation, Y_validation, ), callbacks=callback)  # , verbose=0)
-            #pprint(vars(callback[0]))
 
-
-        if self._plot_history:
-            """
-            Plot the history
-            """
-            #plot_history(history)
-
-        if self._store_history:
-            """
-            Store history of training
-            """
 
         return
 

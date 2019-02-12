@@ -111,7 +111,7 @@ lrate = LearningRateScheduler(step_decay)
 #lr = config.get("model", 'gen_epoch')
 #Gen pretrain
 histories.set_mode(mode="pre_train")
-gen_met_trainin.train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories])
+gen_met_trainin.pre_train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories])
 histories.set_mode(mode="train")
 gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
 

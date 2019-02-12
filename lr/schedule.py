@@ -1,5 +1,7 @@
 import math
-
+"""
+Cyclical Learning Rates for Training Neural Networks
+"""
 
 
 
@@ -10,6 +12,11 @@ def step_decay(epoch, epochs_drop=10.0):
            math.floor((1+epoch)/epochs_drop))
    return lrate
 
+def triangulat_lr():
+    """
+
+    :return:
+    """
 
 def periodical_lr():
     """
