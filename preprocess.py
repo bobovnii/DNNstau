@@ -22,7 +22,7 @@ def combine_points():
     """
     return
 
-def test_train_split(df, split=0.4):
+def _train_test_split(df, split=0.4):
     """
 
     :param split:
@@ -32,8 +32,7 @@ def test_train_split(df, split=0.4):
     background = df[(df.classID == 0)]
 
     signal_train, signal_test = train_test_split(signal, split=split)
-    background_train, background_test = train_test_split(background,
-                                                         split=split)
+    background_train, background_test = train_test_split(background, split=split)
 
     train = shuffle(pd.concat([signal_train, background_train]))
     test = shuffle(pd.concat([signal_test, background_test]))

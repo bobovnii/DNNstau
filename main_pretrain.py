@@ -53,9 +53,8 @@ train = label_correction(train, labels=[1,0], class_names=["signal","background"
 
 
 ###   Test train split  ###
-from preprocess import test_train_split
-_train, _test = test_train_split(train, split=float(config.get("model","test_train_split" )))
-_train, _validation = test_train_split(_train, split=0.1)
+from preprocess import _train_test_split
+_train, _test = _train_test_split(train, split=float(config.get("model","test_train_split" )))
 
 
 ###    Preprocess     ###
