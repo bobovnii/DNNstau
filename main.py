@@ -77,10 +77,10 @@ gen_X_train = _train[gen_VARS]
 Y_train = _train[LABELS]
 W_train = _train[WEIGHT]
 
-X_validation = _validation[VARS]
-gen_X_validation = _validation[gen_VARS]
-Y_validation = _validation[LABELS]
-W_validation = _validation[WEIGHT]
+X_validation = _test[VARS]
+gen_X_validation = _test[gen_VARS]
+Y_validation = _test[LABELS]
+W_validation = _test[WEIGHT]
 
 X_test = _test[VARS]
 gen_X_test = _test[gen_VARS]
@@ -93,8 +93,8 @@ from train import Training
 
 ###   Start training:   ####
 
-gen_met_trainin = Training(config)
-model = gen_met_trainin._model()
+trainin = Training(config)
+model = trainin._model()
 
 from utils import Histories
 histories = Histories()
@@ -106,18 +106,10 @@ histories.set_up_val_weight(weight=W_validation)
 #from utils import LearningRateScheduler
 #ls #lrate = LearningRateScheduler(step_decay)
 
-#epochs = config.get("model", 'gen_lr')
-#lr = config.get("model", 'gen_epoch')
-#Gen pretrain
+#Train
 histories.set_mode(mode="train")
-gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
-##Store gen_pretraininf results:
-
-#Normal training
-# gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
-
-
-gen_met_trainin.store_model()
+trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
+trainin.store_model()
 
 #gen_met_trainin.epochs = 20
 #gen_met_trainin.train(x_train, y_train, epochs=50)
@@ -125,7 +117,7 @@ gen_met_trainin.store_model()
 #Get Result of training:
 #from utils import get_results
 
-_df_train, _df_test  = gen_met_trainin.get_results(X_train, Y_train,  X_test, Y_test, W_train, W_test)
+_df_train, _df_test  = trainin.get_results(X_train, Y_train,  X_test, Y_test, W_train, W_test)
 
 
 ###    Run plotter:    ###

@@ -26,7 +26,7 @@ def asimov(true, predicted, weight):
     asimov = TP/math.sqrt(TP+FP)
     return asimov
 
-
+#TODO add to config loss!
 def sigLoss(y_true,y_pred, weights):
     """
     Based on this paper:

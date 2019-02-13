@@ -3,10 +3,8 @@ Utils:
 """
 import pandas as pd
 import numpy as np
-##from sklearn.metrics import accuracy_score
 from sklearn.metrics import roc_auc_score
 from sklearn.utils import shuffle
-import math
 import  keras
 from loss import asimov
 from Plotter import plot_asimov, plot_history

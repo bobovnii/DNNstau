@@ -82,11 +82,11 @@ class Training():
         #cl4 = partial(custom_loss_4, weights=weights_tensor)
 
         model = Sequential()
-        model.add(Dense(256, input_dim=13, kernel_initializer='uniform', activation='relu'))
+        model.add(Dense(256, input_dim=13, kernel_initializer='uniform', activation='sigmoid'))
         model.add(Dropout(0.4))
-        model.add(Dense(256, kernel_initializer='uniform', activation='relu'))
+        model.add(Dense(256, kernel_initializer='uniform', activation='sigmoid'))
         model.add(Dropout(0.4))
-        model.add(Dense(256, kernel_initializer='uniform', activation='relu'))
+        model.add(Dense(256, kernel_initializer='uniform', activation='sigmoid'))
         model.add(Dropout(0.4))
         model.add(Dense(1, kernel_initializer='uniform', activation='sigmoid'))
         # Compile model
@@ -217,6 +217,15 @@ class Training():
 
         return
 
+
+    def make_transfer_learning(self, model):
+        """
+
+        :param model:
+        :return:
+        """
+        #TODO implement stacked model
+        return
 
     def store_model(self, model=None, model_name=None):
         """
