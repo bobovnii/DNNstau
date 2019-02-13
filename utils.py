@@ -11,7 +11,7 @@ import  keras
 from loss import asimov
 from Plotter import plot_asimov, plot_history
 from lr.schedule import *
-
+import keras.backend as K
 
 
 class Histories(keras.callbacks.Callback):
@@ -125,7 +125,7 @@ class Histories(keras.callbacks.Callback):
         #y_train_pred = self.model.predict(self.x)
 
         #AUC
-        #elf.aucs['train'].append(roc_auc_score(self.y, y_pred))
+        #self.aucs['train'].append(roc_auc_score(self.y, y_pred))
         self.aucs['val'].append(roc_auc_score(self.validation_data[1], y_pred))
 
         #Asimov
@@ -133,7 +133,7 @@ class Histories(keras.callbacks.Callback):
         self.asimov['val'].append(asimov(self.validation_data[1], y_pred, self.val_weight))
 
         #Learning Rate:
-        self.lr.append(step_decay(len( self.losses['train'])))
+        self.lr.append(K.get_value(self.model.optimizer.lr))
 
         return
 

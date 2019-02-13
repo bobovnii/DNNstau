@@ -1,5 +1,4 @@
 import pandas as pd
-from sklearn.utils import shuffle
 from Plotter import Plotter
 import ConfigParser
 
@@ -56,8 +55,6 @@ train = label_correction(train, labels=[1,0], class_names=["signal","background"
 
 ###   Test train split  ###
 from preprocess import test_train_split
-_train, _test = test_train_split(train, split=float(config.get("model","test_train_split" )))
-_train, _validation = test_train_split(_train, split=0.1)
 
 
 ###    Preprocess     ###
@@ -67,10 +64,10 @@ _train = ovbal(_train)
 
 ###   Extract the SF for signal and background:  ###
 from sf import *
-Number_of_Background = float(config.get("physics", "Number_of_Background"))
-Number_of_Signal = float(config.get("physics","Number_of_Signal"))
-bgd_train_sf, bgd_test_sf = 1, 1#sf_bgd_train_test(test=_test,train=_train, Number_of_Background=Number_of_Background)
-signal_train_sf, signal_test_sf = 1, 1#sf_signal_train_test(test=_test,train=_train, Number_of_Signal=Number_of_Signal)
+Number_of_Background = train[(train.classID==0)].weight.sum()# float(config.get("physics", "Number_of_Background"))
+Number_of_Signal = train[(train.classID==1)].weight.sum()#float(config.get("physics","Number_of_Signal"))
+bgd_train_sf, bgd_test_sf = sf_bgd_train_test(test=_test,train=_train, Number_of_Background=Number_of_Background)
+signal_train_sf, signal_test_sf = sf_signal_train_test(test=_test,train=_train, Number_of_Signal=Number_of_Signal)
 
 
 X_train = _train[VARS]

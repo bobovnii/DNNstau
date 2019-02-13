@@ -50,14 +50,14 @@ dataloader = DataLoader(config)
 #Load Data
 train =dataloader._get_train()
 from utils import label_correction
-train = label_correction(train, labels=[1,0], class_names=["signal","background"], col_names=["classID", "className"])
-#train["classID"] = train["classID"].apply(lambda x: 1-np.int32(x>0.5))
+#train = label_correction(train, labels=[1,0], class_names=["signal","background"], col_names=["classID", "className"])
+import numpy as np
+train["classID"] = train["classID"].apply(lambda x: 1-np.int32(x>0.5))
 
 
 ###   Test train split  ###
 from preprocess import test_train_split
 _train, _test = test_train_split(train, split=float(config.get("model","test_train_split" )))
-_train, _validation = test_train_split(_train, split=0.1)
 
 
 ###    Preprocess     ###
@@ -67,10 +67,18 @@ _train = ovbal(_train)
 
 ###   Extract the SF for signal and background:  ###
 from sf import *
-Number_of_Background = float(config.get("physics", "Number_of_Background"))
-Number_of_Signal = float(config.get("physics","Number_of_Signal"))
+Number_of_Background = train[(train.classID==0)].weight.sum()#float(config.get("physics", "Number_of_Background"))
+Number_of_Signal = train[(train.classID==1)].weight.sum()#float(config.get("physics","Number_of_Signal"))
+print("Number of  Number_of_Background", Number_of_Background)
+print("Number of Signal", Number_of_Signal)
+
+
+
+
 bgd_train_sf, bgd_test_sf = sf_bgd_train_test(test=_test,train=_train, Number_of_Background=Number_of_Background)
 signal_train_sf, signal_test_sf = sf_signal_train_test(test=_test,train=_train, Number_of_Signal=Number_of_Signal)
+
+
 
 
 X_train = _train[VARS]
@@ -94,7 +102,18 @@ from train import Training
 
 from keras.callbacks import LearningRateScheduler
 from lr.schedule import step_decay
-lrate = LearningRateScheduler(step_decay)
+#lrate = LearningRateScheduler(step_decay)
+from lr.warm_restart import SGDRScheduler
+
+step_per_epoch = int(X_train.shape[0]/int(config.get('train', 'epochs')))
+print("Steps per epochs: ", step_per_epoch)
+warm_restart_lr = SGDRScheduler(min_lr=0.00001,
+                                 max_lr=0.1,
+                                 steps_per_epoch=step_per_epoch,
+                                 lr_decay=1,
+                                 cycle_length=10,
+                                 mult_factor=2)
+
 ###   Start training:   ####
 
 gen_met_trainin = Training(config)
@@ -110,13 +129,12 @@ histories.set_up_val_weight(weight=W_validation)
 #epochs = config.get("model", 'gen_lr')
 #lr = config.get("model", 'gen_epoch')
 #Gen pretrain
-gen_met_trainin.train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories, lrate])
-
-
+#gen_met_trainin.train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories, warm_restart_lr])
 
 
 #Normal training
-gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories, lrate])
+histories.set_mode(mode="train")
+gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories, warm_restart_lr])
 
 
 gen_met_trainin.store_model()
