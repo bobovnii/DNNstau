@@ -41,9 +41,12 @@ class Plotter():
         low_high = (low,high)
         
       
-        bgd_weights=[np.float32(i)*np.float32(bgd_train_sf) for i in df_train[df_train.train_labels==0]['train_weights']]
-        signal_weights=[np.float32(41.6*i)*np.float32(signal_train_sf) for i in  df_train[df_train.train_labels==1]['train_weights']]
-        
+        bgd_weights=[np.float32(i)/np.float32(bgd_train_sf) for i in df_train[df_train.train_labels==0]['train_weights']]
+        signal_weights=[np.float32(i)/(signal_train_sf) for i in  df_train[df_train.train_labels==1]['train_weights']]
+
+        print("Background train: ", sum(bgd_weights))
+
+        print("Signal train: ", sum(signal_weights))
         
         plt.hist(decisions[0],
                  color='r', alpha=0.5, range=low_high, bins=bins,
@@ -54,8 +57,8 @@ class Plotter():
                  histtype='stepfilled', weights=bgd_weights, #normed=True, 
                  label='B (train)')
 
-        bgd_weights=[np.float32(i)*np.float32(bgd_test_sf) for i in df_test[df_test.test_labels==0]['test_weights']]
-        signal_weights=[np.float32(i)*np.float32(signal_test_sf) for i in  df_test[df_test.test_labels==1]['test_weights']]
+        bgd_weights=[np.float32(i)/np.float32(bgd_test_sf) for i in df_test[df_test.test_labels==0]['test_weights']]
+        signal_weights=[np.float32(i)/np.float32(signal_test_sf) for i in  df_test[df_test.test_labels==1]['test_weights']]
 
         
         hist, bins = np.histogram(decisions[2], weights=signal_weights,
@@ -93,8 +96,8 @@ class Plotter():
         Class prediction plots  from https://github.com/aelwood/hepML
         """
 
-        bgd_weights=[np.float32(i)*np.float32(bgd_test_sf) for i in df[df.test_labels==0]['test_weights']]
-        signal_weights=[np.float32(i)*np.float32(signal_test_sf) for i in  df[df.test_labels==1]['test_weights']]
+        bgd_weights=[np.float32(i)/np.float32(bgd_test_sf) for i in df[df.test_labels==0]['test_weights']]
+        signal_weights=[np.float32(i)/np.float32(signal_test_sf) for i in  df[df.test_labels==1]['test_weights']]
 
 
         self.h1=plt.hist(df[df.test_labels==0]['test_output'], weights=bgd_weights, bins=5000,color='b',alpha=0.8,label='background',cumulative=-1)

@@ -27,24 +27,23 @@ def asimov(true, predicted, weight):
     return asimov
 
 #TODO add to config loss!
-def sigLoss(y_true,y_pred, weights):
-    """
-    Based on this paper:
-    Code:
+def significanceLoss(expectedSignal,expectedBkgd):
+    '''Define a loss function that calculates the significance based on fixed
+    expected signal and expected background yields for a given batch size'''
+    "Loss From Adam https://github.com/aelwood/hepML/blob/master/MlFunctions/DnnFunctions.py"
 
-    :param y_true:
-    :param y_pred:
-    :param weights:
-    :return:
-    """
+    def sigLoss(y_true,y_pred):
+        #Continuous version:
 
-    signalWeight=weights/K.sum(y_true)
-    bkgdWeight=weights/K.sum(1-y_true)
+        signalWeight=expectedSignal/K.sum(y_true)
+        bkgdWeight=expectedBkgd/K.sum(1-y_true)
 
-    s = signalWeight*K.sum(y_pred*y_true)
-    b = bkgdWeight*K.sum(y_pred*(1-y_true))
+        s = signalWeight*K.sum(y_pred*y_true)
+        b = bkgdWeight*K.sum(y_pred*(1-y_true))
 
-    return -(s*s)/(s+b+K.epsilon()) #Add the epsilon to avoid dividing by 0
+        return (s+b)/(s*s+K.epsilon()) #Add the epsilon to avoid dividing by 0
+
+    return sigLoss
 
 
 def significance(true, predicted, weigth):

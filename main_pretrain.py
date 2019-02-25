@@ -59,17 +59,26 @@ _train, _test = _train_test_split(train, split=float(config.get("model","test_tr
 
 ###    Preprocess     ###
 from utils import _overbalance as ovbal
-_train = ovbal(_train)
 
 
 ###   Extract the SF for signal and background:  ###
 from sf import *
 Number_of_Background = float(config.get("physics", "Number_of_Background"))
 Number_of_Signal = float(config.get("physics","Number_of_Signal"))
+
 Number_of_Background = train[(train.classID==0)].weight.sum()# float(config.get("physics", "Number_of_Background"))
 Number_of_Signal = train[(train.classID==1)].weight.sum()
+print("Number_of_Background", Number_of_Background)
+print("Number_of_Signal", Number_of_Signal)
 bgd_train_sf, bgd_test_sf = sf_bgd_train_test(test=_test,train=_train, Number_of_Background=Number_of_Background)
 signal_train_sf, signal_test_sf = sf_signal_train_test(test=_test,train=_train, Number_of_Signal=Number_of_Signal)
+
+ubalanced = _train
+ubalanced_X_train = ubalanced[VARS]
+ubalanced_Y_train = ubalanced[LABELS]
+ubalanced_W_train = ubalanced[WEIGHT]
+del ubalanced
+_train = ovbal(_train)
 
 
 X_train = _train[VARS]
@@ -114,7 +123,14 @@ lrate = LearningRateScheduler(step_decay)
 histories.set_mode(mode="pre_train")
 gen_met_trainin.pre_train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories])
 histories.set_mode(mode="train")
-gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
+from loss import significanceLoss
+#loss=significanceLoss(expected_signal,expecred_background)
+loss = "binary_crossentropy"
+
+expected_signal = train[(train.classID==1)].weight.sum()
+expecred_background = train[(train.classID==0)].weight.sum()
+gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories],
+                      loss=loss)
 
 ##Store gen_pretraininf results:
 
@@ -130,7 +146,8 @@ gen_met_trainin.store_model()
 #Get Result of training:
 #from utils import get_results
 
-_df_train, _df_test  = gen_met_trainin.get_results(X_train, Y_train,  X_test, Y_test, W_train, W_test)
+_df_train, _df_test  = gen_met_trainin.get_results(ubalanced_X_train, ubalanced_Y_train,  X_test,
+                                                   Y_test, ubalanced_W_train, W_test)
 
 
 ###    Run plotter:    ###

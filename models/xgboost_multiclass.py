@@ -31,7 +31,7 @@ best_params = {
     'objective': 'multi:softprob',
    # 'eval_metric': 'mlogloss',
     'silent': True,
-    'n_classes': 8,
+    'n_classes': 2,
     'booster': 'gbtree',
     'n_estimators': 1000,
     'tree_method': 'hist',

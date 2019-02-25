@@ -18,28 +18,22 @@ configuration_name = args.config
 
 #Define Variables and Features:
 
-VARS = ["DiL", "Dr", "Dr2", "MT", "Mt2as","dEta", "dMETPhiL1", "dMETPhiL2", "dzeta",
-        "mcta", "met_e", "met_eta", "met_phi", "met_pt",
-        "mttotal", "mu_e", "mu_eta", "mu_phi", "mu_pt", "nbtag", "njets",
-        "tau_e", "tau_eta", "tau_phi", "tau_pt"]
+VARS = ["DiL", "Dr", "Dr2", "MT", "Mt2as","dEta", "dMETPhiL1", "dMETPhiL2", "Dzeta",
+        "mcta",  "met_pt", "MTtot", "mu_pt",  "tau_pt", 'Mt2as']
 
 
 gen_VARS = ["gen_DiL", "gen_Dr", "gen_Dr2", "gen_MT", "gen_Mt2as", "gen_dEta",
-       "gen_dMETPhiL1", "gen_dMETPhiL2", "gen_dzeta", "gen_mcta",
-       "gen_met_e", "gen_met_eta", "gen_met_phi", "gen_met_pt",
-       "gen_mttotal", "gen_muon_e", "gen_muon_eta", "gen_muon_phi",
-       "gen_muon_pt", "gen_tau_e", "gen_tau_eta", "gen_tau_phi",
-       "gen_tau_pt"]
+       "gen_dMETPhiL1", "gen_dMETPhiL2", "gen_Dzeta", "gen_mcta", "gen_met_pt",
+       "gen_MTtot", "gen_muon_pt",  "gen_tau_pt", 'gen_Mt2as']
+#gen_VARS = ["gen_met_pt", "Lept1Pt", "Lept2Pt", "EtaDil",
+#            "MTtot","genDzeta","dR" ,"Minv", "genMT", "MCTb", "genMT2lester",
+#            "gendMETPhiL1", "gendMETPhiL2"]
 
+#VARS = ["met_pt", "Lept1Pt", "Lept2Pt", "EtaDil",
+#        "MTtot","Dzeta","dR" ,"Minv", "MT", "MCTb",
+#        "MT2lester", "dMETPhiL1", "dMETPhiL2"]
 
-
-gen_VARS = ["gen_met_pt", "Lept1Pt", "Lept2Pt", "EtaDil",
-            "MTtot","genDzeta","dR" ,"Minv", "genMT", "MCTb", "genMT2lester",
-            "gendMETPhiL1", "gendMETPhiL2"]
-
-VARS = ["met_pt", "Lept1Pt", "Lept2Pt", "EtaDil",
-        "MTtot","Dzeta","dR" ,"Minv", "MT", "MCTb",
-        "MT2lester", "dMETPhiL1", "dMETPhiL2"]
+N_INPUTS = len(VARS)
 
 
 LABELS = ["classID"]
@@ -70,7 +64,6 @@ train = label_correction(train, labels=[1,0], class_names=["signal","background"
 ###   Test train split  ###
 from preprocess import _train_test_split
 _train, _test = _train_test_split(train, split=float(config.get("model","test_train_split" )))
-_train, _validation = _train_test_split(_train, split=0.1)
 
 
 ###    Preprocess     ###
@@ -84,6 +77,10 @@ Number_of_Background = float(config.get("physics", "Number_of_Background"))
 Number_of_Signal = float(config.get("physics","Number_of_Signal"))
 Number_of_Background = train[(train.classID==0)].weight.sum()# float(config.get("physics", "Number_of_Background"))
 Number_of_Signal = train[(train.classID==1)].weight.sum()
+
+print("Number_of_Background", Number_of_Background)
+print("Number_of_Signal", Number_of_Signal)
+
 bgd_train_sf, bgd_test_sf = sf_bgd_train_test(test=_test,train=_train, Number_of_Background=Number_of_Background)
 signal_train_sf, signal_test_sf = sf_signal_train_test(test=_test,train=_train, Number_of_Signal=Number_of_Signal)
 
@@ -94,10 +91,10 @@ gen_X_train = _train[gen_VARS]
 Y_train = _train[LABELS]
 W_train = _train[WEIGHT]
 
-X_validation = _validation[VARS]
-gen_X_validation = _validation[gen_VARS]
-Y_validation = _validation[LABELS]
-W_validation = _validation[WEIGHT]
+X_validation = _test[VARS]
+gen_X_validation = _test[gen_VARS]
+Y_validation = _test[LABELS]
+W_validation = _test[WEIGHT]
 
 X_test = _test[VARS]
 gen_X_test = _test[gen_VARS]
@@ -111,7 +108,7 @@ from train import Training
 ###   Start training:   ####
 
 gen_met_trainin = Training(config)
-model = gen_met_trainin._model()
+model = gen_met_trainin._model(input_dim = N_INPUTS)
 
 from utils import Histories
 histories = Histories()
@@ -129,6 +126,7 @@ lrate = LearningRateScheduler(step_decay)
 #Gen pretrain
 histories.set_mode(mode="pre_train")
 gen_met_trainin.pre_train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories])
+gen_met_trainin.pop_layers()
 histories.set_mode(mode="train")
 gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
 

@@ -60,7 +60,6 @@ _train, _test = _train_test_split(train, split=float(config.get("model","test_tr
 
 ###    Preprocess     ###
 from utils import _overbalance as ovbal
-_train = ovbal(_train)
 
 
 ###   Extract the SF for signal and background:  ###
@@ -70,12 +69,19 @@ Number_of_Signal = train[(train.classID==1)].weight.sum()#float(config.get("phys
 bgd_train_sf, bgd_test_sf = sf_bgd_train_test(test=_test,train=_train, Number_of_Background=Number_of_Background)
 signal_train_sf, signal_test_sf = sf_signal_train_test(test=_test,train=_train, Number_of_Signal=Number_of_Signal)
 
+ubalanced = _train
+ubalanced_X_train = ubalanced[VARS]
+ubalanced_Y_train = ubalanced[LABELS]
+ubalanced_W_train = ubalanced[WEIGHT]
+del ubalanced
 
-X_train = _train[VARS]
-gen_X_train = _train[gen_VARS]
+__train = ovbal(_train)
 
-Y_train = _train[LABELS]
-W_train = _train[WEIGHT]
+X_train = __train[VARS]
+gen_X_train = __train[gen_VARS]
+
+Y_train = __train[LABELS]
+W_train = __train[WEIGHT]
 
 X_validation = _test[VARS]
 gen_X_validation = _test[gen_VARS]
@@ -94,8 +100,21 @@ from train import Training
 ###   Start training:   ####
 
 trainin = Training(config)
-model = trainin._model()
+from loss import significanceLoss
+expected_signal = _train[(_train.classID==1)].weight.sum()
+expecred_background = _train[(_train.classID==0)].weight.sum()
+print("Expected Signal: ", expected_signal)
+print("Expected Background: ", expecred_background)
+loss = "binary_crossentropy"
 
+
+#Prepate X:
+#def p
+#X = np.zeros((num_train_examples,max_train_length, 13))
+#sum_X = np.zeros((num_train_examples))
+
+
+model = trainin._model()#(max_length=10)#losssignificanceLoss(expected_signal,expecred_background ))
 from utils import Histories
 histories = Histories()
 histories.set_up_config(config)
@@ -105,10 +124,14 @@ histories.set_up_val_weight(weight=W_validation)
 
 #from utils import LearningRateScheduler
 #ls #lrate = LearningRateScheduler(step_decay)
+#Prepare X and Y
+
 
 #Train
 histories.set_mode(mode="train")
-trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
+trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories],
+              loss="binary_crossentropy")
+              #loss = significanceLoss(expected_signal,expecred_background )
 trainin.store_model()
 
 #gen_met_trainin.epochs = 20
@@ -117,7 +140,7 @@ trainin.store_model()
 #Get Result of training:
 #from utils import get_results
 
-_df_train, _df_test  = trainin.get_results(X_train, Y_train,  X_test, Y_test, W_train, W_test)
+_df_train, _df_test  = trainin.get_results(ubalanced_X_train, ubalanced_Y_train,  X_test, Y_test, ubalanced_W_train, W_test)
 
 
 ###    Run plotter:    ###

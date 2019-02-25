@@ -1,7 +1,6 @@
 """
 """
 from keras.models import Sequential
-from keras.layers import Dense, Dropout
 from keras.models import model_from_json
 from keras.optimizers import Adam
 import matplotlib.pyplot as plt
@@ -12,6 +11,13 @@ import pandas as pd
 np.random.seed(7)
 from functools import partial
 from sklearn.model_selection import StratifiedKFold
+from keras.layers import Input, Dense, LSTM, GRU, Embedding, Lambda
+from keras.models import Model, load_model
+import keras.backend as K
+from keras.layers.core import Dropout, Activation
+from hyperopt import Trials, STATUS_OK, tpe
+from hyperas import optim
+from hyperas.distributions import choice, uniform
 
 
 
@@ -73,8 +79,55 @@ class Training():
 
         return
 
+    def get_deepset_model(self, max_length):
 
-    def _model(self, config=None):
+        input_txt = Input(shape=(max_length,))
+        x = Embedding(2, 100, mask_zero=True)(input_txt)
+        x = Dense(30, activation='tanh')(x)
+        Adder = Lambda(lambda x: K.sum(x, axis=1), output_shape=(lambda shape: (shape[0], shape[2])))
+        x = Adder(x)
+        encoded = Dense(1)(x)
+        summer = Model(input_txt, encoded)
+        adam = Adam(lr=1e-4, epsilon=1e-3)
+        summer.compile(optimizer=adam, loss='mae')
+        self.__model = summer
+        return summer
+
+    def get_tune_model(self, loss="binary_crossentropy", input_dim = 13, config=None):
+        """
+
+        :param loss:
+        :param input_dim:
+        :param config:
+        :return:
+        """
+        model = Sequential()
+        model.add(Dense(256, input_shape=(13,)))
+        model.add(Activation({{choice(['relu', 'sigmoid'])}}))
+        model.add(Dropout({{uniform(0, 1)}}))
+        model.add(Dense({{choice([256, 512, 1024])}}))
+        model.add(Activation({{choice(['relu', 'sigmoid'])}}))
+        model.add(Dropout({{uniform(0, 1)}}))
+
+        # If we choose 'four', add an additional fourth layer
+        if {{choice(['three', 'four'])}} == 'four':
+            model.add(Dense(100))
+
+            # We can also choose between complete sets of layers
+
+            model.add({{choice([Dropout(0.5), Activation('linear')])}})
+            model.add(Activation('relu'))
+
+        model.add(Dense(1))
+        model.add(Activation('sigmoid'))
+
+        model.compile(loss='categorical_crossentropy', metrics=['accuracy'],
+                      optimizer={{choice(['rmsprop', 'adam', 'sgd'])}})
+
+        self.__model = model
+        return model
+
+    def _model(self, loss="binary_crossentropy", input_dim = 13, config=None):
         """
            :return:
         """
@@ -82,15 +135,13 @@ class Training():
         #cl4 = partial(custom_loss_4, weights=weights_tensor)
 
         model = Sequential()
-        model.add(Dense(256, input_dim=13, kernel_initializer='uniform', activation='sigmoid'))
-        model.add(Dropout(0.4))
-        model.add(Dense(256, kernel_initializer='uniform', activation='sigmoid'))
+        model.add(Dense(256, input_dim=input_dim, kernel_initializer='uniform', activation='sigmoid'))
         model.add(Dropout(0.4))
         model.add(Dense(256, kernel_initializer='uniform', activation='sigmoid'))
         model.add(Dropout(0.4))
         model.add(Dense(1, kernel_initializer='uniform', activation='sigmoid'))
         # Compile model
-        model.compile(loss='binary_crossentropy', metrics=['accuracy'], optimizer=Adam(lr=0.001))
+        model.compile(loss=loss, metrics=['accuracy'], optimizer=Adam(lr=0.01))
 
         print(model.summary())
         self.__model = model
@@ -103,15 +154,41 @@ class Training():
         return self.__model
 
 
-    def pre_train(self, X, Y, X_validation=None, Y_validation=None,  callback=None):
+    def tune_model(self, X, Y, X_validation=None, Y_validation=None,  callback=None, loss='binary_crossentropy'):
+        """
+
+        :return:
+        """
+
+
+        if X_validation is None or Y_validation is None:
+
+            result = self.__model.fit(X, Y,
+                                      batch_size={{choice([64, 128, 300, 500, 1000, 2000, 4000])}},
+                                      epochs=2,
+                                      verbose=2,
+                                      validation_data=(X_validation, Y_validation),
+                                      callbacks=callback)
+        else:
+            result = self.__model.fit(X, Y,
+                                      batch_size={{choice([64, 128, 300, 500, 1000, 2000, 4000])}},
+                                      epochs=2,
+                                      verbose=2,
+                                      validation_data=(X_validation, Y_validation),
+                                      callbacks=callback)
+
+        validation_acc = np.amax(result.history['val_acc'])
+        print('Best validation acc of epoch:', validation_acc)
+        return {'loss': -validation_acc, 'status': STATUS_OK, 'model': self.__model}
+
+
+    def pre_train(self, X, Y, X_validation=None, Y_validation=None,  callback=None, loss='binary_crossentropy'):
         """
 
         # Set learning rate:
         # Set Number of epochs
         :return:
         """
-        #TODO add possibility to use learning rate and another parmaeters from function
-        #inputs
 
 
         try:
@@ -132,7 +209,7 @@ class Training():
             batch_size = self.config.get("train", 'batch_size')
 
         #Recompile model with new settings
-        self.__model.compile(loss='binary_crossentropy',
+        self.__model.compile(loss=loss,
                              metrics=['accuracy'],
                              optimizer=Adam(lr=float(lr)))
         #Start Training:
@@ -149,44 +226,46 @@ class Training():
         return
 
 
-    def train(self, X, Y, X_validation=None, Y_validation=None, callback=None):
-        """
+        def train(self, X, Y, X_validation=None, Y_validation=None, callback=None,  loss='binary_crossentropy'):
+            """
 
-        #Set Numb
-        :return:
-        """
-        try:
-            lr = self.config.get("train", 'lr')
-        except Exception:
+            #Set Numb
+            :return:
+            """
+            try:
+                lr = self.config.get("train", 'lr')
+            except Exception:
 
-            lr = self.config.get("train", 'lr')
+                lr = self.config.get("train", 'lr')
 
-        try:
-            epochs = self.config.get("train", 'epochs')
-        except Exception:
-            epochs = self.config.get("train", 'epochs')
-
-
-        try:
-            batch_size = self.config.get("train", 'batch_size')
-        except Exception:
-            batch_size = self.config.get("train", 'batch_size')
-
-        #Recompile model with new settings
-        self.__model.compile(loss='binary_crossentropy',
-                             metrics=['accuracy'],
-                             optimizer=Adam(lr=float(lr)))
+            try:
+                epochs = self.config.get("train", 'epochs')
+            except Exception:
+                epochs = self.config.get("train", 'epochs')
 
 
-        if X_validation is None or Y_validation is None:
-
-            self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size), callbacks=callback)
-        else:
-            self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size),
-                                       validation_data=(X_validation, Y_validation, ), callbacks=callback)  # , verbose=0)
+            try:
+                batch_size = self.config.get("train", 'batch_size')
+            except Exception:
+                batch_size = self.config.get("train", 'batch_size')
 
 
-        return
+            #Recompile model with new settings
+            self.__model.compile(loss=loss,
+                                 metrics=['accuracy'],
+                                 optimizer=Adam(lr=float(lr)))
+
+
+            if X_validation is None or Y_validation is None:
+
+                self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size), callbacks=callback)
+            else:
+                self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size),
+                                           validation_data=(X_validation, Y_validation, ), callbacks=callback)  # , verbose=0)
+
+
+
+            return
 
 
     def train_k_folds(self, X, Y, k_folds = 5, n_class=2):
@@ -218,13 +297,26 @@ class Training():
         return
 
 
-    def make_transfer_learning(self, model):
+    def pop_layers(self):
         """
 
         :param model:
         :return:
         """
         #TODO implement stacked model
+        self.__model.pop()
+        self.__model.pop()
+        self.__model.pop()
+        for index in range(len(self.__model.layers)):
+            if index <=4:
+                self.__model.layers[index].trainable = False
+
+        self.__model.add(Dense(256, kernel_initializer='uniform', activation='relu'))
+        self.__model.add(Dropout(0.4))
+        self.__model.add(Dense(1, kernel_initializer='uniform', activation='sigmoid'))
+        self.__model.compile(loss='binary_crossentropy',
+                             metrics=['accuracy'], optimizer=Adam(lr=0.001))
+
         return
 
     def store_model(self, model=None, model_name=None):
@@ -241,7 +333,7 @@ class Training():
         with open("{0}/Model.json".format(self.dir +  model_name), "w") as json_file:
             json_file.write(model_json)
         # serialize weights to HDF5
-        model.save_weights(self.dir +  model_name+"/Model_weight")
+        model.save_weights(self.dir +  model_name+"/Model_Weight.h5")
         print("Model is saved on disk")
         return
 
