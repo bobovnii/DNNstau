@@ -11,7 +11,7 @@ from hyperopt import Trials, tpe
 from hyperas import optim
 import  numpy as np
 
-
+from logger import set_logger
 
 parser = argparse.ArgumentParser()
 
@@ -26,6 +26,9 @@ configuration_name = args.config
 config = ConfigParser.RawConfigParser()
 config.read(configuration_name)
 DIR = config.get("model", "dir")
+
+### Set Logger ###:
+set_logger(file_name="{0}/hyper_optimisation.log".format(DIR), config=None)
 
 ####  Preprocess Data    #####
 from utils import label_correction
@@ -105,7 +108,6 @@ def create_model(X_train, Y_train,  X_validation, Y_validation):
     if {{choice(['three', 'four'])}} == 'four':
         model.add(Dense(100))
         # We can also choose between complete sets of layers
-        model.add({{choice([Dropout(0.5), Activation({{choice(['relu', 'sigmoid'])}})])}})
         model.add(Activation('relu'))
 
     model.add(Dense(1))
@@ -122,6 +124,7 @@ def create_model(X_train, Y_train,  X_validation, Y_validation):
                               )
 
     validation_acc = np.amax(result.history['val_acc'])
+    print(model.summary())
     print('Best validation acc of epoch:', validation_acc)
     return {'loss': validation_acc, 'status': STATUS_OK, 'model': model}
 
