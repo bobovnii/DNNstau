@@ -1,2 +1,2 @@
-# stau_learning
+# stau learning
 Deep learning for stau
