@@ -1,7 +1,7 @@
-from Plotter import Plotter
+from plotter.Plotter import Plotter
 import ConfigParser
 
-from dataloader import DataLoader
+from loader.dataloader import DataLoader
 
 import argparse
 
@@ -62,7 +62,7 @@ train = label_correction(train, labels=[1,0], class_names=["signal","background"
 
 
 ###   Test train split  ###
-from preprocess import _train_test_split
+from utils.preprocess import _train_test_split
 _train, _test = _train_test_split(train, split=float(config.get("model","test_train_split" )))
 
 
@@ -72,7 +72,7 @@ _train = ovbal(_train)
 
 
 ###   Extract the SF for signal and background:  ###
-from sf import *
+from utils.sf import *
 Number_of_Background = float(config.get("physics", "Number_of_Background"))
 Number_of_Signal = float(config.get("physics","Number_of_Signal"))
 Number_of_Background = train[(train.classID==0)].weight.sum()# float(config.get("physics", "Number_of_Background"))

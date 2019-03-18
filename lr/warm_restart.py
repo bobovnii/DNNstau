@@ -82,6 +82,7 @@ class SGDRScheduler(Callback):
             self.max_lr *= self.lr_decay
             self.best_weights = self.model.get_weights()
 
+
     def on_train_end(self, logs={}):
         '''Set weights to the values from the end of the most recent cycle for best performance.'''
         self.model.set_weights(self.best_weights)

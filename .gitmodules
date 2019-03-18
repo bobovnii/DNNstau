@@ -1,0 +1,3 @@
+[submodule "freeze_model/Keras2Cpp4Terminal"]
+	path = freeze_model/Keras2Cpp4Terminal
+	url = https://github.com/didukhle/Keras2Cpp4Terminal.git

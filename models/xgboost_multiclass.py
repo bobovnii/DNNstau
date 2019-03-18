@@ -15,8 +15,7 @@ from keras.utils import to_categorical
 import numpy as np
 from functools import partial, wraps
 import uproot
-from xgboost import XGBClassifier
-
+from sklearn.ensemble import  AdaBoostClassifier
 # Read from configuration:
 
 

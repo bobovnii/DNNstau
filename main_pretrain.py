@@ -1,10 +1,8 @@
-from Plotter import Plotter
+from plotter.Plotter import Plotter
 import ConfigParser
-
-from dataloader import DataLoader
-
+from loader.dataloader import DataLoader
 import argparse
-
+from sklearn.preprocessing import MinMaxScaler
 
 parser = argparse.ArgumentParser()
 
@@ -48,12 +46,12 @@ dataloader = DataLoader(config)
 #Load Data
 train =dataloader._get_train()
 from utils import label_correction
-train = label_correction(train, labels=[1,0], class_names=["signal","background"], col_names=["classID", "className"])
+train = label_correction(train)
 #train["classID"] = train["classID"].apply(lambda x: 1-np.int32(x>0.5))
 
 
 ###   Test train split  ###
-from preprocess import _train_test_split
+from utils.preprocess import _train_test_split
 _train, _test = _train_test_split(train, split=float(config.get("model","test_train_split" )))
 
 
@@ -62,7 +60,7 @@ from utils import _overbalance as ovbal
 
 
 ###   Extract the SF for signal and background:  ###
-from sf import *
+from utils.sf import *
 Number_of_Background = float(config.get("physics", "Number_of_Background"))
 Number_of_Signal = float(config.get("physics","Number_of_Signal"))
 
@@ -73,27 +71,29 @@ print("Number_of_Signal", Number_of_Signal)
 bgd_train_sf, bgd_test_sf = sf_bgd_train_test(test=_test,train=_train, Number_of_Background=Number_of_Background)
 signal_train_sf, signal_test_sf = sf_signal_train_test(test=_test,train=_train, Number_of_Signal=Number_of_Signal)
 
+scaler = MinMaxScaler()
+
 ubalanced = _train
-ubalanced_X_train = ubalanced[VARS]
+ubalanced_X_train = scaler.fit_transform(ubalanced[VARS])
 ubalanced_Y_train = ubalanced[LABELS]
 ubalanced_W_train = ubalanced[WEIGHT]
 del ubalanced
 _train = ovbal(_train)
 
-
-X_train = _train[VARS]
-gen_X_train = _train[gen_VARS]
+X_train = scaler.fit_transform(_train[VARS])
+gen_X_train = scaler.fit_transform(_train[gen_VARS])
 
 Y_train = _train[LABELS]
 W_train = _train[WEIGHT]
 
-X_validation = _test[VARS]
-gen_X_validation = _test[gen_VARS]
+X_validation = scaler.fit_transform(_test[VARS])
+gen_X_validation = scaler.fit_transform(_test[gen_VARS])
 Y_validation = _test[LABELS]
 W_validation = _test[WEIGHT]
 
-X_test = _test[VARS]
-gen_X_test = _test[gen_VARS]
+
+X_test = scaler.fit_transform(_test[VARS])
+gen_X_test = scaler.fit_transform(_test[gen_VARS])
 Y_test = _test[LABELS]
 W_test = _test[WEIGHT]
 
@@ -112,19 +112,17 @@ histories.set_up_config(config)
 histories.set_up_train_weight(weight=W_train)
 histories.set_up_val_weight(weight=W_validation)
 
+#lr = SGDRScheduler(min_lr=0.0001, max_lr=0.01, steps_per_epoch=np.ceil(X_train.shape[0]/4000),lr_decay=0.7, cycle_length=20, mult_factor=2)
 
-from keras.callbacks import LearningRateScheduler
-from lr.schedule import *
-lrate = LearningRateScheduler(step_decay)
 
 #epochs = config.get("model", 'gen_lr')
 #lr = config.get("model", 'gen_epoch')
 #Gen pretrain
 histories.set_mode(mode="pre_train")
 gen_met_trainin.pre_train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories])
+gen_met_trainin.store_model()
+
 histories.set_mode(mode="train")
-from loss import significanceLoss
-#loss=significanceLoss(expected_signal,expecred_background)
 loss = "binary_crossentropy"
 
 expected_signal = train[(train.classID==1)].weight.sum()
@@ -138,7 +136,6 @@ gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[h
 # gen_met_trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories])
 
 
-gen_met_trainin.store_model()
 
 #gen_met_trainin.epochs = 20
 #gen_met_trainin.train(x_train, y_train, epochs=50)

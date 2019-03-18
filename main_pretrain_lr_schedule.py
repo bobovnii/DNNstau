@@ -1,9 +1,7 @@
-import pandas as pd
-from sklearn.utils import shuffle
-from Plotter import Plotter
+from plotter.Plotter import Plotter
 import ConfigParser
 
-from dataloader import DataLoader
+from loader.dataloader import DataLoader
 
 import argparse
 
@@ -49,14 +47,11 @@ dataloader = DataLoader(config)
 
 #Load Data
 train =dataloader._get_train()
-from utils import label_correction
 #train = label_correction(train, labels=[1,0], class_names=["signal","background"], col_names=["classID", "className"])
-import numpy as np
 train["classID"] = train["classID"].apply(lambda x: 1-np.int32(x>0.5))
 
 
 ###   Test train split  ###
-from preprocess import test_train_split
 _train, _test = test_train_split(train, split=float(config.get("model","test_train_split" )))
 
 
@@ -66,7 +61,7 @@ _train = ovbal(_train)
 
 
 ###   Extract the SF for signal and background:  ###
-from sf import *
+from utils.sf import *
 Number_of_Background = train[(train.classID==0)].weight.sum()#float(config.get("physics", "Number_of_Background"))
 Number_of_Signal = train[(train.classID==1)].weight.sum()#float(config.get("physics","Number_of_Signal"))
 print("Number of  Number_of_Background", Number_of_Background)
@@ -100,8 +95,6 @@ W_test = _test[WEIGHT]
 DIR = config.get("model", "dir")
 from train import Training
 
-from keras.callbacks import LearningRateScheduler
-from lr.schedule import step_decay
 #lrate = LearningRateScheduler(step_decay)
 from lr.warm_restart import SGDRScheduler
 

@@ -255,11 +255,11 @@ class analyzer {
   Float_t 	genTauDecayedElMatched;
   Float_t 	genLeptonPromptElMatched;
   Float_t 	genLeptonPromptMuMatched;
-  Float_t         genLeptonMatchedPrompEl;
-  Float_t         genLeptonMatchedPrompMu;
-  Float_t         genElMatchedToTauDecay;
-  Float_t         genMuMatchedToTauDecay;
-  Float_t         genTauMatchedToTauDecay;
+  Float_t   genLeptonMatchedPrompEl;
+  Float_t   genLeptonMatchedPrompMu;
+  Float_t   genElMatchedToTauDecay;
+  Float_t   genMuMatchedToTauDecay;
+  Float_t   genTauMatchedToTauDecay;
   Float_t	        genLeptonMatchedPromptEl;
   Float_t	        genLeptonMatchedPromptMu;
   Float_t	        genLeptonMatchedPromptTau;
@@ -546,9 +546,8 @@ class analyzer {
   */
 
 
-
-////////////////////fake study
-  void FillHistsFakes(int CutIndex, Double_t EvWeight, TLorentzVector  elV, TLorentzVector  muV, TLorentzVector tauV, vector<TLorentzVector>  &JetsV, TLorentzVector  &MetV, double Chimass, double mintermediate, string & Sel, int  mIndex, int eIndex, int  tIndex, int &category, int &categoryJet, bool isdata, bool dogenMET){
+//Fake Study
+void FillHistsFakes(int CutIndex, Double_t EvWeight, TLorentzVector  elV, TLorentzVector  muV, TLorentzVector tauV, vector<TLorentzVector>  &JetsV, TLorentzVector  &MetV, double Chimass, double mintermediate, string & Sel, int  mIndex, int eIndex, int  tIndex, int &category, int &categoryJet, bool isdata, bool dogenMET){
 
 
 
@@ -706,11 +705,8 @@ if (pzetavis !=0) dzetaR = pzetamiss/pzetavis;
 
   }
 
-
-
-///////////////////////////////
-
-  void FillHistsFakesInvertTau(int CutIndex, Double_t EvWeight, TLorentzVector  elV, TLorentzVector  muV, TLorentzVector tauV, vector<TLorentzVector>  &JetsV, TLorentzVector  &MetV,  string & Sel, int  mIndex, int eIndex, int  tIndex, int &category, int &categoryJet, bool &isData, bool &isTight, bool &isLoose, int etaBin){
+//Fill Hist Fake Invert Tau
+void FillHistsFakesInvertTau(int CutIndex, Double_t EvWeight, TLorentzVector  elV, TLorentzVector  muV, TLorentzVector tauV, vector<TLorentzVector>  &JetsV, TLorentzVector  &MetV,  string & Sel, int  mIndex, int eIndex, int  tIndex, int &category, int &categoryJet, bool &isData, bool &isTight, bool &isLoose, int etaBin){
 
 
 	met=MetV.Pt();
@@ -764,9 +760,12 @@ if (tauV.Pt()>0. && etaBin>-1)	    FakeRatePtIncTight[etaBin][CutIndex]->Fill(ta
 
 }
 
-////////////////////////////MAIN METHOD
+//MAIN METHOD
 
-  void FillHists(int CutIndex, Double_t EvWeight, TLorentzVector  elV, TLorentzVector  muV, TLorentzVector tauV, vector<TLorentzVector>  &JetsV, TLorentzVector  &MetV, double Chimass, double mintermediate, string & Sel, int  mIndex, int eIndex, int  tIndex, bool dogenMET){
+//FilHist
+void FillHists(int CutIndex, Double_t EvWeight, TLorentzVector  elV, TLorentzVector  muV, TLorentzVector tauV, vector<TLorentzVector>  &JetsV, TLorentzVector  &MetV,
+                double Chimass, double mintermediate, string & Sel,
+                int  mIndex, int eIndex, int  tIndex, bool dogenMET){
 
     met = MetV.Pt();
     metx=MetV.Px();
@@ -823,8 +822,8 @@ if (dogenMET) { met = sqrt(genmet_Ex*genmet_Ex + genmet_Ey*genmet_Ey);
     if ((Sel=="mutau" || Sel=="WJetsCR" )&& mIndex >-1 && tIndex>-1 ){
 
 
-	double sminn = SMin(muV,tauV,met, 0.);
-	hSmin[CutIndex]->Fill(sminn,EvWeight);
+	  double sminn = SMin(muV,tauV,met, 0.);
+	  hSmin[CutIndex]->Fill(sminn,EvWeight);
 
       tauMass = tauV.M();
 
@@ -837,15 +836,6 @@ if (dogenMET) { met = sqrt(genmet_Ex*genmet_Ex + genmet_Ey*genmet_Ey);
 
       double dPhiD=dPhiFrom2P( muV.Px(),  muV.Py(),tauV.Px(),  tauV.Py());
       hdPhiDil[CutIndex]->Fill(dPhiD,EvWeight);
-
-//if (CutIndex ==17)
-//cout<<" insidecheck here  DEta " << fabs(deta)<<"   "<<fabs(detaM)<<" DPhi "<<dPhiD<<"   "<<endl;
-				
-      //   Mt2::Basic_Mt2_332_Calculator mt2Calculator;
-      //   Mt2::LorentzTransverseVector  vis_A(Mt2::TwoVector(muV.Px(), muV.Py()), muonMass);
-      //   Mt2::LorentzTransverseVector  vis_B(Mt2::TwoVector(tauV.Px(), tauV.Py()), tauMass);
-      //   Mt2::TwoVector                pT_Miss(metx, mety);    
-      //double mt2  = mt2Calculator.mt2_332(vis_A, vis_B, pT_Miss, Chimass);
 
       double v1[4] = {muV.Px(),muV.Py(),muV.Pz(),muonMass};
       double v2[4] = {tauV.Px(),tauV.Py(),tauV.Pz(),tauMass};
@@ -976,20 +966,6 @@ if (CutIndex==17 &&  (int)event_lumi==101925 && (int) event_run ==1)
       hDZetaFB[CutIndex]->Fill(dzeta,EvWeight);
       hDZetaR[CutIndex]->Fill(dzetaR,EvWeight);
       hDZetaRFB[CutIndex]->Fill(dzetaR,EvWeight);
-/*
-	hprofMt2vsMET[CutIndex]->Fill(Mt2as,met,EvWeight);
-	hprofMt2vsDZeta[CutIndex]->Fill(Mt2as,dzeta,EvWeight);
-
-	hprofMETvsMt2[CutIndex]->Fill(met,Mt2as,EvWeight);
-	hprofMETvsDZeta[CutIndex]->Fill(met,dzeta,EvWeight);
-
-	hprofDZetavsMET[CutIndex]->Fill(dzeta,met,EvWeight);
-	hprofDZetavsMt2[CutIndex]->Fill(dzeta,Mt2as,EvWeight);
-*/
-
-//	hMt2_binned[CutIndex][nSR]->Fill(Mt2as,EvWeight);
-//	hMET_binned[CutIndex][nSR]->Fill(met,EvWeight);
-//	hDzeta_binned[CutIndex][nSR]->Fill(dzeta,EvWeight);
 
 if (dzeta < -100) {
 	hMt2LowDzeta[CutIndex]->Fill(Mt2as,EvWeight);
@@ -1017,7 +993,6 @@ if (dzeta > -100 && dzeta <50) {
 	hMt2MiddleDzeta[CutIndex]->Fill(Mt2as,EvWeight);
 	hMETMiddleDzeta[CutIndex]->Fill(met,EvWeight);
 	}
-
 if (dzeta > 50) {
 	hMt2HighDzeta[CutIndex]->Fill(Mt2as,EvWeight);
 	hMETHighDzeta[CutIndex]->Fill(met,EvWeight);
@@ -1054,8 +1029,8 @@ if (Mt2as>40 && Mt2as<120)
 			(*inputVec)[3] = deta;
 			(*inputVec)[4] = mttotal;
 			(*inputVec)[5] = dzeta;
-			(*inputVec)[6] = DiL.M();
-			(*inputVec)[7] = Dr;
+			(*inputVec)[6] = Dr;
+			(*inputVec)[7] =  DiL.M();
 			(*inputVec)[8] = MT;
 			(*inputVec)[9] = mcta;
 			(*inputVec)[10] = Mt2as;
@@ -1312,9 +1287,7 @@ if (pzetavis !=0) dzetaR = pzetamiss/pzetavis;
 	hdR_taujet[CutIndex]->Fill(Drtj,EvWeight);
       }
 
-    }////////////end of eltau channel
-
-
+    }
     if (Sel=="muel" &&  eIndex >-1 &&  mIndex>-1){
 
       double deta=deltaEta(muV.Px(),  muV.Py(),muV.Pz(), elV.Px(),  elV.Py(),elV.Pz() );
@@ -1500,8 +1473,7 @@ if (pzetavis !=0) dzetaR = pzetamiss/pzetavis;
       */
 
 
-    }/////////////////end of muel channel
-
+    }
 
 
 
@@ -2363,7 +2335,6 @@ if (dogenMET) { met = sqrt(genmet_Ex*genmet_Ex + genmet_Ey*genmet_Ey);
   }
 
 ///////////////////////////////////////////////////////////////
-
 
 
   void FillHistsDiL(int CutIndex, Double_t EvWeight, TLorentzVector  LeptV1, TLorentzVector  LeptV2,  vector<TLorentzVector>  &JetsV, TLorentzVector  &MetV, double Chimass, double mintermediate, string & Sel, int  mIndex_1, int mIndex_2){

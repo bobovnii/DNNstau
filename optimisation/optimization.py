@@ -1,5 +1,5 @@
 import numpy as np
-from loss import asimov
+from metric.loss import asimov
 
 #TODO implement relu and sigmoid
 

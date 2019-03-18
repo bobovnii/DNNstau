@@ -6,11 +6,10 @@ import numpy as np
 from sklearn.metrics import roc_auc_score
 from sklearn.utils import shuffle
 import  keras
-from loss import asimov
-from Plotter import plot_asimov, plot_history
-from lr.schedule import *
+from metric.loss import asimov
+from plotter.Plotter import plot_asimov, plot_history
 import keras.backend as K
-
+import os
 
 class Histories(keras.callbacks.Callback):
     """
@@ -22,7 +21,6 @@ class Histories(keras.callbacks.Callback):
         :param config:
         :return:
         """
-        print(config)
         self.config=config
         return
 
@@ -34,6 +32,11 @@ class Histories(keras.callbacks.Callback):
         :return:
         """
         self.mode = mode
+        if os.path.exists(self.config.get("model","dir")+self.config.get("model","model_name")):
+            pass
+        else:
+            os.mkdir(self.config.get("model","dir")+self.config.get("model","model_name"))
+
         return
 
 
@@ -80,6 +83,7 @@ class Histories(keras.callbacks.Callback):
         self.lr = []
 
 
+
     def on_train_end(self, logs={}):
         """
 
@@ -92,9 +96,9 @@ class Histories(keras.callbacks.Callback):
 
         dir = self.config.get("model", "dir")
         model_name = self.config.get("model", "model_name")
-        plot_asimov(self.asimov, title="Asimov Significance {0}", dir=dir, model_name=model_name, mode=self.mode)
+        plot_asimov(self.asimov, title="Asimov Significance", dir=dir, model_name=model_name, mode=self.mode)
+        plot_asimov(history={'val': self.lr}, title="Learning Rate", dir=dir, model_name=model_name, mode=self.mode)
         plot_history(history={"loss": self.losses, "acc": self.acc},  dir=dir, model_name=model_name, mode=self.mode)
-        plot_asimov({'val':self.lr} , title="Learning Rate", dir=dir, model_name=model_name, mode=self.mode)
         self.store_history()
         return
 
@@ -127,8 +131,14 @@ class Histories(keras.callbacks.Callback):
         self.aucs['val'].append(roc_auc_score(self.validation_data[1], y_pred))
 
         #Asimov
-        #self.asimov['train'].append(asimov(self.x, y_train_pred, self.train_weight))
-        self.asimov['val'].append(asimov(self.validation_data[1], y_pred, self.val_weight))
+        if self.mode!="fit":
+            try:
+                #self.asimov['train'].append(asimov(self.x, y_train_pred, self.train_weight))
+                self.asimov['val'].append(asimov(self.validation_data[1], y_pred, self.val_weight))
+            except Exception:
+                pass
+        else:
+            pass
 
         #Learning Rate:
         self.lr.append(K.get_value(self.model.optimizer.lr))
@@ -155,8 +165,6 @@ class Histories(keras.callbacks.Callback):
         df['train_loss'] =  self.losses['train']
         df['test_accuracy'] = self.acc['val']
         df['test_loss'] =  self.losses['val']
-        #TODO add train AUC
-        #df['train_auc'] =  self.aucs['train']
         df['test_auc'] =  self.aucs['val']
         df['asimov'] =  self.asimov['val']
         df['lr'] = self.lr
@@ -186,7 +194,7 @@ def _overbalance(train):
 
 
 
-def label_correction(df, labels=[1,0], class_names=["signal","background"], col_names=["classID", "className"]):
+def label_correction(df):
     """
 
     :param df:
@@ -219,8 +227,8 @@ def get_results(model, _x_train, _y_train, x_test, y_test, _w_train, w_test):
     _df_test['test_labels'] = [i[0] for i in y_test.as_matrix()]
     _df_train['index'] = _x_train.index
         
-    _df_train['train_output'] = model.predict(_x_train, verbose=0)
-    _df_test['test_output'] = model.predict(x_test, verbose=0)
+    _df_train['train_output'] =  [i[0] for i in model.predict_proba(_x_train)]
+    _df_test['test_output'] = [i[1] for i in model.predict_proba(x_test)]
         
     _df_train['train_weights'] = _w_train.as_matrix()
     _df_test['test_weights'] = w_test.as_matrix()

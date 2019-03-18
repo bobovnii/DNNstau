@@ -1,41 +1,44 @@
 import ConfigParser
-from dataloader import DataLoader
+from loader.dataloader import DataLoader
 import argparse
 from keras.layers import  Dense
 from keras.layers.core import Dropout, Activation
-from hyperopt import Trials, STATUS_OK, tpe
-from hyperas import optim
+from hyperopt import STATUS_OK
 from hyperas.distributions import choice, uniform
 from keras.models import Sequential
 from hyperopt import Trials, tpe
 from hyperas import optim
 import  numpy as np
+from keras.optimizers import Adam
+from utils.utils import label_correction
+from utils.preprocess import _train_test_split
+from utils.utils import _overbalance as ovbal
 
-from logger import set_logger
 
+
+#from logger import set_logger
+
+
+######   Parse config:    #####
 parser = argparse.ArgumentParser()
-
 parser.add_argument('--config', default='config.ini',
                         help="Configuration file")
 args = parser.parse_args()
 configuration_name = args.config
 
 
-######   Parse config:    #####
-
 config = ConfigParser.RawConfigParser()
 config.read(configuration_name)
 DIR = config.get("model", "dir")
 
 ### Set Logger ###:
-set_logger(file_name="{0}/hyper_optimisation.log".format(DIR), config=None)
+#set_logger(file_name="{0}/hyper_optimisation.log".format(DIR), config=None)
 
 ####  Preprocess Data    #####
-from utils import label_correction
-from preprocess import _train_test_split
-from utils import _overbalance as ovbal
 
 ####   Get Data:   ####
+
+
 def get_data():
     """
     Data providing function:
@@ -61,11 +64,12 @@ def get_data():
 
     # Load Data
     train = dataloader._get_train()
-    train = label_correction(train, labels=[1, 0], class_names=["signal", "background"],
-                             col_names=["classID", "className"])
+    train = label_correction(train)
 
     ###   Test train split  ###
-    _train, _test = _train_test_split(train, split=float(config.get("model", "test_train_split")))
+    _train, _test = _train_test_split(train, split=0.3)
+
+    _train, _test = _train_test_split(_train, split=0.2)
 
     ###    Preprocess     ###
     __train = ovbal(_train)
@@ -80,6 +84,7 @@ def get_data():
 
 ### Create Model   ####
 def create_model(X_train, Y_train,  X_validation, Y_validation):
+    import datetime
     """
     Model providing function:
 
@@ -90,56 +95,63 @@ def create_model(X_train, Y_train,  X_validation, Y_validation):
     The last one is optional, though recommended, namely:
         - model: specify the model just created so that we can later use it again.
     """
+    now = datetime.datetime.now()
+
+    time_stamp = now.strftime("%s")
     # Train
     config = ConfigParser.RawConfigParser()
     configuration_name = "/Users/dydukhle/PycharmProjects/stau_learning/config/config_100.ini"
     config.read(configuration_name)
+    {'Activation_1': 0, 'Dense_2': 3, 'Dense_1': 2, 'Activation_2': 1, 'Dense': 1, 'Activation': 1,
+     'Dropout_1': 0.8366666847115819, 'Dropout_2': 0.9128294469805703, 'lr': 0, 'epochs': 2,
+     'Dropout': 0.9770005173795487}
 
 
     model = Sequential()
-    model.add(Dense(256, input_shape=(13,)))
-    model.add(Activation({{choice(['relu', 'sigmoid'])}}))
-    model.add(Dropout({{uniform(0, 1)}}))
-    model.add(Dense({{choice([256, 512, 1024])}}))
+    model.add(Dense( {{choice([32, 64, 128, 256])}}, input_shape=(13,)))
     model.add(Activation({{choice(['relu', 'sigmoid'])}}))
     model.add(Dropout({{uniform(0, 1)}}))
 
-    # If we choose 'four', add an additional fourth layer
-    if {{choice(['three', 'four'])}} == 'four':
-        model.add(Dense(100))
-        # We can also choose between complete sets of layers
-        model.add(Activation('relu'))
+    model.add(Dense({{choice([32, 64, 128, 256])}}))
+    model.add(Activation({{choice(['relu', 'sigmoid'])}}))
+    model.add(Dropout({{uniform(0, 1)}}))
+
+    model.add(Dense({{choice([32, 64, 128, 256])}}))
+    model.add(Activation({{choice(['relu', 'sigmoid'])}}))
+    model.add(Dropout({{uniform(0, 1)}}))
 
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
 
+    adam = Adam(lr={{choice([0.01, 0.001, 0.0001, 0.00001])}})
+
     model.compile(loss='binary_crossentropy', metrics=['accuracy'],
-                  optimizer={{choice(['rmsprop', 'adam', 'sgd'])}})
+                  optimizer=adam)
+
 
     result = model.fit(X_train, Y_train,
-                              batch_size={{choice([64, 128, 300, 500, 1000, 2000, 4000])}},
-                              epochs={{choice([10, 20, 30, 50, 1000])}},
+                              batch_size= 4000,
+                              epochs={{choice([20, 30, 50])}},
                               verbose=2,
                               validation_data=(X_validation, Y_validation),
                               )
-
     validation_acc = np.amax(result.history['val_acc'])
     print(model.summary())
     print('Best validation acc of epoch:', validation_acc)
-    return {'loss': validation_acc, 'status': STATUS_OK, 'model': model}
+    return {'loss': -validation_acc, 'status': STATUS_OK, 'model': model}
 
-
-    return result
 
 ###   Start training:   ####
 best_run, best_model = optim.minimize(model=create_model,
                                       data=get_data,
                                       algo=tpe.suggest,
-                                      max_evals=5,
+                                      max_evals=10,
                                       trials=Trials())
 ### Evaluate best model   ###
+print(best_run)
 X_train, Y_train, X_test, Y_test = get_data()
 print("Evalutation of best performing model:")
+print(best_model.summary())
 print(best_model.evaluate(X_test, Y_test))
 print("Best performing model chosen hyper-parameters:")
 print(best_run)
@@ -156,12 +168,12 @@ print(best_run)
 #Get Result of training:
 #from utils import get_results
 
-#_df_train, _df_test  = trainin.get_results(ubalanced_X_train, ubalanced_Y_train,  X_test, Y_test, ubalanced_W_train, W_test)
+#_df_train, _df_test  = get_results(ubalanced_X_train, ubalanced_Y_train,  X_test, Y_test, ubalanced_W_train, W_test)
 
 
 ###    Run plotter:    ###
 #DIR = config.get("model", "dir")
-#MODEL_NAME = config.get("model", "model_name")
+#MODEL_NAME = config.ge#t("model", "model_name")
 
 #_df_train.to_csv(DIR+MODEL_NAME+"/train_results.csv")
 #_df_test.to_csv(DIR+MODEL_NAME+"/test_results.csv")

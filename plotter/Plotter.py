@@ -1,9 +1,8 @@
-import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import os
-from sklearn import  metrics
-
+import pandas as pd
+import  os
+from sklearn import metrics
 
 class Plotter():
     def __init__(self, working_dir):
@@ -52,6 +51,13 @@ class Plotter():
                  color='r', alpha=0.5, range=low_high, bins=bins,
                  histtype='stepfilled',  weights=signal_weights, #normed=True,
                  label='S (train)')
+
+        plt.hist(decisions[0],
+                 color='r', alpha=0.5, range=low_high, bins=bins,
+                 histtype='stepfilled', weights=signal_weights,  # normed=True,
+                 label='S (train)')
+
+
         plt.hist(decisions[1], 
                  color='b', alpha=0.5, range=low_high, bins=bins,
                  histtype='stepfilled', weights=bgd_weights, #normed=True, 
@@ -63,6 +69,8 @@ class Plotter():
         
         hist, bins = np.histogram(decisions[2], weights=signal_weights,
                                   bins=bins, range=low_high)
+
+
         print("signal:", sum(hist))
         scale = len(decisions[2]) / sum(hist)
         err = np.sqrt(hist * scale) / scale
@@ -169,10 +177,10 @@ def plot_asimov(history, title="", dir="", model_name="", mode=""):
     print(history)
     #plt.plot(history["train"])
     plt.plot(history["val"])
-    plt.title("model significance")
-    plt.ylabel("significance")
+    plt.title(title)
+    plt.ylabel(title)
     plt.xlabel("epoch")
-    plt.legend(["validation"], loc="upper left")
+    #plt.legend(["validation"], loc="upper left")
 
 
     try:
@@ -188,7 +196,7 @@ def plot_asimov(history, title="", dir="", model_name="", mode=""):
                  bbox=bbox  # arrowprops=dict(facecolor='black', shrink=0.05),
                  )
 
-    plt.savefig(os.path.join(dir + model_name, "Significance_{0}_{1}.pdf".format(title, mode)))
+    plt.savefig(os.path.join(dir + model_name, "{0}_{1}.pdf".format(title, mode)))
     # plt.show()
     plt.clf()
 

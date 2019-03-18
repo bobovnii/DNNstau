@@ -1,23 +1,18 @@
-"""
-"""
+
 from keras.models import Sequential
 from keras.models import model_from_json
 from keras.optimizers import Adam
-import matplotlib.pyplot as plt
-from keras.callbacks import Callback
-from logger import *
+from utils.logger import *
 import numpy as np
 import pandas as pd
-np.random.seed(7)
-from functools import partial
 from sklearn.model_selection import StratifiedKFold
-from keras.layers import Input, Dense, LSTM, GRU, Embedding, Lambda
-from keras.models import Model, load_model
+from keras.layers import Input, Dense, Embedding, Lambda
+from keras.models import Model
 import keras.backend as K
 from keras.layers.core import Dropout, Activation
-from hyperopt import Trials, STATUS_OK, tpe
-from hyperas import optim
-from hyperas.distributions import choice, uniform
+
+np.random.seed(7)
+
 
 
 
@@ -93,40 +88,6 @@ class Training():
         self.__model = summer
         return summer
 
-    def get_tune_model(self, loss="binary_crossentropy", input_dim = 13, config=None):
-        """
-
-        :param loss:
-        :param input_dim:
-        :param config:
-        :return:
-        """
-        model = Sequential()
-        model.add(Dense(256, input_shape=(13,)))
-        model.add(Activation({{choice(['relu', 'sigmoid'])}}))
-        model.add(Dropout({{uniform(0, 1)}}))
-        model.add(Dense({{choice([256, 512, 1024])}}))
-        model.add(Activation({{choice(['relu', 'sigmoid'])}}))
-        model.add(Dropout({{uniform(0, 1)}}))
-
-        # If we choose 'four', add an additional fourth layer
-        if {{choice(['three', 'four'])}} == 'four':
-            model.add(Dense(100))
-
-            # We can also choose between complete sets of layers
-
-            model.add({{choice([Dropout(0.5), Activation('linear')])}})
-            model.add(Activation('relu'))
-
-        model.add(Dense(1))
-        model.add(Activation('sigmoid'))
-
-        model.compile(loss='categorical_crossentropy', metrics=['accuracy'],
-                      optimizer={{choice(['rmsprop', 'adam', 'sgd'])}})
-
-        self.__model = model
-        return model
-
     def _model(self, loss="binary_crossentropy", input_dim = 13, config=None):
         """
            :return:
@@ -134,53 +95,70 @@ class Training():
 
         #cl4 = partial(custom_loss_4, weights=weights_tensor)
 
+
         model = Sequential()
-        model.add(Dense(256, input_dim=input_dim, kernel_initializer='uniform', activation='sigmoid'))
+        model.add(Dense( 256, input_shape=(13,)))
+        model.add(Activation('relu'))
         model.add(Dropout(0.4))
-        model.add(Dense(256, kernel_initializer='uniform', activation='sigmoid'))
-        model.add(Dropout(0.4))
-        model.add(Dense(1, kernel_initializer='uniform', activation='sigmoid'))
-        # Compile model
+
+        model.add(Dense( 256))
+        model.add(Activation('relu'))
+        model.add(Dropout(0.3))
+
+        model.add(Dense( 256))
+        model.add(Activation( 'relu'))
+        model.add(Dropout(0.2))
+
+        model.add(Dense(1))
+        model.add(Activation('sigmoid'))
+
+
         model.compile(loss=loss, metrics=['accuracy'], optimizer=Adam(lr=0.01))
 
         print(model.summary())
         self.__model = model
         return model
 
-
     def get_model(self):
 
 
         return self.__model
 
-
-    def tune_model(self, X, Y, X_validation=None, Y_validation=None,  callback=None, loss='binary_crossentropy'):
+    def train(self, X, Y, X_validation=None, Y_validation=None,  callback=None, loss='binary_crossentropy'):
         """
 
         :return:
         """
+        try:
+            lr = self.config.get("pretrain", 'lr')
+        except Exception:
 
+            lr = self.config.get("train", 'lr')
+
+        try:
+            epochs = self.config.get("pretrain", 'epochs')
+        except Exception:
+            epochs = self.config.get("train", 'epochs')
+
+        try:
+            batch_size = self.config.get("pretrain", 'batch_size')
+        except Exception:
+            batch_size = self.config.get("train", 'batch_size')
+
+            # Recompile model with new settings
+        self.__model.compile(loss=loss,
+                             metrics=['accuracy'],
+                             optimizer=Adam(lr=float(lr)))
+        # Start Training:
 
         if X_validation is None or Y_validation is None:
 
-            result = self.__model.fit(X, Y,
-                                      batch_size={{choice([64, 128, 300, 500, 1000, 2000, 4000])}},
-                                      epochs=2,
-                                      verbose=2,
-                                      validation_data=(X_validation, Y_validation),
-                                      callbacks=callback)
+            self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size), callbacks=callback)
         else:
-            result = self.__model.fit(X, Y,
-                                      batch_size={{choice([64, 128, 300, 500, 1000, 2000, 4000])}},
-                                      epochs=2,
-                                      verbose=2,
-                                      validation_data=(X_validation, Y_validation),
-                                      callbacks=callback)
+            self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size),
+                             validation_data=(X_validation, Y_validation,), callbacks=callback)  # , verbose=0)
 
-        validation_acc = np.amax(result.history['val_acc'])
-        print('Best validation acc of epoch:', validation_acc)
-        return {'loss': -validation_acc, 'status': STATUS_OK, 'model': self.__model}
-
+        return
 
     def pre_train(self, X, Y, X_validation=None, Y_validation=None,  callback=None, loss='binary_crossentropy'):
         """
@@ -220,7 +198,7 @@ class Training():
             self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size), callbacks=callback)
         else:
             self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size),
-                                       validation_data=(X_validation, Y_validation, ), callbacks=callback)  # , verbose=0)
+                                       validation_data=(X_validation, Y_validation ), callbacks=callback)  # , verbose=0)
 
 
         return
@@ -267,7 +245,6 @@ class Training():
 
             return
 
-
     def train_k_folds(self, X, Y, k_folds = 5, n_class=2):
         """
 
@@ -295,7 +272,6 @@ class Training():
         return clfs, oof_preds
 
         return
-
 
     def pop_layers(self):
         """
@@ -337,7 +313,6 @@ class Training():
         print("Model is saved on disk")
         return
 
-
     def store_models(self, models=None, model_name=None):
         """
 
@@ -358,7 +333,6 @@ class Training():
             print("Model is saved on disk")
         return
 
-
     def load_model(self, MODEL_NAME):
         """
 
@@ -376,7 +350,6 @@ class Training():
 
         return
 
-
     def extract_weights(self, model):
         """
 
@@ -388,7 +361,6 @@ class Training():
 
         return {"W": W, "B": B}
 
-
     def model_diagnostic(self):
         """
 
@@ -396,7 +368,6 @@ class Training():
         """
         #TODO provide simple way for model diagnostics
         return
-
 
     def evaluate_model(self, X, Y, model=None):
         """
@@ -412,8 +383,6 @@ class Training():
         # evaluate the model
         scores = self.__model.evaluate(X, Y, verbose=0)
         print("Accuraccy %s: %.2f%%" % (self.__model.metrics_names[1], scores[1] * 100))
-
-
 
     def get_results(self, _x_train, _y_train, x_test, y_test, _w_train, w_test):
 
@@ -435,23 +404,5 @@ class Training():
         _df_test["test_pred"] = _df_test["test_output"].apply(lambda x: 1 if x > 0.5 else 0)
         _df_test["index"] = x_test.index
         return _df_train, _df_test
-
-
-    def lr_schedule(self):
-        """
-
-        :return:
-        """
-        #self.loss_history = LossHistory()
-        #lrate = LearningRateScheduler(step_decay)
-
-        #callbacks_list = [loss_history, lrate]
-        #history = model.fit(X_train, y_train,
-        #                validation_data=(X_test, y_test),
-        #                epochs=epochs,
-        #                batch_size=batch_size,
-        #                callbacks=callbacks_list,
-        #                verbose=2)
-        return
 
     
