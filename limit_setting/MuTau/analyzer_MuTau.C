@@ -803,6 +803,10 @@ if (taus_index>-1 )			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], t
             (*inputVec)[12] = dPhiTauMET;
 
 
+            //Evaluate the responce from DNN and BDT:
+
+
+
              //MetV_Pt =  METV.Pt();
              //V_Pt = MuV.Pt();
              //Tau_Pt = TauV.Pt();
@@ -810,8 +814,8 @@ if (taus_index>-1 )			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], t
              //t3f->Fill();
 
             //DataChunk *sample = new DataChunkFlat(13, 0);
-            //sample->set_data(*inputVec);
-            //vector<float> responce = ResponseMutau.compute_output(sample);
+            sample->set_data(*inputVec);
+            vector<float> responce = ResponseMutau.compute_output(sample);
 /*
         float retval = responce[0];
 

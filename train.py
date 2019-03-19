@@ -129,21 +129,12 @@ class Training():
 
         :return:
         """
-        try:
-            lr = self.config.get("pretrain", 'lr')
-        except Exception:
+        lr = self.config.get("train", 'lr')
 
-            lr = self.config.get("train", 'lr')
+        epochs = self.config.get("train", 'epochs')
 
-        try:
-            epochs = self.config.get("pretrain", 'epochs')
-        except Exception:
-            epochs = self.config.get("train", 'epochs')
+        batch_size = self.config.get("train", 'batch_size')
 
-        try:
-            batch_size = self.config.get("pretrain", 'batch_size')
-        except Exception:
-            batch_size = self.config.get("train", 'batch_size')
 
             # Recompile model with new settings
         self.__model.compile(loss=loss,
@@ -204,46 +195,6 @@ class Training():
         return
 
 
-        def train(self, X, Y, X_validation=None, Y_validation=None, callback=None,  loss='binary_crossentropy'):
-            """
-
-            #Set Numb
-            :return:
-            """
-            try:
-                lr = self.config.get("train", 'lr')
-            except Exception:
-
-                lr = self.config.get("train", 'lr')
-
-            try:
-                epochs = self.config.get("train", 'epochs')
-            except Exception:
-                epochs = self.config.get("train", 'epochs')
-
-
-            try:
-                batch_size = self.config.get("train", 'batch_size')
-            except Exception:
-                batch_size = self.config.get("train", 'batch_size')
-
-
-            #Recompile model with new settings
-            self.__model.compile(loss=loss,
-                                 metrics=['accuracy'],
-                                 optimizer=Adam(lr=float(lr)))
-
-
-            if X_validation is None or Y_validation is None:
-
-                self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size), callbacks=callback)
-            else:
-                self.__model.fit(X, Y, epochs=int(epochs), batch_size=int(batch_size),
-                                           validation_data=(X_validation, Y_validation, ), callbacks=callback)  # , verbose=0)
-
-
-
-            return
 
     def train_k_folds(self, X, Y, k_folds = 5, n_class=2):
         """
@@ -384,25 +335,35 @@ class Training():
         scores = self.__model.evaluate(X, Y, verbose=0)
         print("Accuraccy %s: %.2f%%" % (self.__model.metrics_names[1], scores[1] * 100))
 
-    def get_results(self, _x_train, _y_train, x_test, y_test, _w_train, w_test):
+    def get_results(self, _x_train, _y_train, x_test, y_test, _w_train, w_test, index_train=None,
+                    index_test=None):
 
         _df_train = pd.DataFrame()
         _df_test = pd.DataFrame()
 
-        _df_train["train_labels"] = [i[0] for i in _y_train.as_matrix()]
-        _df_test["test_labels"] = [i[0] for i in y_test.as_matrix()]
-        _df_train["index"] = _x_train.index
+        _df_train["train_labels"] = [i[0] for i in _y_train.values]
+        _df_test["test_labels"] = [i[0] for i in y_test.values]
+
+        if index_train is None:
+            _df_train["index"] = _x_train.index
+        else:
+            _df_train["index"] = index_train
 
         _df_train["train_output"] = self.__model.predict(_x_train, verbose=0)
         _df_test["test_output"] = self.__model.predict(x_test, verbose=0)
 
-        _df_train["train_weights"] = _w_train.as_matrix()
-        _df_test["test_weights"] = w_test.as_matrix()
+        _df_train["train_weights"] = _w_train.values
+        _df_test["test_weights"] = w_test.values
 
     
         _df_train["train_pred"] = _df_train["train_output"].apply(lambda x: 1 if x > 0.5 else 0)
         _df_test["test_pred"] = _df_test["test_output"].apply(lambda x: 1 if x > 0.5 else 0)
-        _df_test["index"] = x_test.index
+
+        if index_test is None:
+            _df_test["index"] = x_test.index
+        else:
+            _df_test["index"] = index_test
+
         return _df_train, _df_test
 
     

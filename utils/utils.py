@@ -131,14 +131,7 @@ class Histories(keras.callbacks.Callback):
         self.aucs['val'].append(roc_auc_score(self.validation_data[1], y_pred))
 
         #Asimov
-        if self.mode!="fit":
-            try:
-                #self.asimov['train'].append(asimov(self.x, y_train_pred, self.train_weight))
-                self.asimov['val'].append(asimov(self.validation_data[1], y_pred, self.val_weight))
-            except Exception:
-                pass
-        else:
-            pass
+        self.asimov['val'].append(asimov(self.validation_data[1], y_pred, self.val_weight))
 
         #Learning Rate:
         self.lr.append(K.get_value(self.model.optimizer.lr))
@@ -161,12 +154,12 @@ class Histories(keras.callbacks.Callback):
         """
         #Save train
         df = pd.DataFrame()
-        df['train_accuracy'] = self.acc['train']
-        df['train_loss'] =  self.losses['train']
+        df['train_aeccuracy'] = self.acc['train']
+        df['train_loss'] = self.losses['train']
         df['test_accuracy'] = self.acc['val']
-        df['test_loss'] =  self.losses['val']
-        df['test_auc'] =  self.aucs['val']
-        df['asimov'] =  self.asimov['val']
+        df['test_loss'] = self.losses['val']
+        df['test_auc'] = self.aucs['val']
+        df['asimov'] = self.asimov['val']
         df['lr'] = self.lr
         #Save test
         dir = self.config.get("model", "dir")

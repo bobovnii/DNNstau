@@ -63,3 +63,10 @@ def mywloss(y_true,y_pred):
     loss=-(tf.reduce_mean(tf.reduce_mean(y_true*tf.log(yc),axis=0)/wtable))
     return loss
 
+
+# Asimov significance
+def Z(s,b,sig=0.2):
+    #if sig == None: sig=eps
+    return np.sqrt( -2.0/(sig*sig)*np.log( b/( b+(b*b)*(sig*sig))*(sig*sig)*s+1.0)+ \
+           2.0*( b+s)*np.log(( b+s)*( b+(b*b)*(sig*sig))/( (b*b)+( b+s)*(b*b)*(sig*sig))))
+

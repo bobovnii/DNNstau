@@ -1,10 +1,12 @@
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
-import  os
+import os
+from metric.loss import Z
 from sklearn import metrics
 
+
 class Plotter():
+
     def __init__(self, working_dir):
         """
         Simple Plotter
@@ -12,14 +14,14 @@ class Plotter():
         """
         self.dir = working_dir
 
-        #if directory doesn't exist create new one:
         if os.path.exists(working_dir):
             pass
         else:
             os.mkdir(working_dir)
 
         return
-    
+
+
     def train_test_plot(self, df_train, df_test, bgd_train_sf, bgd_test_sf, signal_train_sf, signal_test_sf):
         """
         Train test plots from https://github.com/aelwood/hepML
@@ -38,10 +40,9 @@ class Plotter():
         low = min(np.min(d) for d in decisions)
         high = max(np.max(d) for d in decisions)
         low_high = (low,high)
-        
-      
-        bgd_weights=[np.float32(i)/np.float32(bgd_train_sf) for i in df_train[df_train.train_labels==0]['train_weights']]
-        signal_weights=[np.float32(i)/(signal_train_sf) for i in  df_train[df_train.train_labels==1]['train_weights']]
+
+        bgd_weights = df_train[df_train.train_labels==0].train_weights/bgd_train_sf
+        signal_weights = df_train[df_train.train_labels==1].train_weights/signal_train_sf
 
         print("Background train: ", sum(bgd_weights))
 
@@ -52,30 +53,21 @@ class Plotter():
                  histtype='stepfilled',  weights=signal_weights, #normed=True,
                  label='S (train)')
 
-        plt.hist(decisions[0],
-                 color='r', alpha=0.5, range=low_high, bins=bins,
-                 histtype='stepfilled', weights=signal_weights,  # normed=True,
-                 label='S (train)')
-
-
         plt.hist(decisions[1], 
                  color='b', alpha=0.5, range=low_high, bins=bins,
                  histtype='stepfilled', weights=bgd_weights, #normed=True, 
                  label='B (train)')
 
-        bgd_weights=[np.float32(i)/np.float32(bgd_test_sf) for i in df_test[df_test.test_labels==0]['test_weights']]
-        signal_weights=[np.float32(i)/np.float32(signal_test_sf) for i in  df_test[df_test.test_labels==1]['test_weights']]
+        bgd_weights = df_test[df_test.test_labels==0].test_weights/bgd_test_sf
+        signal_weights = df_test[df_test.test_labels==1].test_weights/signal_test_sf
 
-        
         hist, bins = np.histogram(decisions[2], weights=signal_weights,
                                   bins=bins, range=low_high)
-
 
         print("signal:", sum(hist))
         scale = len(decisions[2]) / sum(hist)
         err = np.sqrt(hist * scale) / scale
 
-        width = (bins[1] - bins[0])
         center = (bins[:-1] + bins[1:]) / 2
         plt.errorbar(center, hist, yerr=err, fmt='o', c='r', label='S (test)')
 
@@ -92,34 +84,37 @@ class Plotter():
         plt.ylabel("Arbitrary units")
         plt.yscale('log')
         plt.legend(loc='best')
-        #if not os.path.exists(output): os.makedirs(output)
-        #plt.show()
         plt.savefig(os.path.join(self.dir,'compareTrainTest.pdf'))
         plt.clf()
 
         return
-    
+
+
     def class_prediction(self, df, save=False, bgd_test_sf=1, signal_test_sf=1):
         """
         Class prediction plots  from https://github.com/aelwood/hepML
         """
 
-        bgd_weights=[np.float32(i)/np.float32(bgd_test_sf) for i in df[df.test_labels==0]['test_weights']]
-        signal_weights=[np.float32(i)/np.float32(signal_test_sf) for i in  df[df.test_labels==1]['test_weights']]
+        bgd_weights=df[df.test_labels==0].test_weights
+        signal_weights=df[df.test_labels==1].test_weights
 
 
-        self.h1=plt.hist(df[df.test_labels==0]['test_output'], weights=bgd_weights, bins=5000,color='b',alpha=0.8,label='background',cumulative=-1)
-        self.h2=plt.hist(df[df.test_labels==1]['test_output'], weights=signal_weights, bins=5000,color='r',alpha=0.8,label='signal',cumulative=-1)
+        self.h1=plt.hist(df[df.test_labels==0]['test_output'], weights=bgd_weights/np.float32(bgd_test_sf),
+                         bins=5000,color='b',alpha=0.8,label='background',cumulative=-1)
+        self.h2=plt.hist(df[df.test_labels==1]['test_output'], weights=signal_weights/np.float32(signal_test_sf),
+                         bins=5000,color='r',alpha=0.8,label='signal',cumulative=-1)
+
+
         plt.yscale('log')
-        plt.ylabel('Cumulative event counts / 0.02')
+        plt.ylabel('Cumulative event counts')
         plt.xlabel('Classifier output')
         plt.legend()
-        if save:
-            plt.savefig(os.path.join(self.dir,'class_prediction.pdf'))
-        #plt.show()
+        plt.savefig(os.path.join(self.dir,'class_prediction.pdf'))
+        plt.close()
         return
-    
-    def significance_plot(self, df_test, bgd_test_sf, signal_test_sf):
+
+
+    def significance_plot(self, df_test, bgd_test_sf, signal_test_sf, syst=0.2):
         """
         Significance plots from https://github.com/aelwood/hepML
         """
@@ -127,19 +122,30 @@ class Plotter():
         s=self.h2[0]
         b=self.h1[0]
 
+        sign = s/np.sqrt(s+b)
+        sign_syst = s/np.sqrt(s+b+(syst*b)**2)
+        asimov = Z(s, b)
+
+
+        plt.title('Asimov best is {0} \n  '
+                  'Max s/sqrt(s+b) is {1} \n'
+                  ' Max s/sqrt(s+b+syst^2*b^2) is {2} \n'.format(max(asimov), max(sign), max(sign_syst)))
+
         plt.plot((self.h1[1][:-1]+self.h1[1][1:])/2,s/b)
-        plt.title('sig/bkgd on test set')
-        plt.savefig(os.path.join(self.dir,'sigDivBkgdDiscriminator.pdf'))
-        #plt.show()
-        plt.clf()
-        
-        plt.plot((self.h1[1][:-1]+self.h1[1][1:])/2,s/np.sqrt(s+b))
-        plt.title('sig/sqrt(sig+bkgd) on test set, best is '+str(max(s/np.sqrt(s+b))))
-        plt.savefig(os.path.join(self.dir,'sensitivityDiscriminator.pdf'))
-        #plt.show()
-        plt.clf()
-        
+
+
+        plt.xlabel('Classifier output')
+        plt.plot((self.h1[1][:-1]+self.h1[1][1:])/2, sign, label='s/sqrt(s+b)')
+        plt.plot((self.h1[1][:-1]+self.h1[1][1:])/2, sign_syst, label='s/sqrt(s+b+syst)')
+        plt.plot((self.h1[1][:-1]+self.h1[1][1:])/2, asimov, label='asimov', linestyle='dotted')
+
+        plt.grid()
+        plt.legend()
+        plt.savefig(os.path.join(self.dir,'asimov+sign.pdf'))
+        plt.close()
+
         return
+
 
     def roc_curve(self, df_train, df_test):
         
@@ -162,7 +168,8 @@ class Plotter():
         plt.title('Receiver operating characteristic at AUC %f'%_roc_auc_score)
         plt.legend(loc="lower right")
         plt.savefig(os.path.join(self.dir,'ROC_Curva.pdf'))
-        #plt.show()
+        plt.close()
+
         return
 
 
@@ -197,7 +204,6 @@ def plot_asimov(history, title="", dir="", model_name="", mode=""):
                  )
 
     plt.savefig(os.path.join(dir + model_name, "{0}_{1}.pdf".format(title, mode)))
-    # plt.show()
     plt.clf()
 
 
@@ -205,10 +211,7 @@ def plot_history(history, title="", dir="", model_name="", mode=""):
         """"
 
         """
-
-
         # summarize history for accuracy
-
 
         bbox = dict(boxstyle="round", fc="blue", alpha=0.1)
 
@@ -241,7 +244,6 @@ def plot_history(history, title="", dir="", model_name="", mode=""):
                      )
 
         plt.savefig(os.path.join(dir +  model_name, "Accuracy_{0}_{1}.pdf".format(title, mode)))
-        #plt.show()
         plt.clf()
 
         # summarize history for loss
@@ -272,7 +274,6 @@ def plot_history(history, title="", dir="", model_name="", mode=""):
 
 
         plt.savefig(os.path.join(dir +  model_name, "Loss_{0}_{1}.pdf".format(title, mode)))
-        #plt.show()
         plt.clf()
 
         return
