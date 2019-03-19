@@ -14,7 +14,6 @@ class DataLoader():
         
         """
         """
-        print(self.config)
         self.path = self.config.get("data","path")
         self.train_path = self.config.get("data","train")
         self.train_directory = self.config.get("data","train_directory")
