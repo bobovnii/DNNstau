@@ -99,21 +99,21 @@ class Training():
         model = Sequential()
         model.add(Dense( 256, input_shape=(13,)))
         model.add(Activation('relu'))
-        model.add(Dropout(0.4))
+        model.add(Dropout(0.7))
 
         model.add(Dense( 256))
         model.add(Activation('relu'))
-        model.add(Dropout(0.3))
+        model.add(Dropout(0.4))
 
-        model.add(Dense( 256))
+        model.add(Dense(256))
         model.add(Activation( 'relu'))
-        model.add(Dropout(0.2))
+        model.add(Dropout(0.1))
 
         model.add(Dense(1))
         model.add(Activation('sigmoid'))
 
 
-        model.compile(loss=loss, metrics=['accuracy'], optimizer=Adam(lr=0.01))
+        model.compile(loss=loss, metrics=['accuracy'], optimizer=Adam(lr=0.001))
 
         print(model.summary())
         self.__model = model
@@ -277,28 +277,28 @@ class Training():
         for i in range(len(models)):
             index+=1
             model_json = models[i].to_json()
-            with open("{0}/Model{0}.json".format(index).format(self.dir + self.model_name), "w") as json_file:
+            with open("{0}/Model{0}.json".format(self.dir + self.model_name), "w") as json_file:
                 json_file.write(model_json)
             # serialize weights to HDF5
             models[i].save_weights(self.dir + self.model_name + "/Model_weight_{0}".format(index))
             print("Model is saved on disk")
         return
 
-    def load_model(self, MODEL_NAME):
+    def load_model(self):
         """
 
         :return:
         """
-        #TODO implement this method
         # load json and create model
-        json_file = open('GEN_MET_model.json', 'r')
+        json_file = open(os.path.join(self.dir + self.model_name + '/Model.json'),'r')
         loaded_model_json = json_file.read()
         json_file.close()
         loaded_model = model_from_json(loaded_model_json)
         # load weights into new model
-        loaded_model.load_weights(MODEL_NAME)
+        loaded_model.load_weights(self.dir + self.model_name + "/Model_weight.h5")
         print("Loaded model from disk")
-
+        self.__model = loaded_model
+        self.__model.compile(loss='binary_crossentropy', metrics=['accuracy'], optimizer=Adam(lr=0.01))
         return
 
     def extract_weights(self, model):

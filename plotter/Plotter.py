@@ -41,52 +41,56 @@ class Plotter():
         high = max(np.max(d) for d in decisions)
         low_high = (low,high)
 
-        bgd_weights = df_train[df_train.train_labels==0].train_weights/bgd_train_sf
-        signal_weights = df_train[df_train.train_labels==1].train_weights/signal_train_sf
+        sw_train = df_train[df_train.train_labels==1].train_weights/signal_train_sf
+        sw = df_test[df_test.test_labels==1].test_weights/signal_test_sf
 
-        print("Background train: ", sum(bgd_weights))
+        print("Signal train: ", sum(sw_train))
+        print("Signal test: ", sum(sw))
 
-        print("Signal train: ", sum(signal_weights))
-        
-        plt.hist(decisions[0],
-                 color='r', alpha=0.5, range=low_high, bins=bins,
-                 histtype='stepfilled',  weights=signal_weights, #normed=True,
-                 label='S (train)')
 
-        plt.hist(decisions[1], 
-                 color='b', alpha=0.5, range=low_high, bins=bins,
-                 histtype='stepfilled', weights=bgd_weights, #normed=True, 
-                 label='B (train)')
+        fig, ax1 = plt.subplots()
 
-        bgd_weights = df_test[df_test.test_labels==0].test_weights/bgd_test_sf
-        signal_weights = df_test[df_test.test_labels==1].test_weights/signal_test_sf
+        ax1.hist(decisions[0], color='r', alpha=0.5, bins=50,
+                 weights=sw_train,
+                 label='S', range=(0, 1))
 
-        hist, bins = np.histogram(decisions[2], weights=signal_weights,
-                                  bins=bins, range=low_high)
-
-        print("signal:", sum(hist))
-        scale = len(decisions[2]) / sum(hist)
+        hist, bins = np.histogram(decisions[2], weights=sw,
+                                  bins=bins, range=(0, 1))
+        scale = len(decisions[0]) / sum(hist)
         err = np.sqrt(hist * scale) / scale
 
+        width = (bins[1] - bins[0])
         center = (bins[:-1] + bins[1:]) / 2
         plt.errorbar(center, hist, yerr=err, fmt='o', c='r', label='S (test)')
+        ax1.legend(loc=1)
+        ax1.set_ylabel('Signal', color='r')
+        ax1.set_xlabel('DNN output')
 
-        hist, bins = np.histogram(decisions[3], weights=bgd_weights,
-                                  bins=bins, range=low_high)
-        print("background:", sum(hist))
+        ax2 = ax1.twinx()
 
-        scale = len(decisions[3]) / sum(hist)
+
+        bw_train = df_train[df_train.train_labels==0].train_weights/bgd_train_sf
+        bw = df_test[df_test.test_labels==0].test_weights/bgd_test_sf
+
+        ax2.hist(decisions[1],
+                 color='b', alpha=0.5, range=low_high, bins=bins,
+                 histtype='stepfilled', weights=bw_train,  # normed=True,
+                 label='B (train)')
+
+
+        hist, bins = np.histogram(decisions[3], weights=bw ,
+                                  bins=bins, range=(0, 1))
+        scale = len(decisions[1]) / sum(hist)
         err = np.sqrt(hist * scale) / scale
 
-        plt.errorbar(center, hist, yerr=err, fmt='o', c='b', label='B (test)')
-
-        plt.xlabel("Classifier output")
-        plt.ylabel("Arbitrary units")
-        plt.yscale('log')
-        plt.legend(loc='best')
+        width = (bins[1] - bins[0])
+        center = (bins[:-1] + bins[1:]) / 2
+        ax2.errorbar(center, hist, yerr=err, fmt='o', c='b', label='B (test)')
+        ax2.set_ylabel('Background', color='b')
+        ax2.grid()
+        ax2.legend(loc=2)
         plt.savefig(os.path.join(self.dir,'compareTrainTest.pdf'))
-        plt.clf()
-
+        plt.close()
         return
 
 
@@ -127,11 +131,10 @@ class Plotter():
         asimov = Z(s, b)
 
 
-        plt.title('Asimov best is {0} \n  '
-                  'Max s/sqrt(s+b) is {1} \n'
-                  ' Max s/sqrt(s+b+syst^2*b^2) is {2} \n'.format(max(asimov), max(sign), max(sign_syst)))
+        plt.title("Asimov best is {0} \n "
+                  "s/sqrt(s+b) is {1} , {2} \n".format(max(asimov), max(sign), max(sign_syst)))
 
-        plt.plot((self.h1[1][:-1]+self.h1[1][1:])/2,s/b)
+        #plt.plot((self.h1[1][:-1]+self.h1[1][1:])/2,s/b)
 
 
         plt.xlabel('Classifier output')
@@ -148,7 +151,12 @@ class Plotter():
 
 
     def roc_curve(self, df_train, df_test):
-        
+        """
+
+        :param df_train:
+        :param df_test:
+        :return:
+        """
         _roc_auc_score = metrics.roc_auc_score(df_test['test_labels'], df_test['test_pred'])
 
         _fpr, _tpr, _thresholds = metrics.roc_curve(df_train['train_labels'], df_train['train_output'])

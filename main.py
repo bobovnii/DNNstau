@@ -96,7 +96,7 @@ from train import Training
 
 
 ###   Start training:   ####
-trainin = Training(config)
+training = Training(config)
 expected_signal = _train[(_train.classID==1)].weight.sum()
 expecred_background = _train[(_train.classID==0)].weight.sum()
 print("Expected Signal: ", _train[(_train.classID==1)].weight.sum())
@@ -104,7 +104,7 @@ print("Expected Background: ", expecred_background)
 
 loss =significanceLoss(expected_signal,expecred_background )
 loss = "binary_crossentropy"
-model = trainin._model(loss=loss)
+model = training._model(loss=loss)
 histories = Histories()
 histories.set_up_config(config)
 histories.set_up_train_weight(weight=W_train)
@@ -113,14 +113,18 @@ histories.set_up_val_weight(weight=W_validation)
 lr = LossLearningRateScheduler(base_lr=0.01, lookback_epochs=10, decay_multiple=0.9)
 
 
+histories.set_mode(mode="pre_train")
+training.pre_train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories],
+              loss = loss)
 histories.set_mode(mode="train")
-trainin.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories, lr],
-              loss = significanceLoss(expected_signal,expecred_background ))
-trainin.store_model()
+training.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories],
+              loss = loss)
+
+training.store_model()
 
 
 ###  Get Result of training:
-_df_train, _df_test  = trainin.get_results(ubalanced_X_train, ubalanced_Y_train,
+_df_train, _df_test  = training.get_results(ubalanced_X_train, ubalanced_Y_train,
                                             X_test, Y_test, ubalanced_W_train, W_test,
                                            ubalanced_X_train.index,   _test.index
                                            )
@@ -135,7 +139,11 @@ _df_train.to_csv(DIR+MODEL_NAME+"/train_results.csv")
 _df_test.to_csv(DIR+MODEL_NAME+"/test_results.csv")
 
 plotter = Plotter(DIR+MODEL_NAME)
-plotter.train_test_plot(pd.DataFrame(_df_train), pd.DataFrame(_df_test), bgd_train_sf, bgd_test_sf, signal_train_sf, signal_test_sf)
+
+plotter.train_test_plot(pd.DataFrame(_df_train), pd.DataFrame(_df_test),
+                        bgd_train_sf, bgd_test_sf,
+                        signal_train_sf, signal_test_sf)
+
 plotter.significance_plot(_df_test, bgd_test_sf, signal_test_sf)
 plotter.roc_curve(_df_train, _df_test)
 
