@@ -4,29 +4,20 @@
 #include "/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_8_0_12/src/DesyTauAnalyses/NTupleMaker/interface/mt2_bisect.cpp"
 //#include "/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_8_0_12/src/DesyTauAnalyses/NTupleMaker/interface/Basic_Mt2_332_Calculator.h"
 //#include "/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_8_0_12/src/DesyTauAnalyses/NTupleMaker/interface/Basic_Nt2_332_Calculator.h"
-#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/mTBound.h"
-#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/mTTrue.h"
-#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/mt2bl_bisect.h"
-#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/mt2bl_bisect.cpp"
-#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/example.h"
-#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/JetUtil.h"
-#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/JetUtil.cc"
-//#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/topness.cc"
-//#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/topness.h"
-#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/mt2w_bisect.h"
-#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/mt2w_bisect.cpp"
-#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/mt2w.cc"
-#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/mt2w.h"
-#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/interface/functionsSUSY.h"
-
-
-
-#include "/nfs/dust/cms/user/dydukhle/CMSSW_9_4_0_patch1/src/DesyTauAnalyses/NTupleMaker/test/freeze/Keras2Cpp4Terminal/keras2cpp/keras_model.h"
-#pragma cling load("/nfs/dust/cms/user/dydukhle/CMSSW_9_4_0_patch1/src/DesyTauAnalyses/NTupleMaker/test/freeze/Keras2Cpp4Terminal/keras2cpp/libneural_net.so")
-
-using namespace std;
-using namespace keras;
-
+#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/mTBound.h"
+#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/mTTrue.h"
+#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/mt2bl_bisect.h"
+#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/mt2bl_bisect.cpp"
+#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/example.h"
+#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/JetUtil.h"
+#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/JetUtil.cc"
+//#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/topness.cc"
+//#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/topness.h"
+#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/mt2w_bisect.h"
+#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/mt2w_bisect.cpp"
+#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/mt2w.cc"
+#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/mt2w.h"
+#include "/nfs/dust/cms/user/bobovnii/MVAstau/CMSSW_9_4_0_patch1//src/DesyTauAnalyses/NTupleMaker/interface/functionsSUSY.h"
 //#include "/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_8_0_12/src/DesyTauAnalyses/NTupleMaker/interface/TMctLib.h"
 //#include "/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_8_0_12/src/DesyTauAnalyses/NTupleMaker/interface/mctlib.h"
 //#include "/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/CMSSW_8_0_12/src/DesyTauAnalyses/NTupleMaker/interface/Basic_MPairProd_Calculator.h"
@@ -137,10 +128,10 @@ int nBinsEta = 4;
 double binsEtaMuEff[5] =  {0,0.9,1.2,2.1,2.4};
 double binsEtaElEff[4] =  {0,0.9,1.2,2.1};
 
-int nBinsTauPt2 = 4;
+int nBinsTauPt2 = 5;
 int nBinsTauEta2 = 4;
 
-double binsTauPt2[5] =  {20,30,40,70,1000};
+double binsTauPt2[6] =  {20,30,40,70,110,1000};
 double binsTauEta2[5] =  {0,0.8,1.44,1.566,2.3};
 
 
@@ -186,27 +177,26 @@ int nBinsmet = 8;
    double binsMT2lesterr[9] = {0.1,10,20,30,40,80,100,120,1000};
 
 
-int nbinsBDTmutau_Stau100= 27;
- double binsBDTmutau_Stau100[28]  = {0.0, 0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,0.64,0.655,1.0};
 
-int nbinsBDTmutau_Stau200= 36;
- double binsBDTmutau_Stau200[37]  = {0.0, 0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,0.64,0.65,0.66,0.67,0.68,0.69,0.7,0.71,0.72,0.73,0.744,1.0};
+int nbinsBDTmutau_Stau100= 25;
+ double binsBDTmutau_Stau100[26]  = {0.0, 0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.631,1.0};
 
-int nbinsBDTmutau_Stau150= 25;
- double binsBDTmutau_Stau150[26]  = {0.0, 0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,1.0};
+int nbinsBDTmutau_Stau150= 27;
+ double binsBDTmutau_Stau150[28]  = {0.0, 0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,0.64,0.652,1.0};
+		
+int nbinsBDTmutau_Stau200= 28;
+ double binsBDTmutau_Stau200[29]  = {0.0, 0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,0.64,0.65,0.668,1.0};
+	
+int nbinsBDTeltau_Stau100= 23;
+ double binsBDTeltau_Stau100[24]  = {0.0, 0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.60,0.611,1.0};
 
-int nbinsBDTeltau_Stau100= 22;
- double binsBDTeltau_Stau100[23]  = {0.0, 0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.602,1.0};
-
-
-int nbinsBDTeltau_Stau200= 34;
- double binsBDTeltau_Stau200[35]  = {0.0, 0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,0.64,0.65,0.66,0.67,0.68,0.69,0.7,0.71,0.725,1.0};
 
 int nbinsBDTeltau_Stau150= 20;
- double binsBDTeltau_Stau150[21]  = {0.0, 0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.581,1.0};
+ double binsBDTeltau_Stau150[21]  = {0.0, 0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.5814,1.0};
 
-int nbinsDNNmutau_Stau100 = 100;
-//hDNNmutau_Stau100
+int nbinsBDTeltau_Stau200= 27;
+ double binsBDTeltau_Stau200[28]  = {0.0, 0.4,0.41,0.42,0.43,0.44,0.45,0.46,0.47,0.48,0.49,0.5,0.51,0.52,0.53,0.54,0.55,0.56,0.57,0.58,0.59,0.6,0.61,0.62,0.63,0.64,0.656,1.0};
+	
 
 
 double HIP_SF(double pt,double eta)
@@ -322,32 +312,148 @@ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
                 if (pt>40) SF = 0.608262;
         }
 */
+// 2017 Data
+
 
 // VTight
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.338533;
-         if (pt>30 && pt<40) SF = 0.324686;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.320429;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.342852;
-         if (pt>30 && pt<40) SF = 0.325891;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.330219;
  }
  if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.387358;
+        if (pt>30) SF = 0.302723;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.388045;
-         if (pt>30 && pt<40) SF = 0.370063;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.291917;
  }
-        if (pt>40 && pt<70) SF = 0.316091;
-         if (pt>70) SF = 0.251774;
+        if (pt>40 && pt<70) SF = 0.281194;
+         if (pt>70 && pt<110) SF = 0.227457;
+         if (pt>110) SF = 0.21729;
 
 
 
+
+
+/*
+//for DPF
+ if ( working_point == "Nominal"){
+ if (  fabs(eta) < 0.8 )
+ {
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.44197;
+ }
+ if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
+ {
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.467934;
+ }
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
+ {
+        if (pt>30) SF = 0.383893;
+ }
+ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
+ {
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.383764;
+ }
+        if (pt>40 && pt<70) SF = 0.358502;
+         if (pt>70 && pt<110) SF = 0.24208;
+         if (pt>110) SF = 0.184863;
+}
+
+
+
+*/
+/*
+
+if (  fabs(eta) < 0.8 )
+ {
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.44197;
+ }
+ if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
+ {
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.467934;
+ }
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
+ {
+        if (pt>30) SF = 0.383893;
+ }
+ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
+ {
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.383764;
+ }
+        if (pt>40 && pt<70) SF = 0.358502;
+         if (pt>70 && pt<110) SF = 0.24208;
+         if (pt>110) SF = 0.184863;
+
+*/
+
+
+
+
+/*
+ if (  fabs(eta) < 0.8 )
+ {
+        if (pt>20 && pt<30) SF = 0.626978;
+         if (pt>30 && pt<40) SF = 0.598064;
+         if (pt>40 ) SF = 0.477006;
+ }
+ if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
+ {
+        if (pt>20 && pt<30) SF = 0.642723;
+         if (pt>30 && pt<40) SF = 0.634957;
+         if (pt>40 ) SF = 0.545309;
+ }
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ {
+        if (pt>20) SF = 0.609547;
+ }
+ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
+ {
+        if (pt>20 && pt<30) SF = 0.653288;
+         if (pt>30 && pt<40) SF = 0.611165;
+         if (pt>40 ) SF = 0.595863;
+ }
+*/
+
+
+/*
+ if (  fabs(eta) < 0.8 )
+ {
+        if (pt>20 && pt<30) SF = 0.63209;
+         if (pt>30 && pt<40) SF = 0.613068;
+         if (pt>40 ) SF = 0.541824;
+ }
+ if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
+ {
+        if (pt>20 && pt<30) SF = 0.646227;
+         if (pt>30 && pt<40) SF = 0.64326;
+         if (pt>40 ) SF = 0.597469;
+ }
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ {
+        if (pt>20) SF = 0.618933;
+ }
+ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
+ {
+        if (pt>20 && pt<30) SF = 0.655351;
+         if (pt>30 && pt<40) SF = 0.619266;
+         if (pt>40 ) SF = 0.620072;
+ }
+*/
+ 
 
 /*
  if (  fabs(eta) < 0.8 )
@@ -380,599 +486,306 @@ if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  */
  
  
-  if ( working_point == "JetEnUp"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.339479;
-         if (pt>30 && pt<40) SF = 0.325294;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.344266;
-         if (pt>30 && pt<40) SF = 0.326125;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
- {
-        if (pt>20) SF = 0.390974;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.385373;
-         if (pt>30 && pt<40) SF = 0.368231;
- }
-        if (pt>40 && pt<70) SF = 0.314641;
-         if (pt>70) SF = 0.251382;
-}
  
- if ( working_point == "JetEnDown"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.336358;
-         if (pt>30 && pt<40) SF = 0.323963;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.341817;
-         if (pt>30 && pt<40) SF = 0.32377;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
- {
-        if (pt>20) SF = 0.384819;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.381864;
-         if (pt>30 && pt<40) SF = 0.370213;
- }
-        if (pt>40 && pt<70) SF = 0.315565;
-         if (pt>70) SF = 0.256002;
-}
- 
- if ( working_point == "TauEnUp"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.33818;
-         if (pt>30 && pt<40) SF = 0.323574;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.342368;
-         if (pt>30 && pt<40) SF = 0.326021;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
- {
-        if (pt>20) SF = 0.390771;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.386971;
-         if (pt>30 && pt<40) SF = 0.370363;
- }
-        if (pt>40 && pt<70) SF = 0.311948;
-         if (pt>70) SF = 0.244015;
-}
- 
- if ( working_point == "TauEnDown"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.338099;
-         if (pt>30 && pt<40) SF = 0.324063;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.341829;
-         if (pt>30 && pt<40) SF = 0.326569;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
- {
-        if (pt>20) SF = 0.389989;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.388683;
-         if (pt>30 && pt<40) SF = 0.367318;
- }
-        if (pt>40 && pt<70) SF = 0.316723;
-         if (pt>70) SF = 0.258891;
-}
- 
- if ( working_point == "ElEnUp"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.338066;
-         if (pt>30 && pt<40) SF = 0.323953;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.342174;
-         if (pt>30 && pt<40) SF = 0.326078;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
- {
-        if (pt>20) SF = 0.391633;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.38764;
-         if (pt>30 && pt<40) SF = 0.368961;
- }
-        if (pt>40 && pt<70) SF = 0.315011;
-         if (pt>70) SF = 0.250695;
-}
- 
- if ( working_point == "ElEnDown"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.338066;
-         if (pt>30 && pt<40) SF = 0.323953;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.342181;
-         if (pt>30 && pt<40) SF = 0.326078;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
- {
-        if (pt>20) SF = 0.391617;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.387635;
-         if (pt>30 && pt<40) SF = 0.368961;
- }
-        if (pt>40 && pt<70) SF = 0.314953;
-         if (pt>70) SF = 0.250695;
-}
- 
- if ( working_point == "MuEnUp"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.337699;
-         if (pt>30 && pt<40) SF = 0.323846;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.342184;
-         if (pt>30 && pt<40) SF = 0.325513;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
- {
-        if (pt>20) SF = 0.391797;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.3876;
-         if (pt>30 && pt<40) SF = 0.36888;
- }
-        if (pt>40 && pt<70) SF = 0.31454;
-         if (pt>70) SF = 0.249795;
-}
- 
- if ( working_point == "MuEnDown"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.338259;
-         if (pt>30 && pt<40) SF = 0.324447;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.341762;
-         if (pt>30 && pt<40) SF = 0.327098;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
- {
-        if (pt>20) SF = 0.391814;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.387799;
-         if (pt>30 && pt<40) SF = 0.368904;
- }
-        if (pt>40 && pt<70) SF = 0.315363;
-         if (pt>70) SF = 0.251924;
-}
- 
- if ( working_point == "UnclEnUp"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.335057;
-         if (pt>30 && pt<40) SF = 0.329086;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.341751;
-         if (pt>30 && pt<40) SF = 0.325283;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
- {
-        if (pt>20) SF = 0.381257;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.383388;
-         if (pt>30 && pt<40) SF = 0.366312;
- }
-        if (pt>40 && pt<70) SF = 0.31169;
-         if (pt>70) SF = 0.246104;
-}
- 
- if ( working_point == "UnclEnDown"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.341151;
-         if (pt>30 && pt<40) SF = 0.326461;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.340849;
-         if (pt>30 && pt<40) SF = 0.321591;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
- {
-        if (pt>20) SF = 0.411893;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.38701;
-         if (pt>30 && pt<40) SF = 0.370609;
- }
-        if (pt>40 && pt<70) SF = 0.313098;
-         if (pt>70) SF = 0.249026;
-}
- 
- if ( working_point == "BTagUp"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.33872;
-         if (pt>30 && pt<40) SF = 0.32567;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.342847;
-         if (pt>30 && pt<40) SF = 0.327214;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
- {
-        if (pt>20) SF = 0.392643;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.387852;
-         if (pt>30 && pt<40) SF = 0.369951;
- }
-        if (pt>40 && pt<70) SF = 0.317799;
-         if (pt>70) SF = 0.262895;
-}
- 
- if ( working_point == "BTagDown"){
- if (  fabs(eta) < 0.8 )
- {
-        if (pt>20 && pt<30) SF = 0.337298;
-         if (pt>30 && pt<40) SF = 0.322183;
- }
- if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
- {
-        if (pt>20 && pt<30) SF = 0.34172;
-         if (pt>30 && pt<40) SF = 0.324578;
- }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
- {
-        if (pt>20) SF = 0.389711;
- }
- if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
- {
-        if (pt>20 && pt<30) SF = 0.387407;
-         if (pt>30 && pt<40) SF = 0.367851;
- }
-        if (pt>40 && pt<70) SF = 0.31117;
-         if (pt>70) SF = 0.237099;
-}
-
-
-
-
-
- /*
  if ( working_point == "JetEnUp"){
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.67299;
-         if (pt>30 && pt<40) SF = 0.641404;
-         if (pt>40 ) SF = 0.587893;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.321717;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.674998;
-         if (pt>30 && pt<40) SF = 0.625476;
-         if (pt>40 ) SF = 0.571041;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.330751;
  }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.790677;
+        if (pt>30) SF = 0.316813;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.766055;
-         if (pt>30 && pt<40) SF = 0.696323;
-         if (pt>40 ) SF = 0.713004;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.294876;
  }
+        if (pt>40 && pt<70) SF = 0.287071;
+         if (pt>70 && pt<110) SF = 0.240634;
+         if (pt>110) SF = 0.253997;
 }
-
+ 
  if ( working_point == "JetEnDown"){
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.667442;
-         if (pt>30 && pt<40) SF = 0.652886;
-         if (pt>40 ) SF = 0.575058;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.316217;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.674867;
-         if (pt>30 && pt<40) SF = 0.630325;
-         if (pt>40 ) SF = 0.600444;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.331998;
  }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.768298;
+        if (pt>30) SF = 0.305819;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.761079;
-         if (pt>30 && pt<40) SF = 0.70866;
-         if (pt>40 ) SF = 0.701104;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.293558;
  }
+        if (pt>40 && pt<70) SF = 0.285399;
+         if (pt>70 && pt<110) SF = 0.235646;
+         if (pt>110) SF = 0.2149;
 }
-
+ 
  if ( working_point == "TauEnUp"){
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.672294;
-         if (pt>30 && pt<40) SF = 0.643862;
-         if (pt>40 ) SF = 0.576386;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.321449;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.674212;
-         if (pt>30 && pt<40) SF = 0.631933;
-         if (pt>40 ) SF = 0.577185;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.328938;
  }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.795036;
+        if (pt>30) SF = 0.307724;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.76801;
-         if (pt>30 && pt<40) SF = 0.70373;
-         if (pt>40 ) SF = 0.699653;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.294416;
  }
+        if (pt>40 && pt<70) SF = 0.282604;
+         if (pt>70 && pt<110) SF = 0.235822;
+         if (pt>110) SF = 0.201188;
 }
-
+ 
  if ( working_point == "TauEnDown"){
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.673768;
-         if (pt>30 && pt<40) SF = 0.643572;
-         if (pt>40 ) SF = 0.585973;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.322154;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.676242;
-         if (pt>30 && pt<40) SF = 0.641822;
-         if (pt>40 ) SF = 0.575633;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.328156;
  }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.793915;
+        if (pt>30) SF = 0.309183;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.771069;
-         if (pt>30 && pt<40) SF = 0.702321;
-         if (pt>40 ) SF = 0.706686;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.292791;
  }
+        if (pt>40 && pt<70) SF = 0.287286;
+         if (pt>70 && pt<110) SF = 0.236282;
+         if (pt>110) SF = 0.224172;
 }
-
+ 
  if ( working_point == "ElEnUp"){
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.672637;
-         if (pt>30 && pt<40) SF = 0.644345;
-         if (pt>40 ) SF = 0.580745;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.321533;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.67435;
-         if (pt>30 && pt<40) SF = 0.633671;
-         if (pt>40 ) SF = 0.580209;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.33039;
  }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.797305;
+        if (pt>30) SF = 0.306732;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.770201;
-         if (pt>30 && pt<40) SF = 0.700472;
-         if (pt>40 ) SF = 0.70489;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.294871;
  }
+        if (pt>40 && pt<70) SF = 0.284464;
+         if (pt>70 && pt<110) SF = 0.234989;
+         if (pt>110) SF = 0.213747;
 }
-
+ 
  if ( working_point == "ElEnDown"){
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.672637;
-         if (pt>30 && pt<40) SF = 0.644345;
-         if (pt>40 ) SF = 0.580666;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.321533;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.67435;
-         if (pt>30 && pt<40) SF = 0.633671;
-         if (pt>40 ) SF = 0.57994;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.330417;
  }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.797305;
+        if (pt>30) SF = 0.306732;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.770201;
-         if (pt>30 && pt<40) SF = 0.700472;
-         if (pt>40 ) SF = 0.70489;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.294871;
  }
+        if (pt>40 && pt<70) SF = 0.284464;
+         if (pt>70 && pt<110) SF = 0.234989;
+         if (pt>110) SF = 0.213747;
 }
-
+ 
  if ( working_point == "MuEnUp"){
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.672521;
-         if (pt>30 && pt<40) SF = 0.644222;
-         if (pt>40 ) SF = 0.580483;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.320454;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.67403;
-         if (pt>30 && pt<40) SF = 0.631744;
-         if (pt>40 ) SF = 0.578989;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.329654;
  }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.797602;
+        if (pt>30) SF = 0.306663;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.769812;
-         if (pt>30 && pt<40) SF = 0.700455;
-         if (pt>40 ) SF = 0.703825;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.294471;
  }
+        if (pt>40 && pt<70) SF = 0.284174;
+         if (pt>70 && pt<110) SF = 0.235206;
+         if (pt>110) SF = 0.21069;
 }
-
+ 
  if ( working_point == "MuEnDown"){
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.672755;
-         if (pt>30 && pt<40) SF = 0.645719;
-         if (pt>40 ) SF = 0.581132;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.322;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.677249;
-         if (pt>30 && pt<40) SF = 0.634087;
-         if (pt>40 ) SF = 0.580193;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.329997;
  }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.800591;
+        if (pt>30) SF = 0.307603;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.771017;
-         if (pt>30 && pt<40) SF = 0.699003;
-         if (pt>40 ) SF = 0.704209;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.295844;
  }
+        if (pt>40 && pt<70) SF = 0.284491;
+         if (pt>70 && pt<110) SF = 0.234145;
+         if (pt>110) SF = 0.217423;
 }
-
+ 
  if ( working_point == "UnclEnUp"){
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.663881;
-         if (pt>30 && pt<40) SF = 0.6455;
-         if (pt>40 ) SF = 0.575761;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.318508;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.66202;
-         if (pt>30 && pt<40) SF = 0.651215;
-         if (pt>40 ) SF = 0.574364;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.32905;
  }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.747702;
+        if (pt>30) SF = 0.299425;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.768633;
-         if (pt>30 && pt<40) SF = 0.704527;
-         if (pt>40 ) SF = 0.703865;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.299587;
  }
+        if (pt>40 && pt<70) SF = 0.284932;
+         if (pt>70 && pt<110) SF = 0.233625;
+         if (pt>110) SF = 0.218629;
 }
-
+ 
  if ( working_point == "UnclEnDown"){
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.675039;
-         if (pt>30 && pt<40) SF = 0.647367;
-         if (pt>40 ) SF = 0.589217;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.322665;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.668485;
-         if (pt>30 && pt<40) SF = 0.619344;
-         if (pt>40 ) SF = 0.576247;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.324192;
  }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.776659;
+        if (pt>30) SF = 0.323253;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.772044;
-         if (pt>30 && pt<40) SF = 0.716349;
-         if (pt>40 ) SF = 0.70803;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.292666;
  }
+        if (pt>40 && pt<70) SF = 0.288243;
+         if (pt>70 && pt<110) SF = 0.234781;
+         if (pt>110) SF = 0.234815;
 }
-
+ 
  if ( working_point == "BTagUp"){
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.67323;
-         if (pt>30 && pt<40) SF = 0.646175;
-         if (pt>40 ) SF = 0.588014;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.321695;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.675746;
-         if (pt>30 && pt<40) SF = 0.635479;
-         if (pt>40 ) SF = 0.586175;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.330461;
  }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.802677;
+        if (pt>30) SF = 0.306732;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.770412;
-         if (pt>30 && pt<40) SF = 0.701023;
-         if (pt>40 ) SF = 0.710078;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.294988;
  }
+        if (pt>40 && pt<70) SF = 0.284568;
+         if (pt>70 && pt<110) SF = 0.235671;
+         if (pt>110) SF = 0.215284;
 }
-
+ 
  if ( working_point == "BTagDown"){
  if (  fabs(eta) < 0.8 )
  {
-        if (pt>20 && pt<30) SF = 0.672113;
-         if (pt>30 && pt<40) SF = 0.641569;
-         if (pt>40 ) SF = 0.570456;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.327633;
  }
  if (  fabs(eta) > 0.8 && fabs(eta) < 1.44 )
  {
-        if (pt>20 && pt<30) SF = 0.674027;
-         if (pt>30 && pt<40) SF = 0.631134;
-         if (pt>40 ) SF = 0.574189;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.337293;
  }
- if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 )
+ if (  fabs(eta) > 1.44 && fabs(eta) < 1.566 && pt<40)
  {
-        if (pt>20) SF = 0.793288;
+        if (pt>30) SF = 0.326397;
  }
  if (  fabs(eta) > 1.566 && fabs(eta) < 2.3 )
  {
-        if (pt>20 && pt<30) SF = 0.769511;
-         if (pt>30 && pt<40) SF = 0.698979;
-         if (pt>40 ) SF = 0.700928;
+        if (pt>20 && pt<30) SF = 0;
+         if (pt>30 && pt<40) SF = 0.298435;
  }
-}*/
-
+        if (pt>40 && pt<70) SF = 0.296627;
+         if (pt>70 && pt<110) SF = 0.235917;
+         if (pt>110) SF = 0.217226;
+} 
 
 
 return SF;
@@ -1311,26 +1124,21 @@ vector<string> FakeListJet;
 
   std::vector<std::string> inputVarsAll = {"met_pt","Lept1Pt","Lept2Pt","EtaDil","MTtot","Dzeta","Minv","dR","MT","MCTb","MT2lester","dMETPhiL1","dMETPhiL2"};
   //IClassifierReader*
-  std::vector<float>* inputVec = new std::vector<float>( 13 );
-
-  KerasModel ResponseMutau("/nfs/dust/cms/user/dydukhle/CMSSW_9_4_0_patch1/src/DesyTauAnalyses/NTupleMaker/test/freeze/Keras2Cpp4Terminal/keras2cpp/model.net", true);
+  std::vector<double>* inputVec = new std::vector<double>( 13 );
 
   //ResponseMutau = new ReadBDTmutau( inputVarsAll );
   
   //IClassifierReader* BDTResponseMutau_stau150_LSP50My = new ReadBDTmutau_stau_stau150_LSP50My (inputVarsAll );
-
-//IClassifierReader* BDTResponseMutau_Stau150 = new ReadBDTmutau_Stau150 (inputVarsAll );
-//IClassifierReader* BDTResponseMutau_Stau200 = new ReadBDTmutau_Stau200 (inputVarsAll );
-//IClassifierReader* BDTResponseMutau_Stau100 = new ReadBDTmutau_Stau100 (inputVarsAll );
-
-
-//IClassifierReader* BDTResponseEltau_Stau150 = new ReadBDTeltau_Stau150 (inputVarsAll );
-//IClassifierReader* BDTResponseEltau_Stau200 = new ReadBDTeltau_Stau200 (inputVarsAll );
-//IClassifierReader* BDTResponseEltau_Stau100 = new ReadBDTeltau_Stau100 (inputVarsAll );
+/* 
+IClassifierReader* BDTResponseMutau_Stau150 = new ReadBDTmutau_Stau150 (inputVarsAll );
+IClassifierReader* BDTResponseMutau_Stau200 = new ReadBDTmutau_Stau200 (inputVarsAll );
+IClassifierReader* BDTResponseMutau_Stau100 = new ReadBDTmutau_Stau100 (inputVarsAll );
 
 
-
-
+IClassifierReader* BDTResponseEltau_Stau150 = new ReadBDTeltau_Stau150 (inputVarsAll );
+IClassifierReader* BDTResponseEltau_Stau200 = new ReadBDTeltau_Stau200 (inputVarsAll );
+IClassifierReader* BDTResponseEltau_Stau100 = new ReadBDTeltau_Stau100 (inputVarsAll );
+*/
 /*
 TProfile * hprofMt2vsMET[CutN]  ;//= new TProfile("hprof","",100,-4,4,0,20);
 TProfile * hprofMt2vsDZeta[CutN]  ;//= new TProfile("hprof","",100,-4,4,0,20);
@@ -1738,43 +1546,16 @@ TH1D *hmet_MT2lester1D[CutN];
 TH1D *hmet_MT2lester[CutN];
 TH1D *hmet_DZeta1D[CutN];
 TH1D *hMT2lester_DZeta1D[CutN];
-
-
-TH1D *hDNNmutau_Stau100[CutN];
-
-TH1D *hBDTmutau_Stau100_LSP50My[CutN];
+ 
 TH1D *hBDTmutau_Stau100[CutN];
-TH1D *hBDTmutau_Stau150_LSP100My[CutN];
 TH1D *hBDTmutau_Stau150[CutN];
-TH1D *hBDTmutau_Stau150_LSP50My[CutN];
-TH1D *hBDTmutau_Stau200_LSP100My[CutN];
-TH1D *hBDTmutau_Stau200_LSP150My[CutN];
 TH1D *hBDTmutau_Stau200[CutN];
-TH1D *hBDTmutau_Stau200_LSP50My[CutN];
-TH1D *hBDTmutau_Stau300[CutN];
-TH1D *hBDTmutau_Stau300_LSP200My[CutN];
 
 
-TH1D *hBDTmutau_Stau90[CutN];
-TH1D *hBDTmutau_Stau250[CutN];
-
-TH1D *hBDTeltau_Stau90[CutN];
-TH1D *hBDTeltau_Stau250[CutN];
-
-
-TH1D *hBDTeltau_Stau100_LSP50My[CutN];
 TH1D *hBDTeltau_Stau100[CutN];
-TH1D *hBDTeltau_Stau150_LSP100My[CutN];
 TH1D *hBDTeltau_Stau150[CutN];
-TH1D *hBDTeltau_Stau150_LSP50My[CutN];
-TH1D *hBDTeltau_Stau200_LSP100My[CutN];
-TH1D *hBDTeltau_Stau200_LSP150My[CutN];
 TH1D *hBDTeltau_Stau200[CutN];
-TH1D *hBDTeltau_Stau200_LSP50My[CutN];
-TH1D *hBDTeltau_Stau300[CutN];
-TH1D *hBDTeltau_Stau300_LSP200My[CutN];
 
-TH1D *hBDTchannel[CutN];
 
 
 
@@ -2410,19 +2191,19 @@ for(int jj = 0; jj < 60; jj++){
       hInvMassblmuFB[cj] = new TH1D ("hInvMassblmuFB_"+nCut + Nplots,"hInvMassblmuFineBin "+cutName + Nplots,250,0,500);
       hInvMassblmuFB[cj]->Sumw2();
       
-      hInvMassMuTau[cj] = new TH1D ("hInvMassMuTau_"+nCut + Nplots,"hInvMassMuTau "+cutName + Nplots,50,0,500);
+      hInvMassMuTau[cj] = new TH1D ("hInvMassMuTau_"+nCut + Nplots,"hInvMassMuTau "+cutName + Nplots,250,0,500);
       hInvMassMuTau[cj]->Sumw2();
-      hInvMassMuEl[cj] = new TH1D ("hInvMassMuEl_"+nCut + Nplots,"hInvMassMuel "+cutName + Nplots,50,0,500);
+      hInvMassMuEl[cj] = new TH1D ("hInvMassMuEl_"+nCut + Nplots,"hInvMassMuel "+cutName + Nplots,250,0,500);
       hInvMassMuEl[cj]->Sumw2();
-      hInvMassMuMu[cj] = new TH1D ("hInvMassMuMu_"+nCut + Nplots,"hInvMassMuMu "+cutName + Nplots,50,0,500);
+      hInvMassMuMu[cj] = new TH1D ("hInvMassMuMu_"+nCut + Nplots,"hInvMassMuMu "+cutName + Nplots,250,0,500);
       hInvMassMuMu[cj]->Sumw2();
-      hInvMassElTau[cj] = new TH1D ("hInvMassElTau_"+nCut + Nplots,"hInvMassElTau "+cutName + Nplots,50,0,500);
+      hInvMassElTau[cj] = new TH1D ("hInvMassElTau_"+nCut + Nplots,"hInvMassElTau "+cutName + Nplots,250,0,500);
       hInvMassElTau[cj]->Sumw2();
-      hInvMassElEl[cj] = new TH1D ("hInvMassElEl_"+nCut + Nplots,"hInvMassElEl "+cutName + Nplots,50,0,500);
+      hInvMassElEl[cj] = new TH1D ("hInvMassElEl_"+nCut + Nplots,"hInvMassElEl "+cutName + Nplots,250,0,500);
       hInvMassElEl[cj]->Sumw2();
-      hInvMassTauTau[cj] = new TH1D ("hInvMassTauTau_"+nCut + Nplots,"hInvMassTauTau "+cutName + Nplots,50,0,500);
+      hInvMassTauTau[cj] = new TH1D ("hInvMassTauTau_"+nCut + Nplots,"hInvMassTauTau "+cutName + Nplots,250,0,500);
       hInvMassTauTau[cj]->Sumw2();
-      hInvMassDil[cj] = new TH1D ("hInvMassDil_"+nCut + Nplots,"hInvMassDil "+cutName + Nplots,50,0,500);
+      hInvMassDil[cj] = new TH1D ("hInvMassDil_"+nCut + Nplots,"hInvMassDil "+cutName + Nplots,250,0,500);
       hInvMassDil[cj]->Sumw2();
       hInvMassDilFineBin[cj] = new TH1D ("hInvMassDilFineBin_"+nCut + Nplots,"hInvMassDilFineBin "+cutName + Nplots,250,0,500);
       hInvMassDilFineBin[cj]->Sumw2();
@@ -2470,73 +2251,36 @@ for(int jj = 0; jj < 60; jj++){
       hPtDil2El2Tau[cj]->Sumw2();
 
 
-
-
-        hBDTmutau_Stau150[cj] = new TH1D ("BDTmutau_Stau150_" + nCut + Nplots, "BDTmutau_Stau150 "+cutName + Nplots,nbinsBDTmutau_Stau150,binsBDTmutau_Stau150);
+       hBDTmutau_Stau150[cj] = new TH1D ("BDTmutau_Stau150_" + nCut + Nplots, "BDTmutau_Stau150 "+cutName + Nplots,nbinsBDTmutau_Stau150,binsBDTmutau_Stau150);
         hBDTmutau_Stau150[cj]->Sumw2();
         
 
         hBDTmutau_Stau200[cj] = new TH1D ("BDTmutau_Stau200_"+nCut + Nplots,"BDTmutau_Stau200 "+cutName + Nplots,nbinsBDTmutau_Stau200,binsBDTmutau_Stau200);
         hBDTmutau_Stau200[cj]->Sumw2();
 
-
-
-        //hBDTmutau_Stau150_LSP50My[cj] = new TH1D ("BDTmutau_Stau150_LSP50My_"+nCut + Nplots,"BDTmutau_Stau150_LSP50My "+cutName + Nplots,nbinsBDTmutau_Stau150_LSP50My,binsBDTmutau_Stau150_LSP50My);
-        //hBDTmutau_Stau150_LSP50My[cj]->Sumw2();
+      
         
-
-        //hBDTmutau_Stau200_LSP50My[cj] = new TH1D ("BDTmutau_Stau200_LSP50My_"+nCut + Nplots,"BDTmutau_Stau200_LSP50My "+cutName + Nplots,nbinsBDTmutau_Stau200_LSP50My,binsBDTmutau_Stau200_LSP50My);
-        //hBDTmutau_Stau200_LSP50My[cj]->Sumw2();
-
-
-        //hBDTmutau_Stau200_LSP100My[cj] = new TH1D ("BDTmutau_Stau200_LSP100My_"+nCut + Nplots,"BDTmutau_Stau200_LSP100My "+cutName + Nplots,nbinsBDTmutau_Stau200_LSP100My,binsBDTmutau_Stau200_LSP100My);
-        //hBDTmutau_Stau200_LSP100My[cj]->Sumw2();
-
         hBDTmutau_Stau100[cj] = new TH1D ("BDTmutau_Stau100_"+nCut + Nplots,"BDTmutau_Stau100 "+cutName+ Nplots,nbinsBDTmutau_Stau100,binsBDTmutau_Stau100);
         hBDTmutau_Stau100[cj]->Sumw2();
         
-        //hBDTmutau_Stau100_LSP50My[cj] = new TH1D ("BDTmutau_Stau100_LSP50My_"+nCut + Nplots,"BDTmutau_Stau100_LSP50My "+cutName+ Nplots,nbinsBDTmutau_Stau100_LSP50My,binsBDTmutau_Stau100_LSP50My);
-        //hBDTmutau_Stau100_LSP50My[cj]->Sumw2();
+        
         
         hBDTeltau_Stau100[cj] = new TH1D ("BDTeltau_Stau100_"+nCut + Nplots,"BDTeltau_Stau100 "+cutName + Nplots,nbinsBDTeltau_Stau100,binsBDTeltau_Stau100);
         hBDTeltau_Stau100[cj]->Sumw2();
         
-        //hBDTeltau_Stau100_LSP50My[cj] = new TH1D ("BDTeltau_Stau100_LSP50My_"+nCut + Nplots,"BDTeltau_Stau100_LSP50My "+cutName+ Nplots,nbinsBDTeltau_Stau100_LSP50My,binsBDTeltau_Stau100_LSP50My);
-        //hBDTeltau_Stau100_LSP50My[cj]->Sumw2();
+       
         
         hBDTeltau_Stau150[cj] = new TH1D ("BDTeltau_Stau150_"+nCut + Nplots,"BDTeltau_Stau150 "+cutName  + Nplots,nbinsBDTeltau_Stau150,binsBDTeltau_Stau150);
         hBDTeltau_Stau150[cj]->Sumw2();
 
-        hDNNmutau_Stau100[cj] = new TH1D ("DNNmutau_Stau100_"+nCut + Nplots,"DNNmutau_Stau100_ "+cutName  + Nplots,
-                                nbinsDNNmutau_Stau100, 0, 1);
-        hDNNmutau_Stau100[cj]->Sumw2();
-
-        //hBDTeltau_Stau200_LSP100My[cj] = new TH1D ("BDTeltau_Stau200_LSP100My_"+nCut + Nplots,"BDTeltau_Stau200_LSP100My "+cutName + Nplots,nbinsBDTeltau_Stau200_LSP100My,binsBDTeltau_Stau200_LSP100My);
-        //hBDTeltau_Stau200_LSP100My[cj]->Sumw2();
-
-        //hBDTeltau_Stau150_LSP100My[cj] = new TH1D ("BDTeltau_Stau150_LSP100My_"+nCut + Nplots,"BDTeltau_Stau150_LSP100My "+cutName + Nplots,nbinsBDTeltau_Stau150_LSP100My,binsBDTeltau_Stau150_LSP100My);
-        //hBDTeltau_Stau150_LSP100My[cj]->Sumw2();
-
-        //hBDTeltau_Stau150_LSP50My[cj] = new TH1D ("BDTeltau_Stau150_LSP50My_"+nCut + Nplots,"BDTeltau_Stau150_LSP50My "+cutName + Nplots,nbinsBDTeltau_Stau150_LSP50My,binsBDTeltau_Stau150_LSP50My);
-        //hBDTeltau_Stau150_LSP50My[cj]->Sumw2();
-
-        //hBDTeltau_Stau200_LSP150My[cj] = new TH1D ("BDTeltau_Stau200_LSP150My_"+nCut + Nplots,"BDTeltau_Stau200_LSP150My "+cutName + Nplots,nbinsBDTeltau_Stau200_LSP150My,binsBDTeltau_Stau200_LSP150My);
-        //hBDTeltau_Stau200_LSP150My[cj]->Sumw2();
+       
 
         hBDTeltau_Stau200[cj] = new TH1D ("BDTeltau_Stau200_"+nCut + Nplots,"BDTeltau_Stau200 "+cutName + Nplots,nbinsBDTeltau_Stau200,binsBDTeltau_Stau200);
         hBDTeltau_Stau200[cj]->Sumw2();
         
-        //hBDTeltau_Stau200_LSP50My[cj] = new TH1D ("BDTeltau_Stau200_LSP50My_"+nCut + Nplots,"BDTeltau_Stau200_LSP50My "+cutName + Nplots,nbinsBDTeltau_Stau200_LSP50My,binsBDTeltau_Stau200_LSP50My);
-        //hBDTeltau_Stau200_LSP50My[cj]->Sumw2();
-
-        //hBDTeltau_Stau300[cj] = new TH1D ("BDTeltau_Stau300_"+nCut + Nplots,"BDTeltau_Stau300 "+cutName + Nplots,nbinsBDTeltau_Stau300,binsBDTeltau_Stau300);
-        //hBDTeltau_Stau300[cj]->Sumw2();
-
-        //hBDTeltau_Stau90[cj] = new TH1D ("BDTeltau_Stau90_"+nCut + Nplots,"BDTeltau_Stau90 "+cutName + Nplots,nbinsBDTeltau_Stau90,binsBDTeltau_Stau90);
-        //hBDTeltau_Stau90[cj]->Sumw2();
-        //hBDTeltau_Stau250[cj] = new TH1D ("BDTeltau_Stau250_"+nCut + Nplots,"BDTeltau_Stau250 "+cutName + Nplots,nbinsBDTeltau_Stau250,binsBDTeltau_Stau250);
-        //hBDTeltau_Stau250[cj]->Sumw2();
-
+ 
+        
+        
       //Leptons
       //
       //

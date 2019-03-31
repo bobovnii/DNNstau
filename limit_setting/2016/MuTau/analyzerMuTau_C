@@ -56,18 +56,16 @@ void analyzer::Loop(){
 	CutList.push_back("TriggerSF");
 	CutList.push_back("LeptonSF");
 	CutList.push_back("Tau-id");
-	CutList.push_back("TauFakeRate");
-	CutList.push_back("MuTauFakeRate");
+	CutList.push_back("TransferR");
+	CutList.push_back("LeptonTauFakeRate");
 	CutList.push_back("METrecoil");
 	CutList.push_back("ZpTcorrection");
 	CutList.push_back("topPtRwgt");
 	CutList.push_back("Jets<2 ");
 	CutList.push_back("btag=0");
-	CutList.push_back("MTwindow"); //15
-	CutList.push_back("Jets<1");
-	CutList.push_back("BDThigh");
-	CutList.push_back("BDTlow");
-	CutList.push_back("BDTVhigh");
+	CutList.push_back("MTwindow");
+	CutList.push_back("SRCuts");
+	CutList.push_back("JetsCuts");
 	CutList.push_back("StauCuts");
 	CutList.push_back("StauCuts2");
 	CutList.push_back("MET>20");
@@ -76,9 +74,8 @@ void analyzer::Loop(){
 	CutList.push_back("MTsum>120");
 
 
-	string channel = "CHANNELHERE";
+	string channel = "mutau";
 	string Channel = "mutau";
-	string region = "REGION";
 
 	//ChiMass = 0;
 	ChiMass = 0.;
@@ -95,9 +92,6 @@ void analyzer::Loop(){
 	string old = datasetName->c_str();
 	int counter = 0;
 		
-	bool ifCutBDT = true;
-	double CutBDT = 0.236;
-
 	//char hist_[100];
 	bool isData = false;
 	bool isTT = false;
@@ -108,19 +102,14 @@ void analyzer::Loop(){
 	bool isDYnunu = false;
 	bool isDYhigh = false;
 	bool isDYlow = false;
-	bool isDYNJ = false;
 	bool isZTT = false;
+	bool isDYNJ = false;
 	bool isWNJ = false;
 	bool isNJ = false;
 	bool isSignal = false;
+	bool isSUSY = false;
 	bool cut_btag = true;
 	
-	bool isWith1jet=false;
-	bool isWith2jet=false;
-	bool isWith3jet=false;
-	bool isWith4jet=false;
-
-
 	bool t = true;
 	bool f = false;
 	bool InvertLeptonIso = LEPTONHERE;
@@ -128,8 +117,7 @@ void analyzer::Loop(){
 	string Sign = "SIGNHERE";
 	
 	
-	string systematic="SYSTEMATICHERE";
-
+	string systematic="Nominal";
 
 	string cut = to_string(t);
 	cout <<"  "<<cut.c_str()<<endl;
@@ -150,113 +138,162 @@ void analyzer::Loop(){
 	string dyj3 = "DY3JetsToLL";
 	string dyj4 = "DY4JetsToLL";
 	string ztt = "isZTT";
+	string ttw = "TTWJetsToLNu";
 	string signal = "stau";
 	string signalC1 = "C1";
+	string signalChi = "Chi";
+	string N0part = "0Parton";
+	string N1part = "1Parton";
+	string N2part = "2Parton";
+	string N3part = "3Parton";
+	string N4part = "4Parton";
+	string HT0to70 = "0To70";
+	string HT70to100 = "70To100";
+	string HT100to200 = "100To200";
+	string HT200to400 = "200To400";
+	string HT400to600 = "400To600";
+	string HT600to800 = "600To800";
+	string HT800to1200 = "800To1200";
 
-	string with1jet = "with1jet";
-	string with2jet = "with2jet";
-	string with3jet = "with3jet";
-	string with4jet = "with4jet";
+	bool isW0Part = false;
+	bool isW1Part = false;
+	bool isW2Part = false;
+	bool isW3Part = false;
+	bool isW4Part = false;
+	bool isDY0Part = false;
+	bool isDY1Part = false;
+	bool isDY2Part = false;
+	bool isDY3Part = false;
+	bool isDY4Part = false;
+	bool isHTz = false;
+	bool isHTa = false;
+	bool isHTb = false;
+	bool isHTc = false;
+	bool isHTd = false;
+	bool isHTe = false;
+	bool isHTf = false;
+
 	if (string::npos != old.find(data)) isData= true;
-	if (string::npos != old.find(signal)) isSignal= true;
-	if (string::npos != old.find(signalC1)) isSignal= true;
+	if (string::npos != old.find(signal) && string::npos != systematic.find("genMET")) isSignal= true;
+	if (string::npos != old.find(signalC1) && string::npos != systematic.find("genMET")) isSignal= true;
+	if (string::npos != old.find(signalChi) && string::npos != systematic.find("genMET")) isSignal= true;
+	
+	if (string::npos != old.find(signal)) isSUSY = true;
+	if (string::npos != old.find(signalC1)) isSUSY = true;
+	if (string::npos != old.find(signalChi)) isSUSY = true;
+
 	if (string::npos != old.find(tt)) isTT= true;
 	if (string::npos != old.find(wj)) isWJ= true;
+	if (string::npos != old.find(ttw)) isWJ= false;
 	if (string::npos != old.find(dyj)) isDY= true;
 	if (string::npos != old.find(dyjhigh)) isDYhigh= true;
 	if (string::npos != old.find(dyjlow) || string::npos != old.find(dyjlow2)) isDYlow= true;
 	if (string::npos != old.find(dyj1) || string::npos != old.find(dyj2) || string::npos != old.find(dyj3) || string::npos != old.find(dyj4)) isDYNJ = true;
-	if (string::npos != old.find(wj1) || string::npos != old.find(wj2) || string::npos != old.find(wj3) || string::npos != old.find(wj4)) isWNJ= true;
+	if ((string::npos != old.find(wj1) || string::npos != old.find(wj2) || string::npos != old.find(wj3) || string::npos != old.find(wj4)) && string::npos == old.find(ttw)) isWNJ= true;
+	isNJ = isDYNJ || isWNJ;
 
-	isNJ = isDYNJ && isWNJ;
-
-	if (isSignal) cout<<" YOU HAVE FOUND ITTTTTTTTT "<<endl;
+	
+	if (isSignal) cout<<" YOU HAVE FOUND ITTTTTTTTT is it signal ???  "<<isSignal<<" systematic "<<systematic<<endl;
 	if (isData) cout<<" YOU HAVE FOUND a DATA "<<endl;
 
-	string channel = "mutau";
-
-	TString inputRootFile = "/nfs/dust/cms/user/bobovnii/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker//data/HIP_mediumID.root";
-	TFile * fileInHIP = new TFile(inputRootFile, "read");
-
-TGraphAsymmErrors * TGr_hip;
-TGr_hip = new TGraphAsymmErrors();
-TGr_hip = (TGraphAsymmErrors*)fileInHIP->Get("ratio_eta");
 
 
-	TString inputRootFile2 = "/nfs/dust/cms/user/bobovnii/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/data/sf_mu_medium.root";
 
-	TFile * fileInFast = new TFile(inputRootFile2, "read");
-
-
-TIter nextkey (fileInFast->GetListOfKeys ());
-TKey *key = 0;
-key = (TKey *) nextkey ();
-TObject *obj = key->ReadObj ();
-TH2D *histo = (TH2D*) obj;
-
-	TString fileinName = "/nfs/dust/cms/user/bobovnii/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/test/mutau/FILEIN";
-	if (systematic == "JetEnUp" || systematic == "JetEnDown"  || systematic == "UnclEnDown" || systematic == "UnclEnDown" || systematic == "TauEnUp" || systematic == "TauEnDown" || systematic == "ElEnUp" || systematic == "ElEnDown" || systematic == "MuEnUp" || systematic == "MuEnDown")
-	{fileinName ="/nfs/dust/cms/user/bobovnii/CMSSW_8_0_25/src/DesyTauAnalyses/NTupleMaker/test/mutau_"+systematic+"/FILEIN";}
-
-
-	string fileName = "FILEIN";
-	if (string::npos != fileName.find(with1jet)) isWith1jet= true;
-	if (string::npos != fileName.find(with2jet)) isWith2jet= true;
-	if (string::npos != fileName.find(with3jet)) isWith3jet= true;
-	if (string::npos != fileName.find(with4jet)) isWith4jet= true;
+	TString fileinName = "/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/StauAnalysis/New8025/CMSSW_9_4_0_patch1/src/DesyTauAnalyses/NTupleMaker/test/mutau/DYJetsToLL_M-50_13TeV-12Apr2018_isZTT_0Parton.root";
+	if (systematic == "JetEnUp" || systematic == "JetEnDown"  || systematic == "UnclEnDown" || systematic == "UnclEnDown" || systematic == "TauEnUp" || systematic == "TauEnDown" || systematic == "ElEnUp" || systematic == "ElEnDown" || systematic == "MuEnUp" || systematic == "MuEnDown" || systematic == "BTagUp" || systematic == "BTagDown") 
+	{fileinName ="/nfs/dust/cms/user/alkaloge/TauAnalysis/new/new/StauAnalysis/New8025/CMSSW_9_4_0_patch1/src/DesyTauAnalyses/NTupleMaker/test/mutau_"+systematic+"/DYJetsToLL_M-50_13TeV-12Apr2018_isZTT_0Parton.root";}
 
 
 	TFile * filein = new TFile(fileinName,"read");
-
 	string fln = filein->GetName();
 	if (string::npos != fln.find(ztt)) isZTT= true;
 	if (string::npos == fln.find(ztt)) isZTT= false;
 
-	cout<<" ============================================ is it ZTT ???  "<<isZTT<<" old "<<fln<<endl;
-	TH1D * histW = (TH1D*)filein->Get("mutau/histWeightsH");
+	TH1D * histW   , *histPt;
+	if (systematic == "ScalesUp" ) histW = (TH1D*)filein->Get("mutau/histWeightsScalesUp");
+	else if (systematic == "ScalesDown" ) histW = (TH1D*)filein->Get("mutau/histWeightsScalesDown");
+	else if (systematic == "PDFUp" ) histW = (TH1D*)filein->Get("mutau/histWeightsPDFUp");
+	else if (systematic == "PDFDown" ) histW = (TH1D*)filein->Get("mutau/histWeightsPDFDown");
+	else  {histW = (TH1D*)filein->Get("mutau/histWeightsH");}
 
+	if (string::npos != fln.find(N0part) && (isWJ || isWNJ)) isW0Part= true;
+	if (string::npos != fln.find(N1part) && (isWJ || isWNJ)) isW1Part= true;
+	if (string::npos != fln.find(N2part) && (isWJ || isWNJ)) isW2Part= true;
+	if (string::npos != fln.find(N3part) && (isWJ || isWNJ)) isW3Part= true;
+	if (string::npos != fln.find(N4part) && (isWJ || isWNJ)) isW4Part= true;
+	if (string::npos != fln.find(N0part) && isDYhigh) isDY0Part= true;
+	if (string::npos != fln.find(N1part) && isDYhigh) isDY1Part= true;
+	if (string::npos != fln.find(N2part) && isDYhigh) isDY2Part= true;
+	if (string::npos != fln.find(N3part) && isDYhigh) isDY3Part= true;
+	if (string::npos != fln.find(N4part) && isDYhigh) isDY4Part= true;
 
-///// for mixing inclusive and Njets samples
-	if (isWith1jet && isDYhigh) histW->Scale((1.1637*1012.5)/5765.4);
-	if (isWith2jet && isDYhigh) histW->Scale((1.1637*332.8)/5765.4);
-	if (isWith3jet && isDYhigh) histW->Scale((1.1637*101.8)/5765.4);
-	if (isWith4jet && isDYhigh) histW->Scale((1.1637*54.8)/5765.4);
+	if (string::npos != fln.find(HT0to70)) isHTz= true;
+	if (string::npos != fln.find(HT70to100)) isHTa= true;
+	if (string::npos != fln.find(HT100to200)) isHTb= true;
+	if (string::npos != fln.find(HT200to400)) isHTc= true;
+	if (string::npos != fln.find(HT400to600)) isHTd= true;
+	if (string::npos != fln.find(HT600to800)) isHTe= true;
+	if (string::npos != fln.find(HT800to1200)) isHTf= true;
 
-	if (isWith1jet && isWJ) histW->Scale((1.221*9644.5)/61526.7);
-	if (isWith2jet && isWJ) histW->Scale((1.221*3144.5)/61526.7);
-	if (isWith3jet && isWJ) histW->Scale((1.221*954.8)/61526.7);
-	if (isWith4jet && isWJ) histW->Scale((1.221*485.6)/61526.7);
+	cout<<" check =============================== "<<fln<<" isWJ "<<isWJ<<" isW1 "<<isW1Part<<" isWNJ "<<isWNJ<<" is HT ? "<<isHTa<<"  "<<isHTb<<endl;
+
+	histW->SetName("histWeightsH");
+	histW->SetTitle("histWeightsH");
+
+	if (isSUSY) histPt = (TH1D*)filein->Get("mutau/histPt");
+	float Nw = 1;
+	if (isSUSY) { Nw = 1/histPt->GetSumOfWeights(); Nw *=histW->GetSumOfWeights();}
+
+	cout<<" The Systematic "<<systematic<<" histW "<<histW->GetSumOfWeights()<<endl;
 
 	TH1D * histTop , *histTopSq;
 	if (isTT) histTop = (TH1D*)filein->Get("mutau/histTopPt");
 	if (isTT && systematic == "TopPtUp" ) histTopSq = (TH1D*)filein->Get("mutau/histTopPtSq");
-
-	TH1D * CutFlow = (TH1D*)filein->Get("mutau/CutFlowUnW");
+	
+	//TH1D * CutFlow = (TH1D*)filein->Get("mutau/CutFlowUnW");
 	TFile * file = new TFile("plots.root","recreate");
 
 	//cout<<"  "<<old<<"  "<<datasetName->c_str()<<"  "<<hist_<<"  "<<CutFlow->GetName()<<"  "<<CutFlow->GetBinContent(1)<<endl;
-
-	string Channel = "mutau";
+		
 	file->mkdir(Channel.c_str());
 	file->cd(Channel.c_str());
 	float top_w = 1.;
 	Long64_t nentries = fChain->GetEntriesFast();
 	SetupHists(CutNumb);
+//	SetupHistsnSR(CutNumb);
 
 		cout<<" will process "<<nentries<<" dataset "<<datasetName->c_str()<< endl;
 
 	Long64_t nbytes = 0, nb = 0;
 
+	int genHTa=0;
+	int genHTb=0;
+	int genHTc=0;
+	int genHTd=0;
+	int genHTlow=0;
+	int is0partons=0;
+	int is1partons=0;
+	int is2partons=0;
+	int is3partons=0;
+	int is4partons=0;
 
-	//for (Long64_t jentry=0; jentry<1000;jentry++) {
+	SetupTreeTp();
+
 	for (Long64_t jentry=0; jentry<nentries;jentry++) {
 		Long64_t ientry = LoadTree(jentry);
 		nb = fChain->GetEntry(jentry);   nbytes += nb;
 		float all_weights = 1.;
 
+		////////////////// IMPORTANT///////////////////
+		if (ta_IsoFlagTight[0] <0.5 && !isSUSY) continue;
+		if (ta_IsoFlag <0.5 && isSUSY) continue;
+
+
+		if (mu_relIso[0] > 0.15) continue;
 
 		bool isDYTauTau = false;
 		bool isDYll = false;
+		npart=npartons;
 
 		if ((isDY  ||  isDYNJ) && isDYTT>0.5) isDYTauTau = true;
 		if ((isDY  ||  isDYNJ) && isDYEE>0.5) isDYee = true;
@@ -264,26 +301,112 @@ TH2D *histo = (TH2D*) obj;
 		if ((isDY  ||  isDYNJ) && isDYNuNu>0.5) isDYnunu = true;
 
 		if ((isDY  ||  isDYNJ) && isDYTT<0.5) isDYll = true;
-		float charge_ =mu_charge[muon_index]  * ta_charge[taus_index];
-
 		//cout<<" Again ..................... "<<isZTT<<" DYTT "<<isDYTauTau<<endl;
 		if ((isDY || isDYNJ) && isZTT && !isDYTauTau) continue;
 		if ((isDY || isDYNJ) && !isZTT && !isDYll) continue;
 
+		float charge_ =mu_charge[muon_index]  * ta_charge[taus_index];
+
 		if ( charge_ < 0. && Sign == "SS") continue;
 		if ( charge_ > 0. && Sign == "OS") continue;
-		//if ( charge_ > 0.) continue;
 
 
-		if ( jentry%1000 ==0 ) cout<<" working for you...processed " <<jentry<<" events from "<<nentries<<" dataset "<<datasetName->c_str()<<" weight "<<all_weights<< endl;
+		/*if (isWJ && (npartons>0 && npartons<5)) continue;
 
-		if (isWJ && (npartons>0 && npartons<5) && !(isWith1jet || isWith2jet || isWith3jet || isWith4jet)) continue;
-		if ( isDYhigh  && (npartons>0 && npartons<5) && !(isWith1jet || isWith2jet || isWith3jet || isWith4jet)) continue;
+		if ( isDYhigh  && (npartons>0 && npartons<5)) continue;
+		*/
+		if (npartons!=0 && (isW0Part || isDY0Part)) continue;
+		if (npartons!=1 && (isW1Part || isDY1Part)) continue;
+		if (npartons!=2 && (isW2Part || isDY2Part)) continue;
+		if (npartons!=3 && (isW3Part || isDY3Part)) continue;
+		if (npartons!=4 && (isW4Part || isDY4Part)) continue;
 
-		if (isWith1jet && npartons != 1) continue;
-		if (isWith2jet && npartons != 2) continue;
-		if (isWith3jet && npartons != 3) continue;
-		if (isWith4jet && npartons != 4) continue;
+		if (npartons==0) is0partons++;
+		if (npartons==1) is1partons++;
+		if (npartons==2) is2partons++;
+		if (npartons==3) is3partons++;
+		if (npartons==4) is4partons++;
+/*
+		bool 	stitchflag = false;
+		
+		if (genHT<70 && genHT>0.) genHTlow++;
+		if (genHT>70&&genHT<100) genHTa++;
+		if (genHT>100&&genHT<200) genHTb++;
+		if (genHT>200&&genHT<400) genHTc++;
+		if (genHT>400&&genHT<600) genHTd++;
+
+		if (npartons==0 && isW0Part) stitchflag = true;
+
+		if (isHTz && genHT<70. ){
+		//if (npartons==0 && isW0Part) stitchflag = true;
+		if (npartons==1 && isW1Part) stitchflag = true;
+		if (npartons==2 && isW2Part) stitchflag = true;
+		if (npartons==3 && isW3Part) stitchflag = true;
+		if (npartons==4 && isW4Part) stitchflag = true;
+		}
+
+		if (isHTa && genHT>70. && genHT<100.){
+		if (npartons==0 && isW0Part) stitchflag = true;
+		if (npartons==1 && isW1Part) stitchflag = true;
+		if (npartons==2 && isW2Part) stitchflag = true;
+		if (npartons==3 && isW3Part) stitchflag = true;
+		if (npartons==4 && isW4Part) stitchflag = true;
+		}
+
+
+		if (isHTb && genHT>100. && genHT<200.){
+		if (npartons==0 && isW0Part) stitchflag = true;
+		if (npartons==1 && isW1Part) stitchflag = true;
+		if (npartons==2 && isW2Part) stitchflag = true;
+		if (npartons==3 && isW3Part) stitchflag = true;
+		if (npartons==4 && isW4Part) stitchflag = true;
+		}
+
+		if (isHTc && genHT>200. && genHT<400.){
+		if (npartons==0 && isW0Part) stitchflag = true;
+		if (npartons==1 && isW1Part) stitchflag = true;
+		if (npartons==2 && isW2Part) stitchflag = true;
+		if (npartons==3 && isW3Part) stitchflag = true;
+		if (npartons==4 && isW4Part) stitchflag = true;
+		}
+
+
+
+		if (isHTd && genHT>400. && genHT<600.){
+		if (npartons==0 && isW0Part) stitchflag = true;
+		if (npartons==1 && isW1Part) stitchflag = true;
+		if (npartons==2 && isW2Part) stitchflag = true;
+		if (npartons==3 && isW3Part) stitchflag = true;
+		if (npartons==4 && isW4Part) stitchflag = true;
+		}
+		if (isHTe && genHT>600. && genHT<800.){
+		if (npartons==0 && isW0Part) stitchflag = true;
+		if (npartons==1 && isW1Part) stitchflag = true;
+		if (npartons==2 && isW2Part) stitchflag = true;
+		if (npartons==3 && isW3Part) stitchflag = true;
+		if (npartons==4 && isW4Part) stitchflag = true;
+		}
+
+		if (isHTf && genHT>800.){
+		if (npartons==0 && isW0Part) stitchflag = true;
+		if (npartons==1 && isW1Part) stitchflag = true;
+		if (npartons==2 && isW2Part) stitchflag = true;
+		if (npartons==3 && isW3Part) stitchflag = true;
+		if (npartons==4 && isW4Part) stitchflag = true;
+		}
+
+		if (!isHTz && !isHTa && !isHTb && !isHTc && !isHTd ) stitchflag = true;
+
+
+	if (!stitchflag) continue;
+*/	
+
+
+		//cout<<" "<<jentry<<"  "<<" dataset "<<datasetName->c_str()<<"  partons "<<npartons<<" isW2part "<<isW2Part<<" genHT "<<genHT<<" isHTa "<<isHTa<<"  "<<isHTb<<"  "<<isHTc<<"  "<<isHTd<<" stitch "<<stitchflag<<endl;
+	
+
+		if ( jentry%100000 ==0 ) cout<<" working for you...processed " <<jentry<<" events from "<<nentries<<" dataset "<<datasetName->c_str()<<" weight "<<all_weights<< " partons "<<npartons<<"  "<<isW0Part<<"  "<<isW1Part<<"  "<<isW2Part<<endl;
+		
 
 		if (isData && met_flag<0.5) continue;	
 
@@ -348,17 +471,81 @@ if (taus_index>-1 )			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], t
 		int iCut = 1;
 
 		all_weights = pu_weight * gen_weight ;
+		double cLower, cUpper;
+		vector <double> ScalesV; ScalesV.clear();
+//		ScalesV.push_back(wScale0);
+		ScalesV.push_back(wScale1);
+		ScalesV.push_back(wScale2);
+		ScalesV.push_back(wScale3);
+		ScalesV.push_back(wScale4);
+		ScalesV.push_back(wScale5);
+		ScalesV.push_back(wScale6);
+		ScalesV.push_back(wScale7);
+		ScalesV.push_back(wScale8);
+
+		cLower = *min_element(ScalesV.begin(), ScalesV.end());
+      	        cUpper = *max_element(ScalesV.begin(), ScalesV.end());
+
+	if (systematic =="ScalesDown") all_weights *=cLower;
+	if (systematic =="ScalesUp") all_weights *=cUpper;
+	if (systematic =="PDFUp") all_weights *=wPDFUp;
+	if (systematic =="PDFDown") all_weights *=wPDFDown;
+
+//cout<<" lets see the facts  "<<gen_weight<<"  "<<wScale0<<"  "<<wScale1<<"  "<<wScale2<<"  "<<wScale3<<"  "<<wScale4<<"  "<<wScale5<<"  "<<wScale6<<"  "<<wScale7<<"  "<<wScale8<<" min "<<cLower<<" max  "<<cUpper<<" pdfUp "<<wPDFUp<<" pdfDown "<<wPDFDown<<endl;
+
+		double EWK  = 1.;
+		if (isSUSY) { 
+			EWK = EWKWeight(PtSystem);
+
+	if (systematic =="Nominal") all_weights *= EWK * Nw;
+	if (systematic =="EWKUp") all_weights *=EWK *EWK *Nw;
+
+		}
+////////////////////////////////////////////////////////////////////////////
+		double ptTau1 = (double)ta_pt[taus_index];
+		double etaTau1 = (double)ta_eta[taus_index];
+		double ptMu1 = (double)mu_pt[muon_index];
+		double etaMu1 = (double)mu_eta[muon_index];
+
+		bool isRealTau  = (genTauMatched>0.5 && !isData) ;
+		bool isMuPromptLepton =  (genLeptonMatchedPromptMu >0.5 && genLeptonMatchedPromptEl<0.5 && !isData);
+		bool isElPromptLepton =  (genLeptonMatchedPromptEl >0.5 && genLeptonMatchedPromptMu<0.5 && !isData);
+
+		bool isMuFromTau =  (genMuMatchedToTauDecay > 0.5 && !isData);
+
+
+		bool isfakeTauFromPromptLepton = matchedTauToPromptEl>0.5 || matchedTauToPromptMu >0.5 ;
+	
+		bool isfakeTauFromJet = genTauMatched<0.5 && !isfakeTauFromPromptLepton ;
+		bool isfakeTauFromHadron = matchedTauToMuHadronDec > 0.5 || matchedTauToElHadronDec > 0.5;
+		
+		if (isfakeTauFromHadron) isfakeTauFromJet = true;
+
+		bool isfakeTauFromMu =  ( genTauMatched < 0.5 && matchedTauToPromptMu > 0.5 && !isfakeTauFromJet && !isData) ;
+		bool isfakeTauFromEl =  ( genTauMatched < 0.5 && matchedTauToPromptEl > 0.5 && !isfakeTauFromJet && !isData) ;
+	
+
+		bool isfakeMuFromGluon =  ( genLeptonMatchedGluon >0.5 && !isData) ;
+		bool isfakeMuFromHFQ =  (  genLeptonMatchedHFQ >0.5 && !isData) ;
+		bool isfakeMuFromLFQ =  (  genLeptonMatchedLFQ >0.5 && !isData) ;
+
+
+		if ( isfakeTauFromJet && !isData) continue;
+
+	//	double tfr  = TauFakeRate(ptTau1,etaTau1,channel,systematic);
+	//	if (!isRealTau && isfakeTauFromJet  && !isData) all_weights *= tfr;
 
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
 		CFCounter[iCut]+= all_weights;
 		CFCounter_[iCut]+= all_weights;
                 iCFCounter[iCut]++;
 		iCut++;
+		
 		if (mu_relIso[0] > 0.15 && !InvertLeptonIso) continue;
-		//if (mu_relIso[0] > 0.15) continue;
 		if (mu_relIso[0] < 0.15 && InvertLeptonIso) continue;
-		//if (mu_relIso[0] > 0.5 && InvertLeptonIso && HighInvertLeptonIso) continue;
+		
 		if (mu_relIso[0] > 0.3) continue;
+		
 
 		if ( fabs(mu_dz[muon_index]) > 0.2) continue;
 		if ( fabs(mu_dxy[muon_index]) > 0.045) continue;
@@ -371,6 +558,11 @@ if (taus_index>-1 )			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], t
 		if (Dr>3.5 && !InvertLeptonIso) continue;
 		if (Dr<3.5 && InvertLeptonIso) continue;
 
+		double dPhiJM = 0;
+		if (JetsMV.size()>0)
+     		dPhiJM=dPhiFrom2P( JetsMV.at(0).Px(), JetsMV.at(0).Py(), METV.Px(),  METV.Py() );
+
+		//if (JetsMV.size()>0 && TMath::Cos(dPhiJM)>0.9) continue;
 
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
 		CFCounter[iCut]+= all_weights;
@@ -406,25 +598,11 @@ if (taus_index>-1 )			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], t
                 iCFCounter[iCut]++;
 		iCut++;
 
-		double ptTau1 = (double)ta_pt[taus_index];
-		double etaTau1 = (double)ta_eta[taus_index];
-		double ptMu1 = (double)mu_pt[muon_index];
-		double etaMu1 = (double)mu_eta[muon_index];
+//////////////////////////////////////////////////////////////////////////////
 
-		double ptN=0;double etaN=0;double FastSF=0;
-
-		ptN = histo->GetXaxis()->FindBin(mu_pt[muon_index]);
-		etaN = histo->GetYaxis()->FindBin(fabs(mu_eta[muon_index]));
-		FastSF = histo->GetBinContent(ptN,etaN);
-
-//	if (isSignal) all_weights *= FastSF;
-		//int binNumber = TGr_hip->GetXaxis()->FindBin(mu_eta[muon_index]);
-
-		//string tID="CutBased_Medium";
 		string tID="MVA_Tight";
 		double tauId = TauiD(channel,tID);
-		//if (genTauMatched>0.5 && genLeptonMatched < 0.5 && !isData) all_weights *= tauId;
-		if (genTauMatched>0.5 && genLeptonMatched < 0.5 && !isData) all_weights *= 0.9;
+		if (isRealTau && !isData) all_weights *= 0.95;
 		
                 FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
 		CFCounter[iCut]+= all_weights;
@@ -433,9 +611,9 @@ if (taus_index>-1 )			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], t
 		iCut++;
 
 
-		string WP = "MVA";
-		double tfr  = TauFakeRate(ptTau1,etaTau1,channel,WP);
-		if (genTauMatched<0.5 && genLeptonMatched < 0.5  && !isData) all_weights *= tfr;
+		//string WP = systematic;
+//		double tfr  = TauFakeRate(ptTau1,etaTau1,channel,systematic);
+//		if (!isRealTau && isfakeTauFromJet  && !isData) all_weights *= tfr;
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
 		CFCounter[iCut]+= all_weights;
 		CFCounter_[iCut]+= all_weights;
@@ -446,12 +624,10 @@ if (taus_index>-1 )			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], t
 
 		double tfrmu  = MuonFakeRate(ptMu1,etaMu1);
 		double tfrel  = ElectronFakeRate(ptMu1,etaMu1);
-	//	if (genTauMatched<0.5 && genLeptonMatchedMu > 0.5 && matchedTauToPromptMu < 0.5 && !isData) all_weights *= tfrmu;
-	//	if ( (genLeptonMatched > 0.5 || matchedTauToPromptMu > 0.5) && !isData) all_weights *= tfrmu;
 
 
-		if ( (matchedTauToPromptMu > 0.5 && matchedTauToPromptEl < 0.5) && !isData) all_weights *= tfrmu;
-		if ( (matchedTauToPromptEl > 0.5 && matchedTauToPromptMu < 0.5) && !isData) all_weights *= tfrel;
+		if ( !isRealTau && isfakeTauFromMu  && !isfakeTauFromEl && !isData) all_weights *= tfrmu;
+		if ( !isRealTau && isfakeTauFromEl  && !isfakeTauFromMu && !isData) all_weights *= tfrel;
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
 		CFCounter[iCut]+= all_weights;
 		CFCounter_[iCut]+= all_weights;
@@ -472,21 +648,21 @@ if (taus_index>-1 )			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], t
 		{
 		METV.SetPx(met_ex_JetEnUp_recoil);
 		METV.SetPy(met_ey_JetEnUp_recoil);
-		met = sqrt(met_ex_JetEnUp_recoil*met_ex_JetEnUp_recoil + met_ey_JetEnUp_recoil*met_ey_JetEnUp_recoil);
+		met = sqrt(met_ex_JetEnUp_recoil*met_ex_JetEnUp_recoil + met_ey_JetEnUp_recoil*met_ey_JetEnUp_recoil);      
 		}
 
 	if (systematic =="JetEnDown")
 		{
 		METV.SetPx(met_ex_JetEnDown_recoil);
 		METV.SetPy(met_ey_JetEnDown_recoil);
-		met = sqrt(met_ex_JetEnDown_recoil*met_ex_JetEnDown_recoil + met_ey_JetEnDown_recoil*met_ey_JetEnDown_recoil);
+		met = sqrt(met_ex_JetEnDown_recoil*met_ex_JetEnDown_recoil + met_ey_JetEnDown_recoil*met_ey_JetEnDown_recoil);     
 		}
 
 	if (systematic =="UnclEnUp")
 		{
 		METV.SetPx(met_ex_UnclusteredEnUp_recoil);
 		METV.SetPy(met_ey_UnclusteredEnUp_recoil);
-		met = sqrt(met_ex_UnclusteredEnUp_recoil*met_ex_UnclusteredEnUp_recoil + met_ey_UnclusteredEnUp_recoil*met_ey_UnclusteredEnUp_recoil);
+		met = sqrt(met_ex_UnclusteredEnUp_recoil*met_ex_UnclusteredEnUp_recoil + met_ey_UnclusteredEnUp_recoil*met_ey_UnclusteredEnUp_recoil);     
 		}
 
 	if (systematic =="UnclEnDown")
@@ -495,6 +671,21 @@ if (taus_index>-1 )			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], t
 		METV.SetPy(met_ey_UnclusteredEnDown_recoil);
 		met = sqrt(met_ex_UnclusteredEnDown_recoil*met_ex_UnclusteredEnDown_recoil + met_ey_UnclusteredEnDown_recoil*met_ey_UnclusteredEnDown_recoil);
 		}
+
+	if (systematic =="METRecoilUp")
+		{
+		METV.SetPx(met_ex_recoil*1.02);
+		METV.SetPy(met_ey_recoil*1.02);
+		met=METV.Pt();
+		}
+
+	if (systematic =="METRecoilDown")
+		{
+		METV.SetPx(met_ex_recoil*0.98);
+		METV.SetPy(met_ey_recoil*0.98);
+		met=METV.Pt();
+		}
+
 
 		}
 
@@ -519,9 +710,11 @@ if (taus_index>-1 )			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], t
                 iCFCounter[iCut]++;
 		iCut++;
 
+	if (isTT){
 		if (systematic !="TopPtUp" && systematic !="TopPtDown" ) all_weights *= top_weight;
 		if (systematic =="TopPtUp") all_weights *= top_weight*top_weight;
 		if (systematic =="TopPtDown") all_weights *= 1;
+		}
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
 		CFCounter[iCut]+= all_weights;
 		CFCounter_[iCut]+= all_weights;
@@ -545,8 +738,6 @@ if (taus_index>-1 )			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], t
                 iCFCounter[iCut]++;
 		iCut++;
 
-
-
 		 TLorentzVector DiL = MuV  ;
      		double dPhi=dPhiFrom2P( DiL.Px(), DiL.Py(), METV.Px(),  METV.Py() );
          	double MT = 0;MT=sqrt(2*DiL.Pt()*met*(1-TMath::Cos(dPhi)));
@@ -554,124 +745,16 @@ if (taus_index>-1 )			TauV.SetPtEtaPhiM(ta_pt[taus_index], ta_eta[taus_index], t
          	double MTt = 0;MTt=sqrt(2*TauV.Pt()*met*(1-TMath::Cos(dPhiT)));
 		double MTsum = MT+MTt;
 	     	
-		//if (MT > 60. && MT < 120. ) continue;
+		if (MT > 60. && MT < 120. ) continue;
 		if (MT < 20.) continue;
-
-
-		if ( (MT < 60. ||  MT > 120.) && TightID>0.5)
-			{
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
 		CFCounter[iCut]+= all_weights;
 		CFCounter_[iCut]+= all_weights;
                 iCFCounter[iCut]++;
-			}
 		iCut++;
 
-		if ( (MT < 60. || MT > 120.) && TightID<0.5 && LooseID>0.5)
-			{
-		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
-		CFCounter[iCut]+= all_weights;
-		CFCounter_[iCut]+= all_weights;
-                iCFCounter[iCut]++;
-			}
-		iCut++;
-
-		if (( MT > 60. && MT < 120.) && TightID>0.5)
-			{
-		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
-		CFCounter[iCut]+= all_weights;
-		CFCounter_[iCut]+= all_weights;
-                iCFCounter[iCut]++;
-			}
-		iCut++;
-		if (( MT > 60. && MT < 120.) && TightID<0.5 && LooseID>0.5)
-			{
-		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
-		CFCounter[iCut]+= all_weights;
-		CFCounter_[iCut]+= all_weights;
-                iCFCounter[iCut]++;
-			}
-		iCut++;
-
-
-
+                 
 		 TLorentzVector DiLL = MuV +TauV ;
-		double retvalBDT =0;
-
-////// To cut on BDT value
-
-	if (ifCutBDT)
-
-	{
-			float mttotal = sqrt(MT*MT + MTt*MTt);
-			double deta=deltaEta(MuV.Px(),  MuV.Py(),MuV.Pz(), TauV.Px(),  TauV.Py(),TauV.Pz() );
-
-
-				float tauUnitX = TauV.Px()/TauV.Pt();
-				float tauUnitY = TauV.Py()/TauV.Pt();
-
-				float muonUnitX = MuV.Px()/MuV.Pt();
-				float muonUnitY = MuV.Py()/MuV.Pt();
-
-				float zetaX = tauUnitX + muonUnitX;
-				float zetaY = tauUnitY + muonUnitY;
-
-				float normZeta = TMath::Sqrt(zetaX*zetaX+zetaY*zetaY);
-
-				zetaX = zetaX/normZeta;
-				zetaY = zetaY/normZeta;
-
-				float vectorVisX = MuV.Px() + TauV.Px();
-				float vectorVisY = MuV.Py() + TauV.Py();
-
-				// computation of DZeta variable
-				// pfmet
-				float pzetamiss = METV.Px()*zetaX + METV.Py()*zetaY;
-				float pzetavis = vectorVisX*zetaX + vectorVisY*zetaY;
-				float dzeta = pzetamiss - 0.85*pzetavis;
-
-				DiL = MuV  + TauV;
-				double mcta = sqrt( 2*MuV.Pt()*TauV.Pt()*(1+cos(MuV.Phi()-TauV.Phi())) );
-				double Mt2as = 0;
-
-				Mt2as = asymm_mt2_lester_bisect::get_mT2(muonMass, MuV.Px(), MuV.Py(),tauMass,TauV.Px(),TauV.Py(),METV.Px(),METV.Py(),0,0,0);
-      				double Dr = MuV.DeltaR(TauV);
-
-			(*inputVec)[0] = METV.Pt();
-			(*inputVec)[1] = MuV.Pt();
-			(*inputVec)[2] = TauV.Pt();
-			(*inputVec)[3] = dEta;
-			(*inputVec)[4] = mttotal;
-			(*inputVec)[5] = dzeta;
-			(*inputVec)[6] = Dr;
-			(*inputVec)[7] = DiL.M();
-			(*inputVec)[8] = MT;
-			(*inputVec)[9] = mcta;
-			(*inputVec)[10] = Mt2as;
-			(*inputVec)[11] = dPhiMuMET;
-            (*inputVec)[12] = dPhiTauMET;
-
-
-            //Evaluate the responce from DNN and BDT:
-
-
-
-             //MetV_Pt =  METV.Pt();
-             //V_Pt = MuV.Pt();
-             //Tau_Pt = TauV.Pt();
-             //DiL_M = DiL.M();
-             //t3f->Fill();
-
-            //DataChunk *sample = new DataChunkFlat(13, 0);
-            sample->set_data(*inputVec);
-            vector<float> responce = ResponseMutau.compute_output(sample);
-/*
-        float retval = responce[0];
-
-
-
-
-if (ifCutBDT) continue;
 
 		double dEta = MuV.Eta() - TauV.Eta();
 		double dEtaJMu = -1.; if (JetsMV.size()>0) dEtaJMu = JetsMV.at(0).Eta() - MuV.Eta();
@@ -695,26 +778,41 @@ if (ifCutBDT) continue;
 		if (JetsMV.size()>0 && fabs(dEtaJTau)>3.) continue;
 		if (JetsMV.size()>0 && Dr2>4.) continue;
 
+		if (DiLL.M()<50.) continue;
+		if (MTsum<50.) continue;
+
+//		cout<<" Events  "<<jentry<<" EvWeight  "<<all_weights<<endl;
+
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
 		CFCounter[iCut]+= all_weights;
 		CFCounter_[iCut]+= all_weights;
                 iCFCounter[iCut]++;
 		iCut++;
 
-		if ( fabs(mu_dz[muon_index]) > 0.04) continue;
-		if ( fabs(mu_dxy[muon_index]) > 0.02) continue;
-		if (ta_relIso[0] < 0.85) continue;
+	//	if ( fabs(mu_dz[muon_index]) > 0.04) continue;
+	//	if ( fabs(mu_dxy[muon_index]) > 0.02) continue;
+	//	if (ta_relIso[0] < 0.85) continue;
 
-		if (fabs(dEta)>1.5 && !InvertLeptonIso) continue;
-		if (fabs(dEta)<2 && InvertLeptonIso) continue;
+	//	if (fabs(dEta)>1.5 && !InvertLeptonIso) continue;
+	//	if (fabs(dEta)<2 && InvertLeptonIso) continue;
 		if (dPhiDiL<1.5) continue;
-		if (dPhiDiL>3.2) continue;
-		if (Dr<2.) continue;
-		if (Dr>3.2 && !InvertLeptonIso) continue;
-		if (Dr<3.5 && InvertLeptonIso) continue;
+	//	if (dPhiDiL>3.2) continue;
+	//	if (Dr<2.) continue;
+	//	if (Dr>3.2 && !InvertLeptonIso) continue;
+	//	if (Dr<3.5 && InvertLeptonIso) continue;
 
 		if (DiLL.M()<50.) continue;
 		if (MTsum<50.) continue;
+
+
+		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
+		CFCounter[iCut]+= all_weights;
+		CFCounter_[iCut]+= all_weights;
+                iCFCounter[iCut]++;
+		iCut++;
+
+		if ( fabs(mu_dz[muon_index]) > 0.02) continue;
+		if ( fabs(ta_dxy[taus_index]) > 0.02) continue;
 
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
 		CFCounter[iCut]+= all_weights;
@@ -729,9 +827,6 @@ if (ifCutBDT) continue;
                 iCFCounter[iCut]++;
 		iCut++;
 
-
-
-
 		if (met<30.) continue;
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
 		CFCounter[iCut]+= all_weights;
@@ -745,7 +840,7 @@ if (ifCutBDT) continue;
 		CFCounter_[iCut]+= all_weights;
                 iCFCounter[iCut]++;
 		iCut++;
-
+	
 		if (MTsum<120.) continue;
 		FillHists(iCut, all_weights, ElV, MuV, TauV,JetsMV, METV, ChiMass,mIntermediate, Channel, muon_index,electron_index,taus_index,isSignal);
 		CFCounter[iCut]+= all_weights;
@@ -753,10 +848,11 @@ if (ifCutBDT) continue;
                 iCFCounter[iCut]++;
 		iCut++;
 		
-
+		Tp->Fill();
 	
   }
 
+	cout<<" and about HT now.... <70 "<<genHTlow<<" 70<x<100 "<<genHTa<<" 100x<200 "<<genHTb<<" 200<x<400 "<<genHTc<<" 400<x<600  "<<genHTd<<" 0partons "<<is0partons<<" 1p  "<<is1partons<<" 2p "<<is2partons<<" 3p "<<is3partons<<" 4p "<<is4partons<<endl;
 
 	float Lumi = 35864.;
 
@@ -771,7 +867,6 @@ if (ifCutBDT) continue;
  					CutFlowUnW->SetBinContent(1+ci,float(CFCounter[ci]) );
 				
 
-					//cout<<" Count "<<ci<<" binContent "<<CutFlowUnW->GetBinContent(1+ci)<<"  CFCounter_ "<<CFCounter_[ci]<<" CFCounter "<<CFCounter[ci]<<" iCFCounter "<<iCFCounter[ci]<<" Name "<<CutFlowUnW->GetXaxis()->GetBinLabel(1+ci)<<" entry  "<<CutFlowUnW->GetBinContent(1+ci)<<" prediction for Lumi " <<Lumi<<"  "<<float (CutFlowUnW->GetBinContent(1+ci))*hxsecW->GetMean()*Lumi/histW->GetSumOfWeights()<<endl;			
 					cout<<" Count "<<ci<<" binContent "<<CutFlowUnW->GetBinContent(1+ci)<<"  CFCounter_ "<<CFCounter_[ci]<<" CFCounter "<<CFCounter[ci]<<" iCFCounter "<<iCFCounter[ci]<<" Name "<<CutFlowUnW->GetXaxis()->GetBinLabel(1+ci)<<" entry  "<<CutFlowUnW->GetBinContent(1+ci)<<endl;			
 
 }
@@ -785,7 +880,7 @@ if (ifCutBDT) continue;
 	if (isTT && systematic == "TopPtUp"  ) histTopSq->Write();
 	//	Tp->Write();
 		file->Write();
-		file->Cvilose();
+		file->Close();
 		cout<<" Failed events  "<<counter<<endl;
 	}
 /////////////////////////////////////////////

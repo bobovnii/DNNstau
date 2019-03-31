@@ -7,7 +7,7 @@ import pandas as pd
 from utils.utils import Histories
 from lr.schedule import LossLearningRateScheduler
 from metric.loss import significanceLoss
-
+from metric.loss import focal_loss
 parser = argparse.ArgumentParser()
 parser.add_argument('--config', default='config.ini',
                         help="Configuration file")
@@ -49,7 +49,10 @@ _train, _test = _train_test_split(train, split=float(config.get("model","test_tr
 ###   Extract the SF for signal and background:  ###
 from utils.sf import *
 Number_of_Background = train[(train.classID==0)].weight.sum()# float(config.get("physics", "Number_of_Background"))
-Number_of_Signal = train[(train.classID==1)].weight.sum()#float(config.get("physics","Number_of_Signal"))
+Number_of_Signal = train[(train.Dataset_id==1.0)].weight.sum()#float(config.get("physics","Number_of_Signal"))
+print("Number of Signal: ", Number_of_Signal)
+print("Number of Background: ", Number_of_Background)
+
 bgd_train_sf, bgd_test_sf = sf_bgd_train_test(test=_test,train=_train, Number_of_Background=Number_of_Background)
 signal_train_sf, signal_test_sf = sf_signal_train_test(test=_test,train=_train, Number_of_Signal=Number_of_Signal)
 
@@ -104,6 +107,7 @@ print("Expected Background: ", expecred_background)
 
 loss =significanceLoss(expected_signal,expecred_background )
 loss = "binary_crossentropy"
+loss = focal_loss(gamma=4)
 model = training._model(loss=loss)
 histories = Histories()
 histories.set_up_config(config)
@@ -113,14 +117,14 @@ histories.set_up_val_weight(weight=W_validation)
 lr = LossLearningRateScheduler(base_lr=0.01, lookback_epochs=10, decay_multiple=0.9)
 
 
-histories.set_mode(mode="pre_train")
-training.pre_train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories],
-              loss = loss)
-histories.set_mode(mode="train")
-training.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories],
-              loss = loss)
-
-training.store_model()
+#histories.set_mode(mode="pre_train")
+#training.pre_train(gen_X_train, Y_train,  gen_X_validation, Y_validation, callback=[histories],
+#              loss = loss)
+#histories.set_mode(mode="train")
+#training.train(X_train, Y_train,  X_validation, Y_validation, callback=[histories],
+ #             loss = loss)
+training.load_model()
+#training.store_model()
 
 
 ###  Get Result of training:

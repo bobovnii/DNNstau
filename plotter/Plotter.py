@@ -50,9 +50,9 @@ class Plotter():
 
         fig, ax1 = plt.subplots()
 
-        ax1.hist(decisions[0], color='r', alpha=0.5, bins=50,
+        ax1.hist(decisions[0], color='r', alpha=0.5, bins=bins,
                  weights=sw_train,
-                 label='S', range=(0, 1))
+                 label='S', range=(0, 1), log=True)
 
         hist, bins = np.histogram(decisions[2], weights=sw,
                                   bins=bins, range=(0, 1))
@@ -61,21 +61,15 @@ class Plotter():
 
         width = (bins[1] - bins[0])
         center = (bins[:-1] + bins[1:]) / 2
-        plt.errorbar(center, hist, yerr=err, fmt='o', c='r', label='S (test)')
-        ax1.legend(loc=1)
-        ax1.set_ylabel('Signal', color='r')
-        ax1.set_xlabel('DNN output')
-
-        ax2 = ax1.twinx()
-
+        ax1.errorbar(center, hist, yerr=err, fmt='o', c='r', label='S (test)')
 
         bw_train = df_train[df_train.train_labels==0].train_weights/bgd_train_sf
         bw = df_test[df_test.test_labels==0].test_weights/bgd_test_sf
 
-        ax2.hist(decisions[1],
+        ax1.hist(decisions[1],
                  color='b', alpha=0.5, range=low_high, bins=bins,
                  histtype='stepfilled', weights=bw_train,  # normed=True,
-                 label='B (train)')
+                 label='B (train)', log=True)
 
 
         hist, bins = np.histogram(decisions[3], weights=bw ,
@@ -85,10 +79,12 @@ class Plotter():
 
         width = (bins[1] - bins[0])
         center = (bins[:-1] + bins[1:]) / 2
-        ax2.errorbar(center, hist, yerr=err, fmt='o', c='b', label='B (test)')
-        ax2.set_ylabel('Background', color='b')
-        ax2.grid()
-        ax2.legend(loc=2)
+        ax1.errorbar(center, hist, yerr=err, fmt='o', c='b', label='B (test)')
+        ax1.set_ylabel('Arbitrary Units', color='b')
+        ax1.set_xlabel('DNN output')
+
+        ax1.grid()
+        ax1.legend(loc=2)
         plt.savefig(os.path.join(self.dir,'compareTrainTest.pdf'))
         plt.close()
         return
@@ -113,6 +109,7 @@ class Plotter():
         plt.ylabel('Cumulative event counts')
         plt.xlabel('Classifier output')
         plt.legend()
+        plt.grid()
         plt.savefig(os.path.join(self.dir,'class_prediction.pdf'))
         plt.close()
         return

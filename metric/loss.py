@@ -70,3 +70,16 @@ def Z(s,b,sig=0.2):
     return np.sqrt( -2.0/(sig*sig)*np.log( b/( b+(b*b)*(sig*sig))*(sig*sig)*s+1.0)+ \
            2.0*( b+s)*np.log(( b+s)*( b+(b*b)*(sig*sig))/( (b*b)+( b+s)*(b*b)*(sig*sig))))
 
+
+def focal_loss(gamma):
+    """
+
+    :param gamma:
+    :return:
+    """
+    def focLoss(y_true, y_pred):
+        pt_1 = tf.where(tf.equal(y_true, 1), y_pred, tf.ones_like(y_pred))
+        pt_0 = tf.where(tf.equal(y_true, 0), y_pred, tf.zeros_like(y_pred))
+        return -K.sum(K.pow(1. - pt_1, gamma) * K.log(pt_1)) - K.sum(K.pow(pt_0, gamma) * K.log(1. - pt_0))
+
+    return focLoss
